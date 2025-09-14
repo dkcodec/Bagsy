@@ -2,6 +2,8 @@
 // МИКСИНЫ ДЛЯ ПЕРЕИСПОЛЬЗОВАНИЯ
 // ========================================
 
+@use 'variables' as *;
+
 // Миксин для создания CSS переменных из карты цветов
 @mixin theme-variables($theme-map) {
   @each $key, $value in $theme-map {

@@ -2,6 +2,9 @@
 // КОМПОНЕНТЫ
 // ========================================
 
+@use 'mixins' as *;
+@use 'variables' as *;
+
 // Переключатель тем
 .theme-toggle {
   @include flex-center;

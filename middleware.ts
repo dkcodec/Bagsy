@@ -11,8 +11,3 @@ export default createMiddleware({
   // Локаль по умолчанию
   defaultLocale
 });
-
-export const config = {
-  // Применять middleware ко всем путям кроме статических файлов и API
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)']
-};

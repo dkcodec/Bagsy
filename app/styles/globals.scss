@@ -2,9 +2,9 @@
 // ИМПОРТЫ
 // ========================================
 
-@import 'variables';
-@import 'mixins';
-@import 'components';
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'components' as *;
 
 // ========================================
 // ГЛОБАЛЬНЫЕ СТИЛИ

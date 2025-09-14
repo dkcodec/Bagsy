@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={nunito.variable}>
+      <body className={nunito.variable} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

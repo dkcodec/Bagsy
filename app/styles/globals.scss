@@ -1,0 +1,271 @@
+// ========================================
+// ИМПОРТЫ
+// ========================================
+
+@import 'variables';
+@import 'mixins';
+@import 'components';
+
+// ========================================
+// ГЛОБАЛЬНЫЕ СТИЛИ
+// ========================================
+
+// CSS переменные для светлой темы
+:root {
+  @include theme-variables($light-theme);
+  --radius: #{$border-radius};
+}
+
+// CSS переменные для темной темы
+.dark {
+  @include theme-variables($dark-theme);
+}
+
+// ========================================
+// БАЗОВЫЕ СТИЛИ
+// ========================================
+
+// Сброс стилей
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+// HTML и Body
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: $font-family-sans;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @include transition(color, background-color);
+}
+
+// ========================================
+// ТИПОГРАФИКА
+// ========================================
+
+// Ссылки
+a {
+  color: inherit;
+  text-decoration: none;
+  @include transition(color);
+  
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+// Заголовки
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+// Параграфы
+p {
+  color: var(--muted-foreground);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+// ========================================
+// КОМПОНЕНТЫ
+// ========================================
+
+// Кнопки
+button {
+  @include button-base;
+  
+  // Размеры кнопок
+  &.sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  &.md {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  &.lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+  
+  // Варианты кнопок
+  &.primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+    
+    &:hover {
+      background-color: var(--primary);
+      opacity: 0.9;
+    }
+  }
+  
+  &.secondary {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border-color: var(--secondary);
+    
+    &:hover {
+      background-color: var(--secondary);
+      opacity: 0.9;
+    }
+  }
+  
+  &.accent {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+    border-color: var(--accent);
+    
+    &:hover {
+      background-color: var(--accent);
+      opacity: 0.9;
+    }
+  }
+}
+
+// Карточки
+.card {
+  @include card;
+}
+
+// Инпуты
+input, textarea, select {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: $border-radius;
+  padding: 0.75rem;
+  @include transition(border-color, box-shadow);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 2px var(--ring);
+  }
+  
+  &::placeholder {
+    color: var(--muted-foreground);
+  }
+}
+
+// ========================================
+// УТИЛИТЫ
+// ========================================
+
+// Отображение
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  @include sr-only;
+}
+
+// Flexbox
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+// Grid
+.grid {
+  display: grid;
+}
+
+.grid-center {
+  @include grid-center;
+}
+
+// Отступы
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-6 {
+  gap: 1.5rem;
+}
+
+// Позиционирование
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.fixed {
+  position: fixed;
+}
+
+// Z-index
+.z-10 {
+  z-index: 10;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.z-dropdown {
+  z-index: $z-dropdown;
+}
+
+// ========================================
+// АДАПТИВНОСТЬ
+// ========================================
+
+@include responsive(mobile) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+@include responsive(tablet) {
+  .hidden-tablet {
+    display: none !important;
+  }
+}
+
+@include responsive(desktop) {
+  .hidden-desktop {
+    display: none !important;
+  }
+}

@@ -4,7 +4,6 @@ import { Button } from "@/src/entities/button"
 import { Card, CardContent } from "@/src/entities/card"
 import { Input } from "@/src/entities/input"
 import { Label } from "@/src/entities/label"
-import Image from "next/image"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useState } from "react"
@@ -54,7 +53,7 @@ export default function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
+      <Card className="overflow-hidden p-0 bg-white/10 backdrop-blur-sm">
         <CardContent className="grid p-0 md:grid-cols-1">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
@@ -97,6 +96,7 @@ export default function LoginForm({
                   name="password"
                   aria-invalid={Boolean(errors.password)}
                   aria-describedby={errors.password ? "password-error" : undefined}
+                  className="border-black"
                 />
                 {errors.password ? (
                   <p id="password-error" className="text-destructive text-xs">{errors.password}</p>

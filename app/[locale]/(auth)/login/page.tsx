@@ -1,9 +1,9 @@
 import { LoginForm } from '@/src/all-pages/exports'
-import { useIsMobileServer } from '@/src/shared/hooks/use-mobile-server'
+import { getIsMobile } from '@/src/shared/hooks/use-mobile-server'
 import React from 'react'
 
 export default async function LoginPage() {
-  const isMobile = await useIsMobileServer()
+  const isMobile = await getIsMobile()
   
   return (
     <div className="flex min-h-svh flex-col items-center justify-center p-6 md:p-10">

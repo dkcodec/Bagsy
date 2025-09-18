@@ -1,10 +1,10 @@
 import { headers } from 'next/headers'
 
 /**
- * Серверный хук для определения мобильного устройства
+ * Серверная функция для определения мобильного устройства
  * Работает на основе User-Agent заголовка
  */
-export async function useIsMobileServer(): Promise<boolean> {
+export async function getIsMobile(): Promise<boolean> {
   const headersList = await headers()
   const userAgent = headersList.get('user-agent') || ''
   

@@ -1,4 +1,4 @@
-import { LoginForm } from '@/src/pages/exports'
+import { LoginForm } from '@/src/all-pages/exports'
 import React from 'react'
 
 export default function LoginPage() {

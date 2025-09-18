@@ -1,7 +1,7 @@
 
 import React from 'react'
 
-import { InviteForm } from '@/src/pages/exports'
+import { InviteForm } from '@/src/all-pages/exports'
 
 export default async function InvitePage({
   searchParams,

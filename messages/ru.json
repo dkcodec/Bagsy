@@ -1,11 +1,30 @@
 {
-  "title": "Создать Next App",
-  "description": "Сгенерировано с помощью create next app",
-  "getStarted": "Начните с редактирования",
-  "saveAndSee": "Сохраните и сразу увидите изменения",
-  "deployNow": "Развернуть сейчас",
-  "readDocs": "Прочитать документацию",
-  "learn": "Изучить",
-  "examples": "Примеры",
-  "goToNextjs": "Перейти на nextjs.org →"
+  "LoginForm": {
+    "welcomeBack": "Добро пожаловать",
+    "loginToYourAccount": "Войдите в свой аккаунт Bagsy",
+    "phone": "Телефон",
+    "password": "Пароль",
+    "login": "Войти",
+    "forgotPassword": "Забыли пароль?",
+    "signUp": "Зарегистрироваться",
+    "dontHaveAnAccount": "Нет аккаунта?",
+    "contactUs": "Свяжитесь с нами",
+    "errors": {
+      "phoneRequired": "Введите номер телефона",
+      "phoneInvalid": "Некорректный номер телефона",
+      "passwordMin": "Минимум 6 символов"
+    }
+  }
+  ,
+  "InviteForm": {
+    "title": "Установка пароля",
+    "description": "Придумайте пароль для вашего аккаунта",
+    "password": "Пароль",
+    "confirmPassword": "Повторите пароль",
+    "save": "Сохранить",
+    "errors": {
+      "passwordMin": "Минимум 6 символов",
+      "passwordsMustMatch": "Пароли должны совпадать"
+    }
+  }
 }

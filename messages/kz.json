@@ -1,11 +1,29 @@
 {
-  "title": "Next App жасау",
-  "description": "create next app арқылы жасалған",
-  "getStarted": "Өңдеу арқылы бастаңыз",
-  "saveAndSee": "Сақтаңыз және дереу өзгерістерді көріңіз",
-  "deployNow": "Қазір орналастыру",
-  "readDocs": "Құжаттаманы оқу",
-  "learn": "Үйрену",
-  "examples": "Мысалдар",
-  "goToNextjs": "nextjs.org → сайтына өту"
+  "LoginForm": {
+    "welcomeBack": "Қош келдіңіз",
+    "email": "Email",
+    "phone": "Телефон",
+    "password": "Пароль",
+    "forgotPassword": "Құпия сөзді ұмыттыңыз ба?",
+    "signUp": "Тіркелгіні жасау",
+    "errors": {
+      "emailRequired": "Email енгізіңіз",
+      "emailInvalid": "Дұрыс емес email",
+      "phoneRequired": "Телефон нөмірін енгізіңіз",
+      "phoneInvalid": "Дұрыс емес телефон нөмірі",
+      "passwordMin": "Кемінде 6 таңба"
+    }
+  }
+  ,
+  "InviteForm": {
+    "title": "Құпия сөзді орнату",
+    "description": "Тіркелгіңіз үшін құпия сөз ойластырыңыз",
+    "password": "Құпия сөз",
+    "confirmPassword": "Құпия сөзді қайталаңыз",
+    "save": "Сақтау",
+    "errors": {
+      "passwordMin": "Кемінде 6 таңба",
+      "passwordsMustMatch": "Құпия сөздер сәйкес келуі керек"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { Button } from "@/src/entities/button";
 import {
@@ -13,14 +13,15 @@ import { Globe } from "lucide-react";
 
 // Конфигурация языков
 const locales = [
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
-  { code: "kz", name: "Қазақша", flag: "🇰🇿" },
+  { code: "ru", name: "russian" },
+  { code: "kz", name: "kazakh" },
 ] as const;
 
 export function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("Landing.header");
 
   // Получаем текущий язык
   const currentLocale = locales.find(l => l.code === locale);
@@ -35,8 +36,10 @@ export function LocaleSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{currentLocale?.name}</span>
-          <span className="sm:hidden">{currentLocale?.flag}</span>
+          <span className="hidden sm:inline">
+            {t(currentLocale?.name || "")}
+          </span>
+          <span className="sm:hidden">{currentLocale?.code}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -46,8 +49,8 @@ export function LocaleSwitcher() {
             onClick={() => handleLocaleChange(localeOption.code)}
             className="cursor-pointer"
           >
-            <span className="mr-2">{localeOption.flag}</span>
-            {localeOption.name}
+            <span className="mr-2">{localeOption.code}</span>
+            {t(localeOption.name)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

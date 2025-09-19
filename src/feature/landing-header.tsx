@@ -3,6 +3,7 @@
 import { Button } from "@/src/entities/button";
 import { ThemeToggle } from "@/src/widgets/theme-toggle";
 import { LandingLogo } from "@/src/widgets/landing-logo";
+import { LocaleSwitcher } from "@/src/widgets/locale-switcher";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -52,11 +53,13 @@ export function LandingHeader() {
             <Button size="sm">
               <Link href="#pricing">{t("startFree")}</Link>
             </Button>
+            <LocaleSwitcher />
             <ThemeToggle />
           </div>
 
           {/* Мобильное меню */}
           <div className="md:hidden flex items-center space-x-2">
+            <LocaleSwitcher />
             <ThemeToggle />
             <Button
               variant="ghost"
@@ -75,7 +78,7 @@ export function LandingHeader() {
 
         {/* Мобильное меню */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-4">
+          <div className="md:hidden border-t border-background py-4">
             <nav className="flex flex-col space-y-4">
               <Link
                 href="#features"
@@ -98,13 +101,9 @@ export function LandingHeader() {
               >
                 {t("contact")}
               </Link>
-              <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Button variant="ghost" size="sm" className="justify-start">
-                  <Link href="/login">{t("login")}</Link>
-                </Button>
-                <Button size="sm" className="justify-start">
-                  <Link href="#pricing">{t("startFree")}</Link>
-                </Button>
+              <div className="flex flex-col space-y-2 pt-4 border-t border-background">
+                <Link href="/login">{t("login")}</Link>
+                <Link href="#pricing">{t("startFree")}</Link>
               </div>
             </nav>
           </div>

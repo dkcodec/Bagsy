@@ -7,7 +7,7 @@ import { Label } from "@/src/entities/label";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { z } from "zod";
-import { decodeJwt, secondsToDate } from "../shared/utils/jwt";
+import { decodeJwt } from "../shared/utils/jwt";
 import { formatPhone } from "../shared/utils/formater";
 
 export default function InviteForm({

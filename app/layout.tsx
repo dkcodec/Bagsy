@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "@/src/styles/shadcn.css";
 import { ThemeProvider } from "@/src/providers/theme-provider";

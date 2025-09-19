@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import { Button } from "@/src/entities/button";
 import { Card } from "@/src/entities/card";
-import { ArrowRight, Star, Users, TrendingUp } from "lucide-react";
+import { Star, Users, TrendingUp } from "lucide-react";
 
 export async function LandingCTA() {
   const t = await getTranslations("Landing.cta");
@@ -110,7 +109,7 @@ export async function LandingCTA() {
 
                 {/* Текст отзыва */}
                 <p className="text-gray-900 dark:text-gray-300 mb-4 leading-relaxed">
-                  "{testimonial.content}"
+                  {`"${testimonial.content}"`}
                 </p>
 
                 {/* Автор */}

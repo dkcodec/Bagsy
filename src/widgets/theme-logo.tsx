@@ -30,7 +30,7 @@ export function ThemeLogo({
   if (!mounted) {
     return (
       <Image
-        src={isCollapsed ? "/logo-light.svg" : "/logo-full-ight.svg"}
+        src={isCollapsed ? "/logo-light.svg" : "/logo-full-light.svg"}
         alt={alt}
         width={width}
         height={height}
@@ -47,7 +47,7 @@ export function ThemeLogo({
       height = 30;
       return isDark ? "/logo-dark.svg" : "/logo-light.svg";
     }
-    return isDark ? "/logo-full-dark.svg" : "/logo-full-ight.svg";
+    return isDark ? "/logo-full-dark.svg" : "/logo-full-light.svg";
   })();
 
   return (

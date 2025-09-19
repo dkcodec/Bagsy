@@ -24,7 +24,7 @@ export default function LoginBackground({ isMobile }: LoginBackgroundProps) {
     }
     return resolvedTheme === "dark"
       ? "/logo-full-dark.svg"
-      : "/logo-full-ight.svg";
+      : "/logo-full-light.svg";
   };
 
   return (

@@ -1,31 +1,30 @@
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { locales } from '../../middleware';
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { locales } from "../../middleware";
 
 export function generateStaticParams() {
-  return locales.map((locale) => ({locale}));
+  return locales.map(locale => ({ locale }));
 }
 
 export default async function LocaleLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
-  const {locale} = await params;
-  
-  if (!locales.includes(locale as typeof locales[number])) {
+  const { locale } = await params;
+
+  if (!locales.includes(locale as (typeof locales)[number])) {
     notFound();
   }
 
-  const messages = await getMessages({locale});
+  const messages = await getMessages({ locale });
 
   return (
     <NextIntlClientProvider messages={messages}>
-        {children}
+      {children}
     </NextIntlClientProvider>
   );
 }
-

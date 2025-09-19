@@ -1,20 +1,17 @@
-import { AppSidebar } from "@/src/widgets/app-sidebar"
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/src/entities/sidebar"
-import { DashboardHeader, DashboardContent } from "@/src/feature"
+import { AppSidebar } from "@/src/widgets/app-sidebar";
+import { SidebarInset, SidebarProvider } from "@/src/entities/sidebar";
+import { DashboardHeader, DashboardContent } from "@/src/feature";
 
 export default function Page() {
   return (
     <SidebarProvider>
-        <AppSidebar />
+      <AppSidebar />
 
-        <SidebarInset>
-          <DashboardHeader />
+      <SidebarInset>
+        <DashboardHeader />
 
-          <DashboardContent />
-        </SidebarInset>
+        <DashboardContent />
+      </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

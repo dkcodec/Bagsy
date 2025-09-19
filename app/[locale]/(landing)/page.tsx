@@ -1,12 +1,7 @@
-
-
 export default async function Home({
-  params
+  params,
 }: {
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
-
-  return (
-    <div></div>
-  );
+  return <div></div>;
 }

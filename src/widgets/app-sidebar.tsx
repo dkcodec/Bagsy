@@ -1,5 +1,5 @@
-"use client"
-import * as React from "react"
+"use client";
+import * as React from "react";
 import {
   AudioWaveform,
   BookOpen,
@@ -11,19 +11,19 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
-} from "lucide-react"
+} from "lucide-react";
 
-import { NavMain } from "@/src/widgets/nav-main"
-import { NavProjects } from "@/src/widgets/nav-projects"
-import { NavUser } from "@/src/widgets/nav-user"
+import { NavMain } from "@/src/widgets/nav-main";
+import { NavProjects } from "@/src/widgets/nav-projects";
+import { NavUser } from "@/src/widgets/nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/src/entities/sidebar"
-import { ThemeLogo } from "@/src/widgets/theme-logo"
+} from "@/src/entities/sidebar";
+import { ThemeLogo } from "@/src/widgets/theme-logo";
 
 // This is sample data.
 const data = {
@@ -153,7 +153,7 @@ const data = {
       icon: Map,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -170,5 +170,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

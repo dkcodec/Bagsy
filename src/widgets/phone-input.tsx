@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button } from "@/src/entities/button";
 import { Input } from "@/src/entities/input";
 import { ScrollArea } from "@/src/entities/scroll-area";
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/shared/utils/styles";
 
 // Minimal country dataset (add more if needed)
 const COUNTRIES = [

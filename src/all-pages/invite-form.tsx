@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/shared/utils/styles";
 import { Button } from "@/src/entities/button";
 import { Card, CardContent } from "@/src/entities/card";
 import { Input } from "@/src/entities/input";
@@ -7,6 +7,8 @@ import { Label } from "@/src/entities/label";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { z } from "zod";
+import { decodeJwt, secondsToDate } from "../shared/utils/jwt";
+import { formatPhone } from "../shared/utils/formater";
 
 export default function InviteForm({
   className,
@@ -14,6 +16,8 @@ export default function InviteForm({
   ...props
 }: React.ComponentProps<"div"> & { token: string }) {
   const t = useTranslations("InviteForm");
+  const payload = decodeJwt<{ phone: string; iat: number; exp: number }>(token);
+  const { phone, iat, exp } = payload;
 
   // Локальное состояние ошибок формы
   const [errors, setErrors] = useState<{
@@ -22,7 +26,6 @@ export default function InviteForm({
     form?: string;
   }>({});
 
-  // Схема проверки пароля и совпадения
   const schema = z
     .object({
       password: z.string().min(6, t("errors.passwordMin")),
@@ -56,14 +59,14 @@ export default function InviteForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
+      <Card className="overflow-hidden p-0 dark:bg-white/10 bg-black/10 backdrop-blur-sm">
         <CardContent className="grid p-0 md:grid-cols-1">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">{t("title")}</h1>
                 <p className="text-muted-foreground text-balance">
-                  {t("description")}
+                  {t("description", { phone: formatPhone(phone) })}
                 </p>
               </div>
 
@@ -80,6 +83,7 @@ export default function InviteForm({
                   aria-describedby={
                     errors.password ? "password-error" : undefined
                   }
+                  className="border-background"
                 />
                 {errors.password ? (
                   <p id="password-error" className="text-destructive text-xs">
@@ -99,6 +103,7 @@ export default function InviteForm({
                   aria-describedby={
                     errors.confirm ? "confirm-error" : undefined
                   }
+                  className="border-background"
                 />
                 {errors.confirm ? (
                   <p id="confirm-error" className="text-destructive text-xs">
@@ -108,7 +113,7 @@ export default function InviteForm({
               </div>
 
               <Button type="submit" className="w-full">
-                {t("save")}
+                {t("setPassword")}
               </Button>
               {errors.form ? (
                 <p className="text-destructive text-center text-sm">

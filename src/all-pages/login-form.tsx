@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/shared/utils/styles";
 import { Button } from "@/src/entities/button";
 import { Card, CardContent } from "@/src/entities/card";
 import { Input } from "@/src/entities/input";
@@ -104,7 +104,7 @@ export default function LoginForm({
                   aria-describedby={
                     errors.password ? "password-error" : undefined
                   }
-                  className="border-black"
+                  className="border-background"
                 />
                 {errors.password ? (
                   <p id="password-error" className="text-destructive text-xs">

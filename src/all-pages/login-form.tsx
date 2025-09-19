@@ -1,55 +1,59 @@
-"use client"
-import { cn } from "@/lib/utils"
-import { Button } from "@/src/entities/button"
-import { Card, CardContent } from "@/src/entities/card"
-import { Input } from "@/src/entities/input"
-import { Label } from "@/src/entities/label"
-import { useTranslations } from "next-intl"
-import Link from "next/link"
-import { useState } from "react"
-import { z } from "zod"
-import PhoneInput from "../widgets/phone-input"
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/src/entities/button";
+import { Card, CardContent } from "@/src/entities/card";
+import { Input } from "@/src/entities/input";
+import { Label } from "@/src/entities/label";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useState } from "react";
+import { z } from "zod";
+import PhoneInput from "../widgets/phone-input";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-    const t = useTranslations("LoginForm")
-    const [phone, setPhone] = useState("")
+  const t = useTranslations("LoginForm");
+  const [phone, setPhone] = useState("");
 
-    const loginSchema = z.object({
-      phone: z
-        .string()
-        .min(1, t("errors.phoneRequired"))
-        .refine((v) => {
-          const digits = v.replace(/\D/g, "")
-          return digits.length >= 10 && digits.length <= 15
-        }, t("errors.phoneInvalid")),
-      password: z.string().min(6, t("errors.passwordMin")),
-    })
+  const loginSchema = z.object({
+    phone: z
+      .string()
+      .min(1, t("errors.phoneRequired"))
+      .refine(v => {
+        const digits = v.replace(/\D/g, "");
+        return digits.length >= 10 && digits.length <= 15;
+      }, t("errors.phoneInvalid")),
+    password: z.string().min(6, t("errors.passwordMin")),
+  });
 
-    const [errors, setErrors] = useState<{ phone?: string; password?: string; form?: string }>({})
+  const [errors, setErrors] = useState<{
+    phone?: string;
+    password?: string;
+    form?: string;
+  }>({});
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      const formData = new FormData(e.currentTarget)
-      const data = {
-        phone: String(formData.get("phone") || ""),
-        password: String(formData.get("password") || ""),
-      }
-      const result = loginSchema.safeParse(data)
-      if (!result.success) {
-        const fieldErrors = result.error.flatten().fieldErrors
-        setErrors({
-          phone: fieldErrors.phone?.[0],
-          password: fieldErrors.password?.[0],
-        })
-        return
-      }
-      // Очистим ошибки и выполним дальнейшее действие (вызов API/редирект)
-      setErrors({})
-      // TODO: здесь можно вызвать реальный login action
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      phone: String(formData.get("phone") || ""),
+      password: String(formData.get("password") || ""),
+    };
+    const result = loginSchema.safeParse(data);
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      setErrors({
+        phone: fieldErrors.phone?.[0],
+        password: fieldErrors.password?.[0],
+      });
+      return;
     }
+    // Очистим ошибки и выполним дальнейшее действие (вызов API/редирект)
+    setErrors({});
+    // TODO: здесь можно вызвать реальный login action
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -60,12 +64,12 @@ export default function LoginForm({
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">{t("welcomeBack")}</h1>
                 <p className="text-muted-foreground text-balance">
-                {t("loginToYourAccount")}
+                  {t("loginToYourAccount")}
                 </p>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="phone">{t("phone")}</Label>
-                <PhoneInput 
+                <PhoneInput
                   name="phone"
                   id="phone"
                   required
@@ -76,7 +80,9 @@ export default function LoginForm({
                   aria-describedby={errors.phone ? "phone-error" : undefined}
                 />
                 {errors.phone ? (
-                  <p id="phone-error" className="text-destructive text-xs">{errors.phone}</p>
+                  <p id="phone-error" className="text-destructive text-xs">
+                    {errors.phone}
+                  </p>
                 ) : null}
               </div>
               <div className="grid gap-3">
@@ -95,18 +101,24 @@ export default function LoginForm({
                   required
                   name="password"
                   aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? "password-error" : undefined}
+                  aria-describedby={
+                    errors.password ? "password-error" : undefined
+                  }
                   className="border-black"
                 />
                 {errors.password ? (
-                  <p id="password-error" className="text-destructive text-xs">{errors.password}</p>
+                  <p id="password-error" className="text-destructive text-xs">
+                    {errors.password}
+                  </p>
                 ) : null}
               </div>
               <Button type="submit" className="w-full">
                 {t("login")}
               </Button>
               {errors.form ? (
-                <p className="text-destructive text-center text-sm">{errors.form}</p>
+                <p className="text-destructive text-center text-sm">
+                  {errors.form}
+                </p>
               ) : null}
               {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -143,7 +155,7 @@ export default function LoginForm({
                 </Button>
               </div> */}
               <div className="text-center text-sm">
-                {t("dontHaveAnAccount")} {' '}
+                {t("dontHaveAnAccount")}{" "}
                 <Link href="/contact" className="underline underline-offset-4">
                   {t("contactUs")}
                 </Link>
@@ -165,5 +177,5 @@ export default function LoginForm({
         and <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  )
+  );
 }

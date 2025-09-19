@@ -1,26 +1,26 @@
-"use client"
-import { cn } from "@/lib/utils"
-import { Button } from "@/src/entities/button"
-import { Card, CardContent } from "@/src/entities/card"
-import { Input } from "@/src/entities/input"
-import { Label } from "@/src/entities/label"
-import { useTranslations } from "next-intl"
-import React, { useState } from "react"
-import { z } from "zod"
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/src/entities/button";
+import { Card, CardContent } from "@/src/entities/card";
+import { Input } from "@/src/entities/input";
+import { Label } from "@/src/entities/label";
+import { useTranslations } from "next-intl";
+import React, { useState } from "react";
+import { z } from "zod";
 
 export default function InviteForm({
   className,
   token,
   ...props
 }: React.ComponentProps<"div"> & { token: string }) {
-  const t = useTranslations("InviteForm")
+  const t = useTranslations("InviteForm");
 
   // Локальное состояние ошибок формы
   const [errors, setErrors] = useState<{
-    password?: string
-    confirm?: string
-    form?: string
-  }>({})
+    password?: string;
+    confirm?: string;
+    form?: string;
+  }>({});
 
   // Схема проверки пароля и совпадения
   const schema = z
@@ -28,31 +28,31 @@ export default function InviteForm({
       password: z.string().min(6, t("errors.passwordMin")),
       confirm: z.string().min(6, t("errors.passwordMin")),
     })
-    .refine((data) => data.password === data.confirm, {
+    .refine(data => data.password === data.confirm, {
       message: t("errors.passwordsMustMatch"),
       path: ["confirm"],
-    })
+    });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const data = {
       password: String(formData.get("password") || ""),
       confirm: String(formData.get("confirm") || ""),
-    }
-    const result = schema.safeParse(data)
+    };
+    const result = schema.safeParse(data);
     if (!result.success) {
-      const fieldErrors = result.error.flatten().fieldErrors
+      const fieldErrors = result.error.flatten().fieldErrors;
       setErrors({
         password: fieldErrors.password?.[0],
         confirm: fieldErrors.confirm?.[0],
-      })
-      return
+      });
+      return;
     }
-    setErrors({})
+    setErrors({});
     // TODO: вызвать server action / api c token + паролем
     // Пример: await finalizeInvite({ token, password: data.password })
-  }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -77,10 +77,14 @@ export default function InviteForm({
                   required
                   name="password"
                   aria-invalid={Boolean(errors.password)}
-                  aria-describedby={errors.password ? "password-error" : undefined}
+                  aria-describedby={
+                    errors.password ? "password-error" : undefined
+                  }
                 />
                 {errors.password ? (
-                  <p id="password-error" className="text-destructive text-xs">{errors.password}</p>
+                  <p id="password-error" className="text-destructive text-xs">
+                    {errors.password}
+                  </p>
                 ) : null}
               </div>
 
@@ -92,10 +96,14 @@ export default function InviteForm({
                   required
                   name="confirm"
                   aria-invalid={Boolean(errors.confirm)}
-                  aria-describedby={errors.confirm ? "confirm-error" : undefined}
+                  aria-describedby={
+                    errors.confirm ? "confirm-error" : undefined
+                  }
                 />
                 {errors.confirm ? (
-                  <p id="confirm-error" className="text-destructive text-xs">{errors.confirm}</p>
+                  <p id="confirm-error" className="text-destructive text-xs">
+                    {errors.confirm}
+                  </p>
                 ) : null}
               </div>
 
@@ -103,14 +111,14 @@ export default function InviteForm({
                 {t("save")}
               </Button>
               {errors.form ? (
-                <p className="text-destructive text-center text-sm">{errors.form}</p>
+                <p className="text-destructive text-center text-sm">
+                  {errors.form}
+                </p>
               ) : null}
             </div>
           </form>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
-

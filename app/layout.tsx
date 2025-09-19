@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "@/src/styles/shadcn.css";
 import { ThemeProvider } from "@/src/providers/theme-provider";
@@ -11,18 +10,13 @@ const nunito = Nunito({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Bagsy",
-  description: "Лучший сервис управления записями для вашего бизнеса",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <head>
         <link
           rel="icon"

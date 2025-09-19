@@ -1,14 +1,8 @@
 import createMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
 
-export const locales = ["ru", "kz"] as const;
-export const defaultLocale = "ru" as const;
-
-export default createMiddleware({
-  locales,
-  defaultLocale,
-  localeDetection: true,
-});
+export default createMiddleware(routing);
 
 export const config = {
-  matcher: ["/", "/(ru|kz)/:path*", "/((?!api|_next|_static|.*\\..*).*)"],
+  matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
 };

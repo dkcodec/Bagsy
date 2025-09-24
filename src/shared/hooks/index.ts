@@ -11,4 +11,3 @@ export * from "./use-appointments";
 
 // Хуки приглашений
 export * from "./use-invites";
-

@@ -16,4 +16,3 @@ export {
   inviteService,
   appointmentService,
 } from "./services";
-

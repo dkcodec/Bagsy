@@ -1,14 +1,128 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { format, parseISO, isValid } from "date-fns";
+import {
+  CalendarProvider,
+  ClientContainer,
+  mockEvents,
+  mockUsers,
+} from "@/src/calendar";
+import { ChangeBadgeVariantInput } from "@/src/calendar/components/change-badge-variant-input";
+import { useTranslations } from "next-intl";
+import { Loader, Loader2 } from "lucide-react";
+import { ChangeWorkingHoursInput } from "../calendar/components/change-working-hours-input";
+import { ChangeVisibleHoursInput } from "../calendar/components/change-visible-hours-input";
 
 const DashboardContent: React.FC = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const t = useTranslations("Dashboard.content");
+  // Получаем вид из URL или используем "month" по умолчанию
+  const getInitialView = (): "day" | "week" | "month" | "year" | "agenda" => {
+    const viewParam = searchParams.get("view");
+    const validViews = ["day", "week", "month", "year", "agenda"];
+    return validViews.includes(viewParam || "") ? (viewParam as any) : "month";
+  };
+
+  const [calendarView, setCalendarView] = useState<
+    "day" | "week" | "month" | "year" | "agenda"
+  >(getInitialView);
+
+  // Обновляем URL при изменении вида
+  const handleViewChange = (
+    view: "day" | "week" | "month" | "year" | "agenda"
+  ) => {
+    setCalendarView(view);
+
+    // Создаем новые параметры URL
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("view", view);
+
+    // Обновляем URL без перезагрузки страницы
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Получаем дату из URL или используем текущую дату
+  const getInitialDate = (): Date => {
+    const dateParam = searchParams.get("date");
+    if (dateParam) {
+      const parsedDate = parseISO(dateParam);
+      if (isValid(parsedDate)) {
+        return parsedDate;
+      }
+    }
+    return new Date();
+  };
+
+  const [selectedDate, setSelectedDate] = useState<Date>(getInitialDate);
+
+  // Обновляем URL при изменении даты
+  const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("date", format(date, "yyyy-MM-dd"));
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Синхронизируем состояние с URL при изменении параметров
+  useEffect(() => {
+    const viewParam = searchParams.get("view");
+    const validViews = ["day", "week", "month", "year", "agenda"];
+
+    if (viewParam && validViews.includes(viewParam)) {
+      setCalendarView(viewParam as any);
+    }
+
+    const dateParam = searchParams.get("date");
+    if (dateParam) {
+      const parsedDate = parseISO(dateParam);
+      if (isValid(parsedDate)) {
+        setSelectedDate(parsedDate);
+      }
+    }
+  }, [searchParams]);
+
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
+
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
-        <div className="aspect-video rounded-xl bg-muted/50" />
+        <div className="aspect-video rounded-xl bg-muted/50 border border-border" />
+        <div className="aspect-video rounded-xl bg-muted/50 border border-border" />
+        <div className="aspect-video rounded-xl bg-muted/50 border border-border" />
       </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+      {isMounted ? (
+        <CalendarProvider
+          events={mockEvents}
+          users={mockUsers}
+          initialDate={selectedDate}
+          onDateChange={handleDateChange}
+        >
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold">{t("calendar")}</h2>
+              <div className="flex items-center gap-4">
+                <ChangeBadgeVariantInput />
+              </div>
+            </div>
+            <ClientContainer
+              view={calendarView}
+              onViewChange={handleViewChange}
+            />
+            <ChangeWorkingHoursInput />
+            <ChangeVisibleHoursInput />
+          </div>
+        </CalendarProvider>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <Loader className="h-6 w-6 animate-spin" />
+        </div>
+      )}
     </div>
   );
 };

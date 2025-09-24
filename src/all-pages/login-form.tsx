@@ -8,22 +8,28 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useState } from "react";
 import { z } from "zod";
-import PhoneInput from "../widgets/phone-input";
+import { PhoneInput, PhoneInputValue } from "../widgets/phone-input";
+import { useLogin } from "@/src/shared/hooks/use-auth";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const t = useTranslations("LoginForm");
-  const [phone, setPhone] = useState("");
+  const loginMutation = useLogin();
+
+  // Состояние для телефона
+  const [phone, setPhone] = useState<PhoneInputValue>("");
 
   const loginSchema = z.object({
     phone: z
       .string()
       .min(1, t("errors.phoneRequired"))
       .refine(v => {
-        const digits = v.replace(/\D/g, "");
-        return digits.length >= 10 && digits.length <= 15;
+        // Проверяем E.164 формат: +7XXXXXXXXXX
+        return /^\+[1-9]\d{1,14}$/.test(v);
       }, t("errors.phoneInvalid")),
     password: z.string().min(6, t("errors.passwordMin")),
   });
@@ -34,13 +40,14 @@ export default function LoginForm({
     form?: string;
   }>({});
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = {
-      phone: String(formData.get("phone") || ""),
+      phone: phone, // Используем состояние телефона напрямую
       password: String(formData.get("password") || ""),
     };
+
     const result = loginSchema.safeParse(data);
     if (!result.success) {
       const fieldErrors = result.error.flatten().fieldErrors;
@@ -50,9 +57,23 @@ export default function LoginForm({
       });
       return;
     }
-    // Очистим ошибки и выполним дальнейшее действие (вызов API/редирект)
+    // Очистим ошибки
     setErrors({});
-    // TODO: здесь можно вызвать реальный login action
+
+    try {
+      // Вызываем мутацию логина
+      await loginMutation.mutateAsync({
+        ...result.data,
+        phone: phone.toString().replace(/^\+/, "").match(/\d/g)?.join("") || "",
+      });
+      toast.success(t("loginSuccess"));
+    } catch (error) {
+      console.error("Ошибка входа:", error);
+      toast.error(t("errors.loginError"));
+      setErrors({
+        form: t("errors.loginError"),
+      });
+    }
   };
 
   return (
@@ -112,8 +133,16 @@ export default function LoginForm({
                   </p>
                 ) : null}
               </div>
-              <Button type="submit" className="w-full">
-                {t("login")}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? (
+                  <Loader className="animate-loader" />
+                ) : (
+                  t("login")
+                )}
               </Button>
               {errors.form ? (
                 <p className="text-destructive text-center text-sm">
@@ -162,14 +191,6 @@ export default function LoginForm({
               </div>
             </div>
           </form>
-          {/* <div className="bg-muted relative hidden md:block">
-            <Image
-              src="/placeholder.png"
-              fill
-              alt="Image"
-              className="absolute inset-0 dark:brightness-[0.2] object-cover object-left"
-            />
-          </div> */}
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">

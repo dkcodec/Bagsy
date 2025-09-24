@@ -7,7 +7,7 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/pathnames": {
-      kz: "/pfadnamen",
+      kz: "/pathnames",
     },
   },
 });

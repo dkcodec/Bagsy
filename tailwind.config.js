@@ -12,10 +12,35 @@ module.exports = {
       fontFamily: {
         nunito: ["var(--font-nunito)"],
       },
+      fontSize: {
+        xxs: ["0.625rem", "1rem"],
+      },
+      maxWidth: {
+        "8xl": "90rem",
+      },
+      screens: {
+        xs: "460px",
+        sm: "576px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1440px",
+      },
+      spacing: {
+        18: "4.5rem",
+        4.5: "1.125rem",
+        5.5: "1.375rem",
+        6.5: "1.625rem",
+        8.5: "2.125rem",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        "calendar-disabled-hour":
+          "repeating-linear-gradient(-60deg, hsl(var(--border)) 0 0.5px, transparent 0.5px 8px)",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -40,8 +65,9 @@ module.exports = {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
+        mutedBackground: "hsl(var(--muted-background))",
         accent: {
-          50: "hsl(35.65 100% 95%)",
+          50: "hsla(35.65 100% 95%)",
           100: "hsl(35.65 100% 90%)",
           200: "hsl(35.65 100% 80%)",
           300: "hsl(35.65 100% 70%)",
@@ -79,6 +105,28 @@ module.exports = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

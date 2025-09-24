@@ -1,20 +1,20 @@
 "use client";
 import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
+  HelpCircle,
+  Mail,
   Map,
   PieChart,
+  Search,
+  Settings,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
 
 import { NavMain } from "@/src/widgets/nav-main";
-import { NavProjects } from "@/src/widgets/nav-projects";
 import { NavUser } from "@/src/widgets/nav-user";
 import {
   Sidebar,
@@ -24,31 +24,14 @@ import {
   SidebarRail,
 } from "@/src/entities/sidebar";
 import { ThemeLogo } from "@/src/widgets/theme-logo";
+import { NavProjects } from "./nav-projects";
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -138,19 +121,19 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Settings",
       url: "#",
-      icon: Frame,
+      icon: Settings,
     },
     {
-      name: "Sales & Marketing",
+      name: "Get help",
       url: "#",
-      icon: PieChart,
+      icon: HelpCircle,
     },
     {
-      name: "Travel",
+      name: "Search",
       url: "#",
-      icon: Map,
+      icon: Search,
     },
   ],
 };
@@ -158,10 +141,10 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="pb-0">
+      <SidebarHeader className="pb-2">
         <ThemeLogo alt="Logo" />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="flex flex-col justify-between">
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>

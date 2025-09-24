@@ -2,6 +2,19 @@
   "LocaleLayout": {
     "title": "Bagsy — управление записями"
   },
+  "Sidebar": {
+    "Sidebar": "Боковое меню",
+    "sidebarDescription": "Отображает боковое меню."
+  },
+  "Dashboard": {
+    "content": {
+      "calendar": "Календарь"
+    },
+    "title": {
+      "welcome": "Добро пожаловать!",
+      "panel": "Панель {name}"
+    }
+  },
   "LoginForm": {
     "welcomeBack": "Добро пожаловать",
     "loginToYourAccount": "Войдите в свой аккаунт Bagsy",
@@ -12,10 +25,13 @@
     "signUp": "Зарегистрироваться",
     "dontHaveAnAccount": "Нет аккаунта?",
     "contactUs": "Свяжитесь с нами",
+    "loginSuccess": "Вход выполнен успешно",
     "errors": {
       "phoneRequired": "Введите номер телефона",
       "phoneInvalid": "Некорректный номер телефона",
-      "passwordMin": "Минимум 6 символов"
+      "passwordMin": "Минимум 6 символов",
+      "loginSuccess": "Вход выполнен успешно",
+      "loginError": "Ошибка входа, попробуйте позже"
     }
   },
   "InviteForm": {

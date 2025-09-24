@@ -1,7 +1,9 @@
 import { Nunito } from "next/font/google";
 import "@/src/styles/shadcn.css";
 import { ThemeProvider } from "@/src/providers/theme-provider";
+import { QueryProvider } from "@/src/providers/query-provider";
 import { Analytics } from "@vercel/analytics/next";
+import { Toaster } from "sonner";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -32,15 +34,18 @@ export default function RootLayout({
         />
       </head>
       <body className={nunito.className} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
 
+          <Toaster />
+        </QueryProvider>
         <Analytics />
       </body>
     </html>

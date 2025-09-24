@@ -2,17 +2,36 @@
   "LocaleLayout": {
     "title": "Bagsy — жазбаларды басқару"
   },
+  "Sidebar": {
+    "Sidebar": "Боковое меню",
+    "sidebarDescription": "Боковое меню көрсетеді."
+  },
+  "Dashboard": {
+    "content": {
+      "calendar": "Күнтізбе"
+    },
+    "title": {
+      "welcome": "Кош келдіңіз!",
+      "panel": "Панель {name}"
+    }
+  },
   "LoginForm": {
-    "welcomeBack": "Қош келдіңіз",
+    "welcomeBack": "Кош келдіңіз",
     "loginToYourAccount": "Bagsy тіркелгіңізге кіріңіз",
     "phone": "Телефон",
-    "password": "Пароль",
+    "password": "Құпия сөз",
+    "login": "Кіру",
     "forgotPassword": "Құпия сөзді ұмыттыңыз ба?",
     "signUp": "Тіркелгіні жасау",
+    "dontHaveAnAccount": "Тіркелгі жоқ па?",
+    "contactUs": "Бізбен байланысыңыз",
+    "loginSuccess": "Кіру сәтті",
     "errors": {
       "phoneRequired": "Телефон нөмірін енгізіңіз",
       "phoneInvalid": "Дұрыс емес телефон нөмірі",
-      "passwordMin": "Кемінде 6 таңба"
+      "passwordMin": "Кемінде 6 таңба",
+      "loginSuccess": "Кіру сәтті",
+      "loginError": "Кіру сәтсіз, әзірше қайталап көріңіз"
     }
   },
   "InviteForm": {

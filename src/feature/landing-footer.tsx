@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Link from "next/link";
+import { formatPhone } from "../shared/utils/formater";
 
 export async function LandingFooter() {
   const t = await getTranslations("Landing.footer");
@@ -117,19 +118,19 @@ export async function LandingFooter() {
               <li className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                 <Mail className="h-4 w-4 text-accent-500" />
                 <a
-                  href="mailto:dbagsy25@gmail.com"
+                  href={`mailto:${process.env.NEXT_PUBLIC_EMAIL}`}
                   className="hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
                 >
-                  dbagsy25@gmail.com
+                  {process.env.NEXT_PUBLIC_EMAIL}
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                 <Phone className="h-4 w-4 text-accent-500" />
                 <a
-                  href="tel:+77064267210"
+                  href={`tel:+${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
                   className="hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
                 >
-                  +7 (706) 426-72-10
+                  {formatPhone(process.env.NEXT_PUBLIC_PHONE_NUMBER || "")}
                 </a>
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">

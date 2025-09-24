@@ -54,7 +54,7 @@ export function AuthStatus() {
         </div>
         <div>
           <p className="text-sm text-muted-foreground">Email:</p>
-          <p className="font-medium">{user?.email}</p>
+          <p className="font-medium">{user?.phone}</p>
         </div>
         <div>
           <p className="text-sm text-muted-foreground">Роль:</p>

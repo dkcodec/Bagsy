@@ -38,14 +38,14 @@ export function useUserAppointments(params?: PaginationParams) {
 /**
  * Хук для получения всех записей (для администраторов)
  */
-export function useAllAppointments(params?: PaginationParams) {
-  return useQuery({
-    queryKey: appointmentKeys.list({ ...params, admin: true }),
-    queryFn: () => appointmentService.getAllAppointments(params),
-    staleTime: 2 * 60 * 1000,
-    gcTime: 5 * 60 * 1000,
-  });
-}
+// export function useAllAppointments(params?: PaginationParams) {
+//   return useQuery({
+//     queryKey: appointmentKeys.list({ ...params, admin: true }),
+//     queryFn: () => appointmentService.getAllAppointments(params),
+//     staleTime: 2 * 60 * 1000,
+//     gcTime: 5 * 60 * 1000,
+//   });
+// }
 
 /**
  * Хук для получения записи по ID

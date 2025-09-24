@@ -20,20 +20,19 @@ const DashboardContent: React.FC = () => {
   const router = useRouter();
   const t = useTranslations("Dashboard.content");
   // Получаем вид из URL или используем "month" по умолчанию
-  const getInitialView = (): "day" | "week" | "month" | "year" | "agenda" => {
+  type View = "day" | "week" | "month" | "year" | "agenda";
+  const isView = (v: string): v is View =>
+    ["day", "week", "month", "year", "agenda"].includes(v as View);
+
+  const getInitialView = (): View => {
     const viewParam = searchParams.get("view");
-    const validViews = ["day", "week", "month", "year", "agenda"];
-    return validViews.includes(viewParam || "") ? (viewParam as any) : "month";
+    return viewParam && isView(viewParam) ? viewParam : "month";
   };
 
-  const [calendarView, setCalendarView] = useState<
-    "day" | "week" | "month" | "year" | "agenda"
-  >(getInitialView);
+  const [calendarView, setCalendarView] = useState<View>(getInitialView);
 
   // Обновляем URL при изменении вида
-  const handleViewChange = (
-    view: "day" | "week" | "month" | "year" | "agenda"
-  ) => {
+  const handleViewChange = (view: View) => {
     setCalendarView(view);
 
     // Создаем новые параметры URL
@@ -71,10 +70,8 @@ const DashboardContent: React.FC = () => {
   // Синхронизируем состояние с URL при изменении параметров
   useEffect(() => {
     const viewParam = searchParams.get("view");
-    const validViews = ["day", "week", "month", "year", "agenda"];
-
-    if (viewParam && validViews.includes(viewParam)) {
-      setCalendarView(viewParam as any);
+    if (viewParam && isView(viewParam)) {
+      setCalendarView(viewParam);
     }
 
     const dateParam = searchParams.get("date");

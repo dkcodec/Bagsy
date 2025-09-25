@@ -48,16 +48,17 @@ export function LandingHeader() {
 
           {/* Кнопки действий */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <Link
-                href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
-              >
+            <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}>
+              <Button variant="ghost" size="sm" asChild>
                 {t("login")}
-              </Link>
-            </Button>
-            <Button size="sm">
-              <Link href="#pricing">{t("startFree")}</Link>
-            </Button>
+              </Button>
+            </Link>
+
+            <Link href="#pricing">
+              <Button size="sm" asChild>
+                {t("startFree")}
+              </Button>
+            </Link>
             <LocaleSwitcher />
             <ThemeToggle />
           </div>

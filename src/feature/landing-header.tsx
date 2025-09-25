@@ -6,12 +6,13 @@ import { LandingLogo } from "@/src/widgets/landing-logo";
 import { LocaleSwitcher } from "@/src/widgets/locale-switcher";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
 export function LandingHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const t = useTranslations("Landing.header");
+  const locale = useLocale();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/40 dark:bg-background/40 backdrop-blur-md border-b border-backgroung dark:border-background">
@@ -48,7 +49,9 @@ export function LandingHeader() {
           {/* Кнопки действий */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="sm">
-              <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+              <Link
+                href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+              >
                 {t("login")}
               </Link>
             </Button>
@@ -104,7 +107,9 @@ export function LandingHeader() {
                 {t("contact")}
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-background">
-                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                >
                   {t("login")}
                 </Link>
                 <Link href="#pricing">{t("startFree")}</Link>

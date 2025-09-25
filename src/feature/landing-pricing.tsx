@@ -1,4 +1,5 @@
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
+import { useLocale } from "next-intl";
 import { Button } from "@/src/entities/button";
 import {
   Card,
@@ -13,6 +14,7 @@ import Link from "next/link";
 
 export async function LandingPricing() {
   const t = await getTranslations("Landing.pricing");
+  const locale = await getLocale();
 
   return (
     <section className="py-24 bg-gradient-to-br from-background via-accent-50 to-background dark:from-background dark:via-accent-950 dark:to-background">
@@ -73,7 +75,9 @@ export async function LandingPricing() {
                 ))}
               </ul>
               <Button className="w-full mt-6" size="lg">
-                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                >
                   {t("free.cta")}
                 </Link>
               </Button>
@@ -135,7 +139,9 @@ export async function LandingPricing() {
                 className="w-full mt-6 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700"
                 size="lg"
               >
-                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                >
                   {t("popular.cta")}
                 </Link>
               </Button>
@@ -188,7 +194,9 @@ export async function LandingPricing() {
                 size="lg"
                 disabled
               >
-                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                >
                   {t("future.cta")}
                 </Link>
               </Button>
@@ -210,7 +218,9 @@ export async function LandingPricing() {
                 <Link href="/contact">{t("additional.contact")}</Link>
               </Button>
               <Button size="lg">
-                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                <Link
+                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                >
                   {t("additional.start")}
                 </Link>
               </Button>

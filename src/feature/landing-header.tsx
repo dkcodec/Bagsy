@@ -48,7 +48,9 @@ export function LandingHeader() {
           {/* Кнопки действий */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="sm">
-              <Link href="/login">{t("login")}</Link>
+              <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                {t("login")}
+              </Link>
             </Button>
             <Button size="sm">
               <Link href="#pricing">{t("startFree")}</Link>
@@ -102,7 +104,9 @@ export function LandingHeader() {
                 {t("contact")}
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-background">
-                <Link href="/login">{t("login")}</Link>
+                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                  {t("login")}
+                </Link>
                 <Link href="#pricing">{t("startFree")}</Link>
               </div>
             </nav>

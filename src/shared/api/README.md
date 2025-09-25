@@ -37,7 +37,7 @@ function LoginComponent() {
   const handleLogin = async credentials => {
     try {
       await login.mutateAsync(credentials);
-      // Автоматический редирект на /dashboard
+      // Автоматический редирект на "/" (далее рут редиректит на локаль)
     } catch (error) {
       // Обработка ошибок
     }

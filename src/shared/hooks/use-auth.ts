@@ -47,8 +47,8 @@ export function useLogin() {
       // queryClient.setQueryData(authKeys.user(), data.user);
       // Инвалидируем все запросы для обновления данных
       queryClient.invalidateQueries({ queryKey: authKeys.all });
-      // Перенаправляем на дашборд
-      router.push("/dashboard");
+      // Перенаправляем на корень (далее редирект на локаль/лендинг)
+      router.push("/");
     },
     onError: error => {
       console.error("Ошибка входа:", error);

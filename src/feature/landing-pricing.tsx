@@ -73,7 +73,9 @@ export async function LandingPricing() {
                 ))}
               </ul>
               <Button className="w-full mt-6" size="lg">
-                <Link href="/login">{t("free.cta")}</Link>
+                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                  {t("free.cta")}
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -133,7 +135,9 @@ export async function LandingPricing() {
                 className="w-full mt-6 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700"
                 size="lg"
               >
-                <Link href="/login">{t("popular.cta")}</Link>
+                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                  {t("popular.cta")}
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -184,7 +188,9 @@ export async function LandingPricing() {
                 size="lg"
                 disabled
               >
-                <Link href="/login">{t("future.cta")}</Link>
+                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                  {t("future.cta")}
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -204,7 +210,9 @@ export async function LandingPricing() {
                 <Link href="/contact">{t("additional.contact")}</Link>
               </Button>
               <Button size="lg">
-                <Link href="/login">{t("additional.start")}</Link>
+                <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}/login`}>
+                  {t("additional.start")}
+                </Link>
               </Button>
             </div>
           </div>

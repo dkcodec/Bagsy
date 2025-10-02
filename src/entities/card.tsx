@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 const Card = React.forwardRef<
   HTMLDivElement,

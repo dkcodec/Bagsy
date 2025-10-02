@@ -5,8 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/src/entities/card";
-import { Badge } from "@/src/entities/badge";
+} from "@/entities/card";
+import { Badge } from "@/entities/badge";
 import {
   Calendar,
   Smartphone,
@@ -89,10 +89,6 @@ export async function LandingFeatures() {
                   <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {description}
                   </CardDescription>
-                  {/* <div className="mt-4 flex items-center text-accent-500 dark:text-accent-200 text-sm font-medium group-hover:gap-2 transition-all">
-                    <span>{t("learnMore")}</span>
-                    <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div> */}
                 </CardContent>
               </Card>
             );

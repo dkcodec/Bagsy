@@ -1,5 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { Button } from "@/src/entities/button";
+import { Button } from "@/entities/button";
 import { Calendar, Clock, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";
 

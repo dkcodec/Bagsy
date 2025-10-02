@@ -1,6 +1,6 @@
 import { cloneElement, Children, forwardRef, useMemo } from "react";
 
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 import type { ElementRef, HTMLAttributes, ReactElement } from "react";
 

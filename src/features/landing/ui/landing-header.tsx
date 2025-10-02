@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@/src/entities/button";
-import { ThemeToggle } from "@/src/widgets/theme-toggle";
-import { LandingLogo } from "@/src/widgets/landing-logo";
-import { LocaleSwitcher } from "@/src/widgets/locale-switcher";
+import { Button } from "@/entities/button";
+import { ThemeToggle } from "@/widgets/controls/theme-toggle";
+import { LandingLogo } from "@/widgets/branding/landing-logo";
+import { LocaleSwitcher } from "@/widgets/controls/locale-switcher";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";

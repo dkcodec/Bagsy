@@ -37,7 +37,7 @@ class ApiClient {
         ...options.headers,
       },
       // Включаем cookies для автоматической отправки httpOnly cookies
-      // credentials: "include",
+      credentials: "include",
       ...options,
     };
 

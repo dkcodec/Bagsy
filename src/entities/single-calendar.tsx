@@ -4,9 +4,9 @@ import * as React from "react";
 import { DayPicker } from "react-day-picker";
 import { ru, kk } from "react-day-picker/locale";
 
-import { buttonVariants } from "@/src/entities/button";
+import { buttonVariants } from "@/entities/button";
 
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 // Анализ: Ошибка связана с тем, что в типе DayPickerSingleProps нет свойств className, classNames, showOutsideDays. Это вызывает ошибки типов. Возможно, эти пропсы нужны для кастомизации, но их нужно явно добавить в пропсы компонента или использовать Partial/any. Также стоит проверить, нужны ли все эти пропсы DayPicker, и не дублируются ли они. Можно упростить типизацию, чтобы избежать ошибок и сохранить гибкость.
 

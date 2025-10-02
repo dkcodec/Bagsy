@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
-import { LandingLogo } from "@/src/widgets/landing-logo";
-import { Separator } from "@/src/entities/separator";
+import { LandingLogo } from "@/widgets/branding/landing-logo";
+import { Separator } from "@/entities/separator";
 import {
   Facebook,
   Twitter,
@@ -11,7 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Link from "next/link";
-import { formatPhone } from "../shared/utils/formater";
+import { formatPhone } from "@/shared/utils/formater";
 
 export async function LandingFooter() {
   const t = await getTranslations("Landing.footer");
@@ -49,22 +49,6 @@ export async function LandingFooter() {
                   {t("pricing")}
                 </a>
               </li>
-              {/* <li>
-                <a
-                  href="#integrations"
-                  className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
-                >
-                  {t("integrations")}
-                </a>
-              </li> */}
-              {/* <li>
-                <a
-                  href="#api"
-                  className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
-                >
-                  {t("api")}
-                </a>
-              </li> */}
             </ul>
           </div>
 
@@ -74,30 +58,6 @@ export async function LandingFooter() {
               {t("support")}
             </h3>
             <ul className="space-y-2">
-              {/* <li>
-                <Link
-                  href="#contact"
-                  className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
-                >
-                  {t("help")}
-                </Link>
-              </li> */}
-              {/* <li>
-                <Link
-                  href="#docs"
-                  className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
-                >
-                  {t("docs")}
-                </Link>
-              </li> */}
-              {/* <li>
-                <a
-                  href="#status"
-                  className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
-                >
-                  {t("status")}
-                </a>
-              </li> */}
               <li>
                 <a
                   href="#contact"

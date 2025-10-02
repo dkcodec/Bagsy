@@ -1,38 +1,31 @@
-import {
-  LandingHeader,
-  LandingHero,
-  LandingFeatures,
-  LandingCTA,
-  LandingFooter,
-  LandingPricing,
-} from "@/src/feature";
+import { landing } from "@/features";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen">
-      <LandingHeader />
+      <landing.LandingHeader />
 
       <main>
         <div id="hero">
-          <LandingHero />
+          <landing.LandingHero />
         </div>
 
         <div id="features">
-          <LandingFeatures />
+          <landing.LandingFeatures />
         </div>
 
         <div id="pricing">
-          <LandingPricing />
+          <landing.LandingPricing />
         </div>
 
         <div id="cta">
-          <LandingCTA />
+          <landing.LandingCTA />
         </div>
       </main>
 
       {/* Footer */}
       <div id="contact">
-        <LandingFooter />
+        <landing.LandingFooter />
       </div>
     </div>
   );

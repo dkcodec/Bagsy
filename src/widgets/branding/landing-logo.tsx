@@ -4,10 +4,6 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-/**
- * Логотип для Landing page
- * Не зависит от sidebar контекста
- */
 export function LandingLogo({
   width = 120,
   height = 40,

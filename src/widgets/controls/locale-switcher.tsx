@@ -2,16 +2,15 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { Button } from "@/src/entities/button";
+import { Button } from "@/entities/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/src/widgets/dropdown-menu";
+} from "@/widgets/common/dropdown-menu";
 import { Globe } from "lucide-react";
 
-// Конфигурация языков
 const locales = [
   { code: "ru", name: "russian" },
   { code: "kz", name: "kazakh" },
@@ -23,10 +22,8 @@ export function LocaleSwitcher() {
   const pathname = usePathname();
   const t = useTranslations("Landing.header");
 
-  // Получаем текущий язык
   const currentLocale = locales.find(l => l.code === locale);
 
-  // Обработчик смены языка
   const handleLocaleChange = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
   };

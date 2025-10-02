@@ -1,14 +1,9 @@
-/**
- * Компонент для отображения статуса авторизации
- * Демонстрирует использование хуков авторизации
- */
-
 "use client";
 
-import { useAuth } from "@/src/shared/hooks";
-import { Button } from "@/src/entities/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/entities/card";
-import { Skeleton } from "@/src/entities/skeleton";
+import { useAuth } from "@/shared/hooks";
+import { Button } from "@/entities/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
+import { Skeleton } from "@/entities/skeleton";
 
 export function AuthStatus() {
   const { user, isLoading, isAuthenticated, logout, isLoggingOut } = useAuth();

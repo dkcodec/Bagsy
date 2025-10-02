@@ -1,14 +1,14 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { useLocale } from "next-intl";
-import { Button } from "@/src/entities/button";
+import { Button } from "@/entities/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/src/entities/card";
-import { Badge } from "@/src/entities/badge";
+} from "@/entities/card";
+import { Badge } from "@/entities/badge";
 import { Check, Star, Zap, Users, Crown } from "lucide-react";
 import Link from "next/link";
 
@@ -123,9 +123,7 @@ export async function LandingPricing() {
                 {[
                   t("popular.features.unlimited"),
                   t("popular.features.analytics"),
-                  //   t("popular.features.integrations"),
                   t("popular.features.priority"),
-                  //   t("popular.features.customization"),
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
                     <Check className="h-5 w-5 text-accent-500 flex-shrink-0" />

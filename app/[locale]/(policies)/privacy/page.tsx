@@ -6,7 +6,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from "@/src/entities/breadcrumb";
+} from "@/entities/breadcrumb";
 
 // Локализованные метаданные берутся из messages через next-intl
 export async function generateMetadata() {

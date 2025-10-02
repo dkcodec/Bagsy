@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { DateInput, DateSegment, TimeField } from "react-aria-components";
 
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 import type { TimeFieldProps, TimeValue } from "react-aria-components";
 

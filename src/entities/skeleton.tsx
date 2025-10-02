@@ -1,4 +1,4 @@
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 function Skeleton({
   className,

@@ -1,16 +1,12 @@
 import { format } from "date-fns";
 
-import { useDisclosure } from "@/src/shared/hooks/use-disclosure";
+import { useDisclosure } from "@/shared/hooks/use-disclosure";
 
-import { Button } from "@/src/entities/button";
-import { SingleCalendar } from "@/src/entities/single-calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/src/entities/popover";
+import { Button } from "@/entities/button";
+import { SingleCalendar } from "@/entities/single-calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/entities/popover";
 
-import { cn } from "@/src/shared/utils/styles";
+import { cn } from "@/shared/utils/styles";
 
 import type { ButtonHTMLAttributes } from "react";
 

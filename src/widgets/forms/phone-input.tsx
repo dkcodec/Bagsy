@@ -172,7 +172,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           type="button"
           variant="outline"
           className={cn(
-            "rounded-e-none rounded-s-md border-r-0 px-3 text-sm bg-transparent border-black",
+            "rounded-e-none rounded-s-md border-r-0 px-3 text-sm bg-transparen",
             "h-9"
           )}
           onClick={() => setOpen(s => !s)}
@@ -189,7 +189,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="rounded-s-none border-black"
+          className="rounded-s-none"
           inputMode="tel"
           {...props}
         />

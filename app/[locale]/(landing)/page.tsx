@@ -1,4 +1,4 @@
-import { landing } from "@/features";
+﻿import { landing } from "@/features";
 
 export default function LandingPage() {
   return (
@@ -14,8 +14,12 @@ export default function LandingPage() {
           <landing.LandingFeatures />
         </div>
 
-        <div id="pricing">
+        {/* <div id="pricing">
           <landing.LandingPricing />
+        </div> */}
+
+        <div id="contact">
+          <landing.LandingContact />
         </div>
 
         <div id="cta">
@@ -23,10 +27,7 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <div id="contact">
-        <landing.LandingFooter />
-      </div>
+      <landing.LandingFooter />
     </div>
   );
 }

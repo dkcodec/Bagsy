@@ -1,5 +1,4 @@
 import { getTranslations, getLocale } from "next-intl/server";
-import { useLocale } from "next-intl";
 import { Button } from "@/entities/button";
 import {
   Card,

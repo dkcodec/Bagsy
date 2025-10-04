@@ -33,7 +33,7 @@ export function LandingHeader() {
               {t("features")}
             </Link>
             <Link
-              href="#pricing"
+              href="#contact"
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
             >
               {t("pricing")}
@@ -54,7 +54,7 @@ export function LandingHeader() {
               </Button>
             </Link>
 
-            <Link href="#pricing">
+            <Link href="#contact">
               <Button size="sm">{t("startFree")}</Button>
             </Link>
             <LocaleSwitcher />
@@ -92,7 +92,7 @@ export function LandingHeader() {
                 {t("features")}
               </Link>
               <Link
-                href="#pricing"
+                href="#contact"
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -111,7 +111,7 @@ export function LandingHeader() {
                 >
                   {t("login")}
                 </Link>
-                <Link href="#pricing">{t("startFree")}</Link>
+                <Link href="#contact">{t("startFree")}</Link>
               </div>
             </nav>
           </div>

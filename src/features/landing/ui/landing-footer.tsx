@@ -43,7 +43,7 @@ export async function LandingFooter() {
               </li>
               <li>
                 <a
-                  href="#pricing"
+                  href="#contact"
                   className="text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 text-sm transition-colors"
                 >
                   {t("pricing")}

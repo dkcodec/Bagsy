@@ -33,7 +33,7 @@ import {
   CardTitle,
 } from "@/entities/card";
 import { Badge } from "@/entities/badge";
-import { CheckCircle2, Mail, MapPin, Phone, Rocket, Clock } from "lucide-react";
+import { Mail, MapPin, Phone, Rocket, Clock } from "lucide-react";
 import { formatPhone } from "@/shared/utils/formater";
 import { PhoneInput } from "@/src/widgets/forms/phone-input";
 import { apiClient } from "@/src/shared/api/client";

@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { Button } from "@/entities/button";
 import { Calendar, Clock, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";

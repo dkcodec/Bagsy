@@ -137,7 +137,7 @@ export function LandingContact() {
 
   const onSubmit = async (values: ContactFormValues) => {
     try {
-      await apiClient.post("/api/v1/forms", values);
+      await apiClient.post("v1/forms", values);
 
       toast.success(t("success.title"), {
         description: t("success.description"),

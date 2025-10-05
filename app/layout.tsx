@@ -71,14 +71,12 @@ export default function RootLayout({
           href="/logo-light.svg"
           type="image/svg+xml"
           media="(prefers-color-scheme: light)"
-          hrefLang={defaultLocale}
         />
         <link
           rel="icon"
           href="/logo-dark.svg"
           type="image/svg+xml"
           media="(prefers-color-scheme: dark)"
-          hrefLang={defaultLocale}
         />
       </head>
       <body className={nunito.className} suppressHydrationWarning>

@@ -1,4 +1,5 @@
 import { routing, defaultLocale } from "@/i18n/routing";
+import { localeToHreflang, ogLocaleMap } from "@/src/shared/constants";
 import type { Metadata } from "next";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import {
@@ -26,11 +27,6 @@ export async function generateMetadata(
   const baseNormalized = base.replace(/\/+$/, "");
   const canonical = `${baseNormalized}/${locale}`;
 
-  const localeToHreflang: Record<string, string> = {
-    ru: "ru",
-    kz: "kk-KZ",
-  };
-
   const languages = routing.locales.reduce<Record<string, string>>((acc, l) => {
     const hreflang = localeToHreflang[l] || l;
     acc[hreflang] = `${baseNormalized}/${l}`;
@@ -52,7 +48,8 @@ export async function generateMetadata(
       title: t("title"),
       description,
       url: canonical,
-      locale,
+      locale: ogLocaleMap[locale] ?? "ru_KZ",
+      alternateLocale: ["ru_KZ", "kk_KZ"],
       siteName: "Bagsy",
       images: [
         {

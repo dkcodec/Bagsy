@@ -76,6 +76,7 @@ export function LandingHeader() {
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="p-2"
+              aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
             >
               {isMenuOpen ? (
                 <X className="h-5 w-5" />

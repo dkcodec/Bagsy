@@ -22,15 +22,22 @@ export async function generateMetadata(
     namespace: "LocaleLayout",
   });
 
-  // Build i18n alternates and canonical
   const base = process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz";
-  const currentPath = `/${locale}`; // layout root
-  const languages = Object.fromEntries(
-    routing.locales.map(l => [l, `${base}/${l}`])
-  );
+  const baseNormalized = base.replace(/\/+$/, "");
+  const canonical = `${baseNormalized}/${locale}`;
 
-  const isDefault = locale === defaultLocale;
-  const canonical = `${base}/${locale}`;
+  const localeToHreflang: Record<string, string> = {
+    ru: "ru",
+    kz: "kk-KZ",
+  };
+
+  const languages = routing.locales.reduce<Record<string, string>>((acc, l) => {
+    const hreflang = localeToHreflang[l] || l;
+    acc[hreflang] = `${baseNormalized}/${l}`;
+    return acc;
+  }, {});
+
+  languages["x-default"] = `${baseNormalized}/${defaultLocale}`;
 
   const description = t("description");
 
@@ -49,7 +56,7 @@ export async function generateMetadata(
       siteName: "Bagsy",
       images: [
         {
-          url: "/logo-full-light.svg",
+          url: "/logo-full-dark.svg",
           width: 1200,
           height: 630,
           alt: "Bagsy",
@@ -60,7 +67,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       title: t("title"),
       description,
-      images: ["/logo-full-light.svg"],
+      images: ["/logo-full-dark.svg"],
     },
   };
 

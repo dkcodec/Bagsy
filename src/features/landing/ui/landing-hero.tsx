@@ -1,11 +1,11 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Button } from "@/entities/button";
 import { Calendar, Clock, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";
 
 export async function LandingHero() {
   const t = await getTranslations("Landing.hero");
-
+  const locale = await getLocale();
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-accent-100 via-white to-accent-100 dark:from-accent-950 dark:via-background dark:to-accent-950">
       {/* Декоративные элементы */}
@@ -28,10 +28,14 @@ export async function LandingHero() {
           {/* Кнопки действий */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button size="lg" className="text-lg px-8 py-4">
-              <Link href="#contact">{t("cta")}</Link>
+              <Link href="#contact" hrefLang={locale}>
+                {t("cta")}
+              </Link>
             </Button>
             <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-              <Link href="#features">{t("learnMore")}</Link>
+              <Link href="#features" hrefLang={locale}>
+                {t("learnMore")}
+              </Link>
             </Button>
           </div>
 

@@ -1,4 +1,5 @@
-import { routing } from "@/i18n/routing";
+import { routing, defaultLocale } from "@/i18n/routing";
+import type { Metadata } from "next";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import {
   getMessages,
@@ -21,9 +22,49 @@ export async function generateMetadata(
     namespace: "LocaleLayout",
   });
 
-  return {
+  // Build i18n alternates and canonical
+  const base = process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz";
+  const currentPath = `/${locale}`; // layout root
+  const languages = Object.fromEntries(
+    routing.locales.map(l => [l, `${base}/${l}`])
+  );
+
+  const isDefault = locale === defaultLocale;
+  const canonical = `${base}/${locale}`;
+
+  const description = t("description");
+
+  const metadata: Metadata = {
     title: t("title"),
+    description,
+    alternates: {
+      canonical,
+      languages,
+    },
+    openGraph: {
+      title: t("title"),
+      description,
+      url: canonical,
+      locale,
+      siteName: "Bagsy",
+      images: [
+        {
+          url: "/logo-full-light.svg",
+          width: 1200,
+          height: 630,
+          alt: "Bagsy",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description,
+      images: ["/logo-full-light.svg"],
+    },
   };
+
+  return metadata;
 }
 
 export default async function LocaleLayout({

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,6 +16,7 @@ export async function generateMetadata() {
 
 // Полностью локализованная страница через next-intl ключи
 export default async function TermsPage() {
+  const locale = await getLocale();
   const t = await getTranslations("TermsPage");
   return (
     <main className="container mx-auto max-w-3xl px-4 py-10">
@@ -186,6 +187,7 @@ export default async function TermsPage() {
           <Link
             href="/privacy"
             className="hover:underline hover:text-accent-500"
+            hrefLang={locale}
           >
             {t("footer.privacy")}
           </Link>

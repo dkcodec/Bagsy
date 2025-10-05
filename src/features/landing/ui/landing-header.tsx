@@ -19,7 +19,7 @@ export function LandingHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="#hero">
+            <Link href="#hero" hrefLang={locale}>
               <LandingLogo className="h-8 w-auto" />
             </Link>
           </div>
@@ -29,18 +29,21 @@ export function LandingHeader() {
             <Link
               href="#features"
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
+              hrefLang={locale}
             >
               {t("features")}
             </Link>
             <Link
               href="#contact"
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
+              hrefLang={locale}
             >
               {t("pricing")}
             </Link>
             <Link
               href="#contact"
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
+              hrefLang={locale}
             >
               {t("contact")}
             </Link>
@@ -48,13 +51,16 @@ export function LandingHeader() {
 
           {/* Кнопки действий */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+              hrefLang={locale}
+            >
               <Button variant="ghost" size="sm">
                 {t("login")}
               </Button>
             </Link>
 
-            <Link href="#contact">
+            <Link href="#contact" hrefLang={locale}>
               <Button size="sm">{t("startFree")}</Button>
             </Link>
             <LocaleSwitcher />
@@ -88,6 +94,7 @@ export function LandingHeader() {
                 href="#features"
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
+                hrefLang={locale}
               >
                 {t("features")}
               </Link>
@@ -95,6 +102,7 @@ export function LandingHeader() {
                 href="#contact"
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
+                hrefLang={locale}
               >
                 {t("pricing")}
               </Link>
@@ -102,16 +110,20 @@ export function LandingHeader() {
                 href="#contact"
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
+                hrefLang={locale}
               >
                 {t("contact")}
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-background">
                 <Link
                   href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                  hrefLang={locale}
                 >
                   {t("login")}
                 </Link>
-                <Link href="#contact">{t("startFree")}</Link>
+                <Link href="#contact" hrefLang={locale}>
+                  {t("startFree")}
+                </Link>
               </div>
             </nav>
           </div>

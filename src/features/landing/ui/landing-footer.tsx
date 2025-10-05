@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { LandingLogo } from "@/widgets/branding/landing-logo";
 import { Separator } from "@/entities/separator";
 import {
@@ -15,6 +15,7 @@ import { formatPhone } from "@/shared/utils/formater";
 
 export async function LandingFooter() {
   const t = await getTranslations("Landing.footer");
+  const locale = await getLocale();
   return (
     <footer className="bg-gradient-to-br from-accent-50 via-background to-accent-50 dark:from-accent-950 dark:via-background dark:to-accent-950 border-t border-accent-200 dark:border-accent-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -104,24 +105,28 @@ export async function LandingFooter() {
               <Link
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
+                hrefLang={locale}
               >
                 <Facebook className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
+                hrefLang={locale}
               >
                 <Twitter className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
+                hrefLang={locale}
               >
                 <Instagram className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
+                hrefLang={locale}
               >
                 <Linkedin className="h-5 w-5" />
               </Link>
@@ -140,12 +145,14 @@ export async function LandingFooter() {
             <Link
               href="#privacy"
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
+              hrefLang={locale}
             >
               {t("privacy")}
             </Link>
             <Link
               href="#terms"
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
+              hrefLang={locale}
             >
               {t("terms")}
             </Link>

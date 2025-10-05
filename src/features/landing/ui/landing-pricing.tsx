@@ -76,6 +76,7 @@ export async function LandingPricing() {
               <Button className="w-full mt-6" size="lg">
                 <Link
                   href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                  hrefLang={locale}
                 >
                   {t("free.cta")}
                 </Link>
@@ -138,6 +139,7 @@ export async function LandingPricing() {
               >
                 <Link
                   href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                  hrefLang={locale}
                 >
                   {t("popular.cta")}
                 </Link>
@@ -193,6 +195,7 @@ export async function LandingPricing() {
               >
                 <Link
                   href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                  hrefLang={locale}
                 >
                   {t("future.cta")}
                 </Link>
@@ -212,11 +215,14 @@ export async function LandingPricing() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="outline" size="lg">
-                <Link href="/contact">{t("additional.contact")}</Link>
+                <Link href="/contact" hrefLang={locale}>
+                  {t("additional.contact")}
+                </Link>
               </Button>
               <Button size="lg">
                 <Link
                   href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
+                  hrefLang={locale}
                 >
                   {t("additional.start")}
                 </Link>

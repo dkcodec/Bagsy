@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
+import { ogLocaleMap } from "@/src/shared/constants";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -16,6 +17,14 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz"),
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz",
+    languages: {
+      "ru-KZ": "https://bagsy.kz/ru",
+      "kk-KZ": "https://bagsy.kz/kz",
+      "x-default": "https://bagsy.kz/ru",
+    },
+  },
   title: {
     default: "Bagsy",
     template: "%s | Bagsy",
@@ -38,6 +47,8 @@ export const metadata: Metadata = {
     siteName: "Bagsy",
     type: "website",
     title: "Bagsy",
+    locale: ogLocaleMap[defaultLocale],
+    alternateLocale: ["ru_KZ", "kk_KZ"],
     description:
       "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
     images: [

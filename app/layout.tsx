@@ -6,7 +6,8 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
-import { ogLocaleMap } from "@/src/shared/constants";
+import { localeToHreflang, ogLocaleMap } from "@/src/shared/constants";
+import { getLocale } from "next-intl/server";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -15,67 +16,73 @@ const nunito = Nunito({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz"),
-  alternates: {
-    canonical: process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz",
-    languages: {
-      "ru-KZ": "https://bagsy.kz/ru",
-      "kk-KZ": "https://bagsy.kz/kz",
-      "x-default": "https://bagsy.kz/ru",
-    },
-  },
-  title: {
-    default: "Bagsy",
-    template: "%s | Bagsy",
-  },
-  description:
-    "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
-  robots: {
-    index: true,
-    follow: true,
-  },
-  icons: {
-    icon: [
-      { url: "/logo-light.svg", media: "(prefers-color-scheme: light)" },
-      { url: "/logo-dark.svg", media: "(prefers-color-scheme: dark)" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png" }],
-    shortcut: ["/logo-dark.svg"],
-  },
-  openGraph: {
-    siteName: "Bagsy",
-    type: "website",
-    title: "Bagsy",
-    locale: ogLocaleMap[defaultLocale],
-    alternateLocale: ["ru_KZ", "kk_KZ"],
-    description:
-      "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
-    images: [
-      {
-        url: "/logo-full-dark.svg",
-        width: 1200,
-        height: 630,
-        alt: "Bagsy",
+export async function generateMetadata() {
+  const locale = await getLocale();
+  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz"),
+    alternates: {
+      canonical: process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz",
+      languages: {
+        "ru-KZ": "https://bagsy.kz/ru",
+        "kk-KZ": "https://bagsy.kz/kz",
+        "x-default": "https://bagsy.kz/ru",
       },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Bagsy",
+    },
+    title: {
+      default: "Bagsy",
+      template: "%s | Bagsy",
+    },
     description:
       "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
-    images: ["/logo-full-dark.svg"],
-  },
-};
+    robots: {
+      index: true,
+      follow: true,
+    },
+    icons: {
+      icon: [
+        { url: "/logo-light.svg", media: "(prefers-color-scheme: light)" },
+        { url: "/logo-dark.svg", media: "(prefers-color-scheme: dark)" },
+      ],
+      apple: [{ url: "/apple-touch-icon.png" }],
+      shortcut: ["/logo-dark.svg"],
+    },
+    openGraph: {
+      siteName: "Bagsy",
+      type: "website",
+      title: "Bagsy",
+      locale: ogLocaleMap[locale] ?? "ru_KZ",
+      alternateLocale: ["ru_KZ", "kk_KZ"],
+      description:
+        "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
+      images: [
+        {
+          url: "/logo-full-dark.svg",
+          width: 1200,
+          height: 630,
+          alt: "Bagsy",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Bagsy",
+      description:
+        "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
+      images: ["/logo-full-dark.svg"],
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
   return (
-    <html lang={defaultLocale} suppressHydrationWarning>
+    <html lang={htmlLang} suppressHydrationWarning>
       <head>
         <link
           rel="icon"

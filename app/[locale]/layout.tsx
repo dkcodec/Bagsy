@@ -53,7 +53,7 @@ export async function generateMetadata(
       siteName: "Bagsy",
       images: [
         {
-          url: "/logo-full-dark.svg",
+          url: "/og/bagsy-og-1200x630.jpg",
           width: 1200,
           height: 630,
           alt: "Bagsy",
@@ -64,7 +64,7 @@ export async function generateMetadata(
       card: "summary_large_image",
       title: t("title"),
       description,
-      images: ["/logo-full-dark.svg"],
+      images: [`${process.env.NEXT_PUBLIC_DOMAIN}/og/bagsy-og-1200x630.jpg`],
     },
   };
 

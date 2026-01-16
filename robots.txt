@@ -4,8 +4,6 @@
 User-agent: *
 Allow: /
 Disallow: /login
-Disallow: /register
-Disallow: /invite
 
 # Optional: uncomment to slow down aggressive crawlers
 # Crawl-delay: 10

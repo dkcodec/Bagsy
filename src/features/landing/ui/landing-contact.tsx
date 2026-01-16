@@ -82,7 +82,7 @@ export async function LandingContact() {
               <p className="text-lg text-white/90 mb-8 max-w-xl mx-auto">
                 {t("cta.description")}
               </p>
-              <Link href="/register" hrefLang={locale}>
+              <Link href={`/${locale}/register`} hrefLang={locale}>
                 <Button
                   size="lg"
                   className="bg-white text-accent-600 hover:bg-white/90 shadow-lg hover:shadow-xl transition-all duration-200 group"

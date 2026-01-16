@@ -60,7 +60,7 @@ export function LandingHeader() {
               </Button>
             </Link>
 
-            <Link href="/register" hrefLang={locale}>
+            <Link href={`/${locale}/register`} hrefLang={locale}>
               <Button size="sm">{t("startFree")}</Button>
             </Link>
             <LocaleSwitcher />
@@ -122,7 +122,7 @@ export function LandingHeader() {
                 >
                   {t("login")}
                 </Link>
-                <Link href="/register" hrefLang={locale}>
+                <Link href={`/${locale}/register`} hrefLang={locale}>
                   {t("startFree")}
                 </Link>
               </div>

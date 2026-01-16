@@ -28,7 +28,7 @@ export async function LandingHero() {
           {/* Кнопки действий */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button size="lg" className="text-lg px-8 py-4">
-              <Link href="#contact" hrefLang={locale}>
+              <Link href={`/${locale}/register`} hrefLang={locale}>
                 {t("cta")}
               </Link>
             </Button>

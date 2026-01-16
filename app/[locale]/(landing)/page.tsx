@@ -22,9 +22,9 @@ export default function LandingPage() {
           <landing.LandingContact />
         </div>
 
-        <div id="cta">
+        {/* <div id="cta">
           <landing.LandingCTA />
-        </div>
+        </div> */}
       </main>
 
       <landing.LandingFooter />

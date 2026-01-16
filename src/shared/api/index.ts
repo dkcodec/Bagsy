@@ -8,3 +8,6 @@ export * from "./types";
 
 // Клиент
 export { apiClient, ApiClient, ApiError } from "./client";
+
+// Сервисы
+export * from "./services";

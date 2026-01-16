@@ -36,8 +36,6 @@ class ApiClient {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      // Включаем cookies для автоматической отправки httpOnly cookies
-      // credentials: "include",
       ...options,
     };
 

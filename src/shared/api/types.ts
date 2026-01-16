@@ -31,3 +31,42 @@ export interface FormResponse {
   };
   message: string;
 }
+
+// Типы для регистрации управления
+export type ManagementRole = "net_manager" | "self_owner";
+
+export interface NetworkInfo {
+  name: string;
+  description: string;
+}
+
+export interface ManagementRegisterRequest {
+  name: string;
+  surname: string;
+  phone: string;
+  password: string;
+  role: ManagementRole;
+  network_info: NetworkInfo;
+}
+
+export interface ManagementRegisterResponse {
+  message: string;
+  phone: string;
+  expires_at: string;
+}
+
+export interface ManagementConfirmRequest {
+  phone: string;
+  code: string;
+}
+
+export interface ManagementConfirmResponse {
+  message: string;
+  user: {
+    id: string;
+    name: string;
+    surname: string;
+    phone: string;
+    role: string;
+  };
+}

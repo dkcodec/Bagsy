@@ -27,21 +27,21 @@ export function LandingHeader() {
           {/* Навигация для десктопа */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link
-              href="#features"
+              href={`/${locale}#features`}
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
               hrefLang={locale}
             >
               {t("features")}
             </Link>
             <Link
-              href="#contact"
+              href={`/${locale}#contact`}
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
               hrefLang={locale}
             >
               {t("pricing")}
             </Link>
             <Link
-              href="#contact"
+              href={`/${locale}#contact`}
               className="text-gray-600 dark:text-gray-300 dark:hover:text-accent hover:text-accent transition-colors"
               hrefLang={locale}
             >
@@ -92,7 +92,7 @@ export function LandingHeader() {
           <div className="md:hidden border-t border-background py-4">
             <nav className="flex flex-col space-y-4">
               <Link
-                href="#features"
+                href={`/${locale}#features`}
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
                 hrefLang={locale}
@@ -100,7 +100,7 @@ export function LandingHeader() {
                 {t("features")}
               </Link>
               <Link
-                href="#contact"
+                href={`/${locale}#contact`}
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
                 hrefLang={locale}
@@ -108,7 +108,7 @@ export function LandingHeader() {
                 {t("pricing")}
               </Link>
               <Link
-                href="#contact"
+                href={`/${locale}#contact`}
                 className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
                 hrefLang={locale}

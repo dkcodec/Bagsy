@@ -9,5 +9,5 @@ export * from "./types";
 // Клиент
 export { apiClient, ApiClient, ApiError } from "./client";
 
-// Сервисы
+// Сервисы (разделены по логике в папке services/)
 export * from "./services";

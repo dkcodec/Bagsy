@@ -7,7 +7,7 @@
 export * from "./types";
 
 // Клиент
-export { apiClient, ApiClient, ApiError } from "./client";
+export { apiClient } from "./client";
 
-// Сервисы
+// Сервисы (разделены по логике в папке services/)
 export * from "./services";

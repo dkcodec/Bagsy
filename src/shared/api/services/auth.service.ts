@@ -1,15 +1,15 @@
 /**
- * API сервисы для работы с бэкендом
- * Содержит методы для различных эндпоинтов
+ * Сервис для авторизации и регистрации управления
+ * Работа с эндпоинтами аутентификации
  */
 
-import { apiClient } from "./client";
+import { apiClient } from "../client";
 import type {
   ManagementRegisterRequest,
   ManagementRegisterResponse,
   ManagementConfirmRequest,
   ManagementConfirmResponse,
-} from "./types";
+} from "../types";
 
 /**
  * Сервис для регистрации управления
@@ -26,7 +26,7 @@ export const managementAuthService = {
       "v1/auth/management/register",
       data
     );
-    return response.data;
+    return response;
   },
 
   /**
@@ -39,6 +39,6 @@ export const managementAuthService = {
       "v1/auth/management/register/confirm",
       data
     );
-    return response.data;
+    return response;
   },
 };

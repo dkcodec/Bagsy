@@ -70,3 +70,92 @@ export interface ManagementConfirmResponse {
     role: string;
   };
 }
+
+// Типы для бронирования (bagsies)
+export interface ServicesResponse {
+  services: Service[];
+}
+
+export interface Service {
+  id: string;
+  point_code: string;
+  category_id: number;
+  subcategory_id: number;
+  name: string;
+  description: string;
+  duration_minutes: number;
+  active: boolean;
+  min_price: number;
+  max_price: number;
+}
+
+export interface GetSlotsRequest {
+  point_code: string;
+  service_id: string;
+}
+
+export interface GetSlotsResponse {
+  service_id: string;
+  point_code: string;
+  duration_minutes: number;
+  available_dates: string[]; // ISO date strings
+}
+
+export interface GetDaySlotsRequest {
+  date: string; // ISO date string
+  point_code: string;
+  service_id: string;
+}
+
+// Старый тип для обратной совместимости (если понадобится)
+export interface MasterSlot {
+  phone: string;
+  name: string;
+  slots: string[]; // Time strings like "15:00"
+}
+
+export interface GetDaySlotsResponse {
+  service_id: string;
+  point_code: string;
+  date: string;
+  duration_minutes: number;
+  masters: [
+    {
+      master_name: string;
+      master_phone: string;
+      master_service_price: number;
+      slots: string[];
+    },
+  ];
+}
+
+export interface CreateBagsyRequest {
+  client_phone: string;
+  comment?: string;
+  master_phone: string;
+  name: string;
+  service_id: string;
+  start_at: string; // ISO datetime string rfc339 с Z окончанием
+  surname: string;
+}
+
+export interface ResendCodeRequest {
+  bagsy_id: string;
+}
+
+export interface ResendCodeResponse {
+  message: string;
+}
+
+export interface CreateBagsyResponse {
+  bagsy_id: string;
+}
+
+export interface ConfirmBagsyRequest {
+  bagsy_id: string;
+  code: string;
+}
+
+export interface ConfirmBagsyResponse {
+  message: string;
+}

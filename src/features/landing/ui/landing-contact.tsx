@@ -18,7 +18,7 @@ export async function LandingContact() {
   return (
     <section
       id="contact"
-      className="relative py-24 bg-gradient-to-br from-background via-accent-50/50 to-background dark:from-background dark:via-accent-950/40 dark:to-background overflow-hidden"
+      className="relative py-24 bg-linear-to-br from-background via-accent-50/50 to-background dark:from-background dark:via-accent-950/40 dark:to-background overflow-hidden"
     >
       {/* Декоративные элементы */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
@@ -51,9 +51,9 @@ export async function LandingContact() {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="flex items-start gap-4 p-6 rounded-xl border border-accent-200/60 dark:border-accent-800/60 bg-white/80 dark:bg-accent-950/50 backdrop-blur-sm hover:border-accent-500/60 dark:hover:border-accent-700/60 transition-all duration-300"
+                className="flex items-start gap-4 p-6 rounded-xl border border-accent-200/60 dark:border-accent-800/60 bg-white/80 dark:bg-accent-950/50 backdrop-blur-xs hover:border-accent-500/60 dark:hover:border-accent-700/60 transition-all duration-300"
               >
-                <div className="flex-shrink-0 p-2 rounded-lg bg-accent-100 dark:bg-accent-900">
+                <div className="shrink-0 p-2 rounded-lg bg-accent-100 dark:bg-accent-900">
                   <CheckCircle className="h-5 w-5 text-accent-600 dark:text-accent-400" />
                 </div>
                 <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -64,7 +64,7 @@ export async function LandingContact() {
           </div>
 
           {/* Призыв к действию */}
-          <div className="relative bg-gradient-to-r from-accent-500 via-accent-600 to-accent-500 rounded-2xl p-8 sm:p-12 shadow-2xl overflow-hidden">
+          <div className="relative bg-linear-to-r from-accent-500 via-accent-600 to-accent-500 rounded-2xl p-8 sm:p-12 shadow-2xl overflow-hidden">
             {/* Декоративный фон */}
             <div className="absolute inset-0 bg-grid-pattern opacity-10" />
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
@@ -72,7 +72,7 @@ export async function LandingContact() {
 
             <div className="relative text-center">
               <div className="flex justify-center mb-6">
-                <div className="p-4 rounded-full bg-white/20 backdrop-blur-sm">
+                <div className="p-4 rounded-full bg-white/20 backdrop-blur-xs">
                   <Rocket className="h-8 w-8 text-white" />
                 </div>
               </div>

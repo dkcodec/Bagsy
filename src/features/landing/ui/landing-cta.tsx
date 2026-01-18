@@ -30,7 +30,7 @@ export async function LandingCTA() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-background via-accent-50 to-background dark:from-background dark:via-background dark:to-background">
+    <section className="py-24 bg-linear-to-br from-background via-accent-50 to-background dark:from-background dark:via-background dark:to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Статистика */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -74,7 +74,7 @@ export async function LandingCTA() {
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className="bg-white/10 backdrop-blur-sm border-2 border-accent-500/30 hover:border-accent-500/60 text-black dark:text-white transition-all duration-300"
+              className="bg-white/10 backdrop-blur-xs border-2 border-accent-500/30 hover:border-accent-500/60 text-black dark:text-white transition-all duration-300"
             >
               <div className="p-6">
                 {/* Рейтинг */}

@@ -122,7 +122,12 @@ export function AppointmentStepConfirm({
 
   // Если OTP уже показан, отображаем его
   if (showOtp || formValues.bagsy_id) {
-    return <AppointmentStepOtp bagsyId={formValues.bagsy_id!} />;
+    return (
+      <AppointmentStepOtp
+        bagsyId={formValues.bagsy_id!}
+        daySlotsData={daySlotsData}
+      />
+    );
   }
 
   return (

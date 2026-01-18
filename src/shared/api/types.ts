@@ -139,6 +139,14 @@ export interface CreateBagsyRequest {
   surname: string;
 }
 
+export interface ResendCodeRequest {
+  bagsy_id: string;
+}
+
+export interface ResendCodeResponse {
+  message: string;
+}
+
 export interface CreateBagsyResponse {
   bagsy_id: string;
 }

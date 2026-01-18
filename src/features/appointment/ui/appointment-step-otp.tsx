@@ -8,7 +8,7 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { useConfirmBagsy } from "@/shared/hooks/use-bagsy";
+import { useConfirmBagsy, useResendCode } from "@/shared/hooks/use-bagsy";
 import { toast } from "sonner";
 import {
   FormField,
@@ -17,22 +17,29 @@ import {
   FormControl,
   FormMessage,
 } from "@/entities/form";
+import { REGEXP_ONLY_DIGITS } from "input-otp"
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/entities/input-otp";
 import { Button } from "@/entities/button";
 import { Loader2 } from "lucide-react";
 import { AppointmentStepSuccess } from "./appointment-step-success";
+import type { GetDaySlotsResponse } from "@/shared/api/types";
 
 interface AppointmentStepOtpProps {
   bagsyId: string;
+  daySlotsData?: GetDaySlotsResponse;
 }
 
-export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
+export function AppointmentStepOtp({
+  bagsyId,
+  daySlotsData,
+}: AppointmentStepOtpProps) {
   const t = useTranslations("AppointmentForm");
   const form = useFormContext<{
     code?: string;
   }>();
   const [showSuccess, setShowSuccess] = useState(false);
   const confirmBagsyMutation = useConfirmBagsy();
+  const resendCodeMutation = useResendCode();
 
   const handleOtpComplete = async (value: string) => {
     if (value.length !== 4) return;
@@ -51,8 +58,14 @@ export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
     }
   };
 
+  const handleResendCode = () => {
+    resendCodeMutation.mutateAsync({
+      bagsy_id: bagsyId,
+    });
+  };
+
   if (showSuccess) {
-    return <AppointmentStepSuccess />;
+    return <AppointmentStepSuccess daySlotsData={daySlotsData} />;
   }
 
   return (
@@ -83,13 +96,14 @@ export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
                       handleOtpComplete(value);
                     }
                   }}
+                  pattern={REGEXP_ONLY_DIGITS}
                   disabled={confirmBagsyMutation.isPending}
                 >
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={0} className="md:h-18 md:w-18 md:text-xl" />
+                    <InputOTPSlot index={1} className="md:h-18 md:w-18 md:text-xl" />
+                    <InputOTPSlot index={2} className="md:h-18 md:w-18 md:text-xl" />
+                    <InputOTPSlot index={3} className="md:h-18 md:w-18 md:text-xl" />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
@@ -104,6 +118,18 @@ export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
           <Loader2 className="size-5 animate-spin text-muted-foreground" />
         </div>
       )}
+
+      <Button variant="outline" className="w-full" onClick={handleResendCode}>
+        {resendCodeMutation.isPending ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            {t("steps.otp.resendCode")}
+          </>
+        ) : (
+          t("steps.otp.resendCode")
+        )}
+      </Button>
+
     </div>
   );
 }

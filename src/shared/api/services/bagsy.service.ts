@@ -15,6 +15,8 @@ import type {
   ConfirmBagsyRequest,
   ConfirmBagsyResponse,
   ServicesResponse,
+  ResendCodeRequest,
+  ResendCodeResponse,
 } from "../types";
 
 /**
@@ -71,6 +73,17 @@ export const bagsyService = {
   async confirmBagsy(data: ConfirmBagsyRequest): Promise<ConfirmBagsyResponse> {
     const response = await apiClient.post<ConfirmBagsyResponse>(
       "v1/bagsies/confirm",
+      data
+    );
+    return response;
+  },
+
+  /**
+   * Повторная кода подтверждения на телефон
+   */
+  async resendCode(data: ResendCodeRequest): Promise<ResendCodeResponse> {
+    const response = await apiClient.post<ResendCodeResponse>(
+      "v1/bagsies/resend",
       data
     );
     return response;

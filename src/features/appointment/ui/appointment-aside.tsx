@@ -11,7 +11,7 @@ import { ru, kk } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Separator } from "@/entities/separator";
-import { CreditCard, Calendar, Clock, User } from "lucide-react";
+import { CreditCard, Calendar, Clock, User, BriefcaseBusiness, ClipboardList, Banknote } from "lucide-react";
 import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
 
 interface AppointmentAsideProps {
@@ -70,7 +70,7 @@ export function AppointmentAside({
         {/* Бизнес */}
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <CreditCard className="size-4" />
+            <BriefcaseBusiness className="size-4 text-muted-foreground" />
             <span>{t("aside.business")}</span>
           </div>
           <p className="text-sm pl-6">{formattedPointCode}</p>
@@ -83,7 +83,7 @@ export function AppointmentAside({
           <>
             <div className="space-y-1.5">
               <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <CreditCard className="size-4" />
+                <ClipboardList className="size-4 text-muted-foreground" />
                 <span>{t("aside.service")}</span>
               </div>
               <p className="text-sm pl-6">{service.name}</p>
@@ -114,11 +114,27 @@ export function AppointmentAside({
           </>
         )}
 
+        {/* Мастер */}
+        {selectedMaster && (
+          <>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <User className="size-4" />
+              <span>{t("aside.master")}</span>
+            </div>
+            <div className="pl-6 space-y-1">
+              <p className="text-sm">{selectedMaster.master_name}</p>
+            </div>
+          </div>
+          <Separator />
+        </>
+        )}
+
         {/* Тотал */}
         {(hasSpecificPrice || priceRange) && (
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <CreditCard className="size-4" />
+              <Banknote className="size-4" />
               <span>{t("aside.total")}</span>
             </div>
             <p className="text-lg font-semibold pl-6">

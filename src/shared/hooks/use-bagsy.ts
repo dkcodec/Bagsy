@@ -8,6 +8,7 @@ import type {
   GetDaySlotsRequest,
   CreateBagsyRequest,
   ConfirmBagsyRequest,
+  ResendCodeRequest,
 } from "@/shared/api/types";
 
 /**
@@ -70,6 +71,19 @@ export function useCreateBagsy() {
 export function useConfirmBagsy() {
   return useMutation({
     mutationFn: (data: ConfirmBagsyRequest) => bagsyService.confirmBagsy(data),
+    onError: (error: Error) => {
+      toast.error(error.message || "Неверный код подтверждения");
+    },
+  });  
+}
+
+
+/**
+ * Хук для повторной отправки кода подтверждения
+ */
+export function useResendCode() {
+  return useMutation({
+    mutationFn: (data: ResendCodeRequest) => bagsyService.resendCode(data),
     onError: (error: Error) => {
       toast.error(error.message || "Неверный код подтверждения");
     },

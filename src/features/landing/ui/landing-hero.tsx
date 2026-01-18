@@ -7,7 +7,7 @@ export async function LandingHero() {
   const t = await getTranslations("Landing.hero");
   const locale = await getLocale();
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-accent-100 via-white to-accent-100 dark:from-accent-950 dark:via-background dark:to-accent-950">
+    <section className="relative overflow-hidden bg-linear-to-br from-accent-100 via-white to-accent-100 dark:from-accent-950 dark:via-background dark:to-accent-950">
       {/* Декоративные элементы */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500 rounded-full light:mix-blend-multiply filter blur-xl opacity-20 animate-blob" />

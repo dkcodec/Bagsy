@@ -97,7 +97,7 @@ export async function LandingFeatures() {
 
         {/* Дополнительные преимущества */}
         <div className="mt-20">
-          <div className="bg-gradient-to-r from-accent-100 to-background dark:from-accent-700 dark:to-background rounded-2xl p-8 lg:p-12">
+          <div className="bg-linear-to-r from-accent-100 to-background dark:from-accent-700 dark:to-background rounded-2xl p-8 lg:p-12">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -113,7 +113,7 @@ export async function LandingFeatures() {
                     t("Additional.safeStorage"),
                   ].map((item, index) => (
                     <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
                       <span className="text-gray-700 dark:text-accent-100">
                         {item}
                       </span>

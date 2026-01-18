@@ -11,11 +11,13 @@ import {
   getDefaultClassNames,
   type DayButton,
 } from "react-day-picker";
+import { ru, kk } from "react-day-picker/locale";
 
 import { cn } from "@/shared/utils/styles";
 import { Button, buttonVariants } from "@/entities/button";
+import { useLocale } from "next-intl";
 
-function SingleCalendar({
+function Calendar({
   className,
   classNames,
   showOutsideDays = true,
@@ -28,16 +30,18 @@ function SingleCalendar({
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
+  const locale = useLocale();
 
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
-        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
-        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        "bg-background group/calendar p-3 [--cell-size:--spacing(8)] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
+        String.raw`[.rdp-button\_next>svg]:**:rtl:rotate-180`,
+        String.raw`[.rdp-button\_previous>svg]:**:rtl:rotate-180`,
         className
       )}
+      locale={locale === "ru" ? ru : kk}
       captionLayout={captionLayout}
       formatters={{
         formatMonthDropdown: date =>
@@ -74,7 +78,7 @@ function SingleCalendar({
           defaultClassNames.dropdowns
         ),
         dropdown_root: cn(
-          "relative has-focus:border-ring border border-input shadow-xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
+          "relative has-focus:border-ring border border-input shadow-2xs has-focus:ring-ring/50 has-focus:ring-[3px] rounded-md",
           defaultClassNames.dropdown_root
         ),
         dropdown: cn(
@@ -117,7 +121,7 @@ function SingleCalendar({
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
         today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          "bg-gray-200 text-accent-foreground rounded-md",
           defaultClassNames.today
         ),
         outside: cn(
@@ -217,4 +221,4 @@ function CalendarDayButton({
   );
 }
 
-export { SingleCalendar, CalendarDayButton as SingleCalendarDayButton };
+export { Calendar, CalendarDayButton };

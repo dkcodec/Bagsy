@@ -21,7 +21,7 @@ import {
 } from "@/entities/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Button } from "@/entities/button";
-import { SingleCalendar } from "@/entities/single-calendar";
+import { Calendar } from "@/entities/calendar";
 import { Loader2, Clock, User } from "lucide-react";
 import { cn } from "@/shared/utils/styles";
 import { Separator } from "@/entities/separator";
@@ -140,7 +140,7 @@ export function AppointmentStepDateTime({
               </FormLabel>
               <FormControl>
                 <div className="flex justify-start">
-                  <SingleCalendar
+                  <Calendar
                     mode="single"
                     selected={field.value ? parseISO(field.value) : undefined}
                     onSelect={handleDateSelect}

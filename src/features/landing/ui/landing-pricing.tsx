@@ -16,7 +16,7 @@ export async function LandingPricing() {
   const locale = await getLocale();
 
   return (
-    <section className="py-24 bg-gradient-to-br from-background via-accent-50 to-background dark:from-background dark:via-accent-950 dark:to-background">
+    <section className="py-24 bg-linear-to-br from-background via-accent-50 to-background dark:from-background dark:via-accent-950 dark:to-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Заголовок секции */}
         <div className="text-center mb-16">
@@ -66,7 +66,7 @@ export async function LandingPricing() {
                   t("free.features.support"),
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-green-500 shrink-0" />
                     <span className="text-gray-700 dark:text-gray-300">
                       {feature}
                     </span>
@@ -88,7 +88,7 @@ export async function LandingPricing() {
           <Card className="relative border-2 border-accent-500 dark:border-accent-400 shadow-xl scale-105">
             {/* Популярный бейдж */}
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-gradient-to-r from-accent-500 to-accent-600 text-white px-4 py-1">
+              <Badge className="bg-linear-to-r from-accent-500 to-accent-600 text-white px-4 py-1">
                 <Star className="h-4 w-4 mr-1" />
                 {t("popular.badge")}
               </Badge>
@@ -96,7 +96,7 @@ export async function LandingPricing() {
 
             <CardHeader className="text-center pb-6 pt-8">
               <div className="flex justify-center mb-4">
-                <div className="p-3 rounded-full bg-gradient-to-r from-accent-500 to-accent-600">
+                <div className="p-3 rounded-full bg-linear-to-r from-accent-500 to-accent-600">
                   <Crown className="h-8 w-8 text-white" />
                 </div>
               </div>
@@ -126,7 +126,7 @@ export async function LandingPricing() {
                   t("popular.features.priority"),
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent-500 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-accent-500 shrink-0" />
                     <span className="text-gray-700 dark:text-gray-300">
                       {feature}
                     </span>
@@ -134,7 +134,7 @@ export async function LandingPricing() {
                 ))}
               </ul>
               <Button
-                className="w-full mt-6 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700"
+                className="w-full mt-6 bg-linear-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700"
                 size="lg"
               >
                 <Link
@@ -180,7 +180,7 @@ export async function LandingPricing() {
                   t("future.features.sla"),
                 ].map((feature, index) => (
                   <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                    <Check className="h-5 w-5 text-gray-400 shrink-0" />
                     <span className="text-gray-500 dark:text-gray-400">
                       {feature}
                     </span>
@@ -206,7 +206,7 @@ export async function LandingPricing() {
 
         {/* Дополнительная информация */}
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-accent-100 to-background dark:from-accent-900 dark:to-background rounded-2xl p-8 max-w-4xl mx-auto">
+          <div className="bg-linear-to-r from-accent-100 to-background dark:from-accent-900 dark:to-background rounded-2xl p-8 max-w-4xl mx-auto">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               {t("additional.title")}
             </h3>

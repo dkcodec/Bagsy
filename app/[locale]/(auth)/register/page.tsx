@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RegisterPage() {
   return (
-    <div className="relative min-h-screen flex justify-center p-4 bg-gradient-to-br from-background via-accent-50/50 to-background dark:from-background dark:via-accent-950/40 dark:to-background">
+    <div className="relative min-h-screen flex justify-center p-4 bg-linear-to-br from-background via-accent-50/50 to-background dark:from-background dark:via-accent-950/40 dark:to-background">
       <landing.LandingHeader />
       <div className="absolute inset-0 bg-grid-pattern opacity-5 z-0" />
       <div className="z-10 w-full pt-16">

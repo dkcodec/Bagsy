@@ -111,7 +111,7 @@ function ServiceCard({ service, isSelected, onClick }: ServiceCardProps) {
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">{service.name}</CardTitle>
       </CardHeader>
-      <CardContent className="flex-grow py-0">
+      <CardContent className="grow py-0">
         {service.description && (
           <CardDescription className="line-clamp-2">
             {service.description}

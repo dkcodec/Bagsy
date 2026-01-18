@@ -17,7 +17,7 @@ export async function LandingFooter() {
   const t = await getTranslations("Landing.footer");
   const locale = await getLocale();
   return (
-    <footer className="bg-gradient-to-br from-accent-50 via-background to-accent-50 dark:from-accent-950 dark:via-background dark:to-accent-950 border-t border-accent-200 dark:border-accent-800">
+    <footer className="bg-linear-to-br from-accent-50 via-background to-accent-50 dark:from-accent-950 dark:via-background dark:to-accent-950 border-t border-accent-200 dark:border-accent-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Логотип и описание */}

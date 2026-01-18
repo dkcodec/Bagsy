@@ -31,7 +31,9 @@ export function AppointmentStepSuccess() {
   const dateFnsLocale = locale === "ru" ? ru : kk;
 
   const formattedDate = formValues.date
-    ? format(parseISO(formValues.date), "d MMMM yyyy", { locale: dateFnsLocale })
+    ? format(parseISO(formValues.date), "d MMMM yyyy", {
+        locale: dateFnsLocale,
+      })
     : "";
   const formattedTime = formValues.time || "";
 
@@ -65,7 +67,9 @@ export function AppointmentStepSuccess() {
                   {formattedTime && (
                     <div className="flex items-center gap-1.5 mt-1">
                       <Clock className="size-3.5 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">{formattedTime}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formattedTime}
+                      </p>
                     </div>
                   )}
                 </div>

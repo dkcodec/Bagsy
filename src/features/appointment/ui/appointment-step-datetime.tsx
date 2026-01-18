@@ -12,7 +12,13 @@ import { format, parseISO, isSameDay } from "date-fns";
 import { ru, kk } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { useSlots, useDaySlots } from "@/shared/hooks/use-bagsy";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/entities/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/entities/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Button } from "@/entities/button";
 import { SingleCalendar } from "@/entities/single-calendar";
@@ -63,7 +69,7 @@ export function AppointmentStepDateTime({
   // Форматируем доступные даты для календаря
   const availableDates = useMemo(() => {
     if (!slotsData?.available_dates) return [];
-    return slotsData.available_dates.map((dateStr) => parseISO(dateStr));
+    return slotsData.available_dates.map(dateStr => parseISO(dateStr));
   }, [slotsData]);
 
   // Автоматически выбираем первую доступную дату при загрузке
@@ -76,7 +82,7 @@ export function AppointmentStepDateTime({
 
   // Функция для проверки, доступна ли дата
   const isDateDisabled = (date: Date) => {
-    return !availableDates.some((availableDate) =>
+    return !availableDates.some(availableDate =>
       isSameDay(availableDate, date)
     );
   };
@@ -85,8 +91,8 @@ export function AppointmentStepDateTime({
   const availableTimeSlots = useMemo(() => {
     if (!daySlotsData?.masters) return [];
     const allSlots = new Set<string>();
-    daySlotsData.masters.forEach((master) => {
-      master.slots.forEach((slot) => allSlots.add(slot));
+    daySlotsData.masters.forEach(master => {
+      master.slots.forEach(slot => allSlots.add(slot));
     });
     return Array.from(allSlots).sort();
   }, [daySlotsData]);
@@ -94,7 +100,7 @@ export function AppointmentStepDateTime({
   // Фильтруем мастеров по выбранному времени
   const availableMasters = useMemo(() => {
     if (!selectedTime || !daySlotsData?.masters) return [];
-    return daySlotsData.masters.filter((master) =>
+    return daySlotsData.masters.filter(master =>
       master.slots.includes(selectedTime)
     );
   }, [selectedTime, daySlotsData]);
@@ -122,73 +128,81 @@ export function AppointmentStepDateTime({
 
   return (
     <div className="space-y-6">
-
       <div className="flex gap-6 md:flex-row flex-col md:h-80">
-      {/* Календарь */}
-      <FormField
-        control={form.control}
-        name="date"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className="text-base">{t("steps.datetime.date")}</FormLabel>
-            <FormControl>
-              <div className="flex justify-start">
-                <SingleCalendar
-                  mode="single"
-                  selected={field.value ? parseISO(field.value) : undefined}
-                  onSelect={handleDateSelect}
-                  className="rounded-md border"
-                />
-              </div>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      {/* Сепаратор видим только на десктопе при горизонтальном расположении */}
-      <Separator orientation="vertical" className="hidden md:block self-stretch" />
-
-      {/* Выбор времени */}
-      {selectedDate && (
+        {/* Календарь */}
         <FormField
           control={form.control}
-          name="time"
+          name="date"
           render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel className="text-base">{t("steps.datetime.time")}</FormLabel>
+            <FormItem>
+              <FormLabel className="text-base">
+                {t("steps.datetime.date")}
+              </FormLabel>
               <FormControl>
-                {isLoadingDaySlots ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="size-6 animate-spin text-muted-foreground" />
-                  </div>
-                ) : availableTimeSlots.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-4 text-center">
-                    {t("steps.datetime.noSlots")}
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-2">
-                    {availableTimeSlots.map((timeSlot) => (
-                      <Button
-                        key={timeSlot}
-                        type="button"
-                        variant={field.value === timeSlot ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTimeSelect(timeSlot)}
-                        className="flex items-center gap-1.5"
-                      >
-                        <Clock className="size-3.5" />
-                        {timeSlot}
-                      </Button>
-                    ))}
-                  </div>
-                )}
+                <div className="flex justify-start">
+                  <SingleCalendar
+                    mode="single"
+                    selected={field.value ? parseISO(field.value) : undefined}
+                    onSelect={handleDateSelect}
+                    className="rounded-md border"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-      )}
+
+        {/* Сепаратор видим только на десктопе при горизонтальном расположении */}
+        <Separator
+          orientation="vertical"
+          className="hidden md:block self-stretch"
+        />
+
+        {/* Выбор времени */}
+        {selectedDate && (
+          <FormField
+            control={form.control}
+            name="time"
+            render={({ field }) => (
+              <FormItem className="flex-1">
+                <FormLabel className="text-base">
+                  {t("steps.datetime.time")}
+                </FormLabel>
+                <FormControl>
+                  {isLoadingDaySlots ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="size-6 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : availableTimeSlots.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-4 text-center">
+                      {t("steps.datetime.noSlots")}
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                      {availableTimeSlots.map(timeSlot => (
+                        <Button
+                          key={timeSlot}
+                          type="button"
+                          variant={
+                            field.value === timeSlot ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => handleTimeSelect(timeSlot)}
+                          className="flex items-center gap-1.5"
+                        >
+                          <Clock className="size-3.5" />
+                          {timeSlot}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
       </div>
 
       {/* Выбор мастера */}
@@ -198,7 +212,9 @@ export function AppointmentStepDateTime({
           name="master_phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base">{t("steps.datetime.master")}</FormLabel>
+              <FormLabel className="text-base">
+                {t("steps.datetime.master")}
+              </FormLabel>
               <FormControl>
                 {availableMasters.length === 0 ? (
                   <p className="text-sm text-muted-foreground py-4 text-center">
@@ -206,12 +222,13 @@ export function AppointmentStepDateTime({
                   </p>
                 ) : (
                   <div className="grid gap-4 sm:grid-cols-2">
-                    {availableMasters.map((master) => (
+                    {availableMasters.map(master => (
                       <Card
                         key={master.master_phone}
                         className={cn(
                           "cursor-pointer transition-all hover:shadow-md",
-                          field.value === master.master_phone && "ring-2 ring-primary"
+                          field.value === master.master_phone &&
+                            "ring-2 ring-primary"
                         )}
                         onClick={() => handleMasterSelect(master.master_phone)}
                       >

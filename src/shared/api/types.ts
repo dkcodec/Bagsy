@@ -125,7 +125,7 @@ export interface GetDaySlotsResponse {
       master_phone: string;
       master_service_price: number;
       slots: string[];
-    }
+    },
   ];
 }
 

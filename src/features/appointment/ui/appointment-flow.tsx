@@ -180,7 +180,7 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
   const selectedTime = form.watch("time");
   const selectedMasterPhone = form.watch("master_phone");
   const { data: services } = useServices(pointCode);
-  const service = services?.find((s) => s.id === serviceId);
+  const service = services?.find(s => s.id === serviceId);
 
   const { data: daySlotsData } = useDaySlots(
     selectedDate && serviceId && pointCode
@@ -214,13 +214,13 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
   const handleNext = async () => {
     const isValid = await form.trigger();
     if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+      setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     }
   };
 
   const handleBack = () => {
     if (currentStep === 0) return;
-    setCurrentStep((prev) => Math.max(prev - 1, 0));
+    setCurrentStep(prev => Math.max(prev - 1, 0));
     if (currentStep === 3) {
       // При возврате с шага OTP очищаем код
       form.setValue("code", "");
@@ -235,7 +235,7 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
       {/* Степпер - на мобилке только цифры */}
       <div className={isMobile ? "px-2" : ""}>
         <Stepper
-          steps={steps.map((step) => ({
+          steps={steps.map(step => ({
             label: isMobile ? "" : step.label,
             description: undefined,
           }))}
@@ -257,9 +257,9 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form 
+              <form
                 className="space-y-2 md:space-y-4 lg:space-y-6"
-                onSubmit={(e) => {
+                onSubmit={e => {
                   e.preventDefault();
                   e.stopPropagation();
                 }}

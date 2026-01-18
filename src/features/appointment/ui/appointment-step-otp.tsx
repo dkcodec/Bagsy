@@ -10,12 +10,14 @@ import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useConfirmBagsy } from "@/shared/hooks/use-bagsy";
 import { toast } from "sonner";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/entities/form";
 import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/entities/input-otp";
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/entities/form";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/entities/input-otp";
 import { Button } from "@/entities/button";
 import { Loader2 } from "lucide-react";
 import { AppointmentStepSuccess } from "./appointment-step-success";
@@ -57,7 +59,9 @@ export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
     <div className="space-y-6">
       <div className="text-center space-y-2">
         <h3 className="text-lg font-semibold">{t("steps.otp.title")}</h3>
-        <p className="text-sm text-muted-foreground">{t("steps.otp.description")}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("steps.otp.description")}
+        </p>
       </div>
 
       <FormField
@@ -73,7 +77,7 @@ export function AppointmentStepOtp({ bagsyId }: AppointmentStepOtpProps) {
                 <InputOTP
                   maxLength={4}
                   value={field.value || ""}
-                  onChange={(value) => {
+                  onChange={value => {
                     field.onChange(value);
                     if (value.length === 4) {
                       handleOtpComplete(value);

@@ -11,7 +11,6 @@ export default async function AppointmentPage({
 }) {
   const { pointCode } = await params;
 
-
   return (
     <div className="container mx-auto py-8 px-3 sm:px-4 lg:px-8">
       <AppointmentFlow pointCode={pointCode} />

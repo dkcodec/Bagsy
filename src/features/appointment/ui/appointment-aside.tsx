@@ -38,7 +38,7 @@ export function AppointmentAside({
   // Форматируем pointCode для отображения
   const formattedPointCode = pointCode
     .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   // Форматируем дату
@@ -48,17 +48,18 @@ export function AppointmentAside({
 
   // Находим выбранного мастера и его цену
   const selectedMaster = daySlotsData?.masters.find(
-    (m) => m.master_phone === masterPhone
+    m => m.master_phone === masterPhone
   );
-  
+
   // Определяем отображаемую цену: конкретная цена мастера или диапазон цен услуги
   const hasSpecificPrice = !!selectedMaster?.master_service_price;
   const specificPrice = selectedMaster?.master_service_price;
-  const priceRange = service?.min_price && service?.max_price 
-    ? service.min_price === service.max_price
-    ? `${service.min_price?.toLocaleString()} ₸`
-    : `${service.min_price?.toLocaleString()} - ${service.max_price.toLocaleString()} ₸`
-    : null;
+  const priceRange =
+    service?.min_price && service?.max_price
+      ? service.min_price === service.max_price
+        ? `${service.min_price?.toLocaleString()} ₸`
+        : `${service.min_price?.toLocaleString()} - ${service.max_price.toLocaleString()} ₸`
+      : null;
 
   return (
     <Card className="sticky top-4 h-fit">
@@ -121,20 +122,23 @@ export function AppointmentAside({
               <span>{t("aside.total")}</span>
             </div>
             <p className="text-lg font-semibold pl-6">
-              {hasSpecificPrice 
+              {hasSpecificPrice
                 ? `${specificPrice?.toLocaleString()} ₸`
-                : priceRange
-              }
+                : priceRange}
             </p>
           </div>
         )}
 
         {/* Если ничего не выбрано */}
-        {!service && !formattedDate && !time && !hasSpecificPrice && !priceRange && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            {t("aside.empty")}
-          </p>
-        )}
+        {!service &&
+          !formattedDate &&
+          !time &&
+          !hasSpecificPrice &&
+          !priceRange && (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              {t("aside.empty")}
+            </p>
+          )}
       </CardContent>
     </Card>
   );

@@ -28,7 +28,7 @@ export const bagsyService = {
     const response = await apiClient.get<ServicesResponse>(
       `v1/services/${pointCode}`
     );
-    
+
     return response.services;
   },
 
@@ -68,9 +68,7 @@ export const bagsyService = {
   /**
    * Подтверждение брони с OTP кодом
    */
-  async confirmBagsy(
-    data: ConfirmBagsyRequest
-  ): Promise<ConfirmBagsyResponse> {
+  async confirmBagsy(data: ConfirmBagsyRequest): Promise<ConfirmBagsyResponse> {
     const response = await apiClient.post<ConfirmBagsyResponse>(
       "v1/bagsies/confirm",
       data

@@ -8,8 +8,21 @@
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useServices } from "@/shared/hooks/use-bagsy";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/entities/form";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/entities/card";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/entities/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/entities/card";
 import { Button } from "@/entities/button";
 import { Loader2, Clock } from "lucide-react";
 import { cn } from "@/shared/utils/styles";
@@ -19,7 +32,9 @@ interface AppointmentStepServiceProps {
   pointCode: string;
 }
 
-export function AppointmentStepService({ pointCode }: AppointmentStepServiceProps) {
+export function AppointmentStepService({
+  pointCode,
+}: AppointmentStepServiceProps) {
   const t = useTranslations("AppointmentForm");
   const { data: services, isLoading } = useServices(pointCode);
   const form = useFormContext<{
@@ -53,7 +68,7 @@ export function AppointmentStepService({ pointCode }: AppointmentStepServiceProp
           <FormItem>
             <FormControl>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {services.map((service) => (
+                {services.map(service => (
                   <ServiceCard
                     key={service.id}
                     service={service}
@@ -106,11 +121,11 @@ function ServiceCard({ service, isSelected, onClick }: ServiceCardProps) {
       <CardFooter className="flex-col items-start gap-2 pt-4 mt-auto text-sm">
         <div className="flex items-center gap-1.5 text-muted-foreground">
           <Clock className="size-4" />
-          <span>{service.duration_minutes} {t("steps.service.minutes")}</span>
+          <span>
+            {service.duration_minutes} {t("steps.service.minutes")}
+          </span>
         </div>
-        <div className="font-semibold">
-          {priceText}
-        </div>
+        <div className="font-semibold">{priceText}</div>
       </CardFooter>
     </Card>
   );

@@ -17,7 +17,16 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/entities/card";
 import { Button } from "@/entities/button";
 import { Separator } from "@/entities/separator";
-import { Loader2, Calendar, Clock, User, Phone, ClipboardList, BriefcaseBusiness, ArrowLeft } from "lucide-react";
+import {
+  Loader2,
+  Calendar,
+  Clock,
+  User,
+  Phone,
+  ClipboardList,
+  BriefcaseBusiness,
+  ArrowLeft,
+} from "lucide-react";
 import { AppointmentStepOtp } from "./appointment-step-otp";
 import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
 
@@ -56,23 +65,33 @@ export function AppointmentStepConfirm({
 
   // Находим выбранного мастера
   const selectedMaster = daySlotsData?.masters.find(
-    (m) => m.master_phone === formValues.master_phone
+    m => m.master_phone === formValues.master_phone
   );
 
   // Форматируем дату и время
   const formattedDate = formValues.date
-    ? format(parseISO(formValues.date), "d MMMM yyyy", { locale: dateFnsLocale })
+    ? format(parseISO(formValues.date), "d MMMM yyyy", {
+        locale: dateFnsLocale,
+      })
     : "";
   const formattedTime = formValues.time || "";
 
   // Форматируем pointCode для отображения
   const formattedPointCode = pointCode
     .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   const handleConfirm = async () => {
-    if (!formValues.service_id || !formValues.date || !formValues.time || !formValues.master_phone || !formValues.name || !formValues.surname || !formValues.client_phone) {
+    if (
+      !formValues.service_id ||
+      !formValues.date ||
+      !formValues.time ||
+      !formValues.master_phone ||
+      !formValues.name ||
+      !formValues.surname ||
+      !formValues.client_phone
+    ) {
       toast.error(t("errors.fillAllFields"));
       return;
     }
@@ -80,7 +99,7 @@ export function AppointmentStepConfirm({
     try {
       // Формируем start_at в ISO формате с Z окончанием
       const startAt = `${formValues.date}T${formValues.time}:00Z`;
-      const clientPhone = formValues.client_phone!.replace(/[^\d]/g, '');
+      const clientPhone = formValues.client_phone!.replace(/[^\d]/g, "");
 
       const response = await createBagsyMutation.mutateAsync({
         service_id: formValues.service_id!,
@@ -116,8 +135,12 @@ export function AppointmentStepConfirm({
               <BriefcaseBusiness className="size-5 text-muted-foreground" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">{t("steps.confirm.business")}</p>
-              <p className="text-sm text-muted-foreground">{formattedPointCode}</p>
+              <p className="text-sm font-medium">
+                {t("steps.confirm.business")}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {formattedPointCode}
+              </p>
             </div>
           </div>
 
@@ -131,8 +154,12 @@ export function AppointmentStepConfirm({
                   <ClipboardList className="size-5 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{t("steps.confirm.service")}</p>
-                  <p className="text-sm text-muted-foreground">{service.name}</p>
+                  <p className="text-sm font-medium">
+                    {t("steps.confirm.service")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {service.name}
+                  </p>
                   {selectedMaster && (
                     <p className="text-sm font-medium mt-1">
                       {selectedMaster?.master_service_price?.toLocaleString()} ₸
@@ -153,15 +180,21 @@ export function AppointmentStepConfirm({
                   <Calendar className="size-5 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{t("steps.confirm.when")}</p>
+                  <p className="text-sm font-medium">
+                    {t("steps.confirm.when")}
+                  </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <p className="text-sm text-muted-foreground">{formattedDate}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {formattedDate}
+                    </p>
                     {formattedTime && (
                       <>
                         <span className="text-muted-foreground">•</span>
                         <div className="flex items-center gap-1.5">
                           <Clock className="size-3.5 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">{formattedTime}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {formattedTime}
+                          </p>
                         </div>
                       </>
                     )}
@@ -181,65 +214,75 @@ export function AppointmentStepConfirm({
                   <User className="size-5 text-muted-foreground" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">{t("steps.confirm.master")}</p>
-                  <p className="text-sm text-muted-foreground">{selectedMaster.master_name}</p>
+                  <p className="text-sm font-medium">
+                    {t("steps.confirm.master")}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedMaster.master_name}
+                  </p>
                 </div>
               </div>
             </>
           )}
 
           {/* Данные клиента */}
-          {(formValues.name || formValues.surname || formValues.client_phone) && (
-              <>
-                <Separator />
-                  <div className="space-y-3">
-                    <p className="text-sm font-medium">{t("steps.confirm.client")}</p>
-                    <div className="space-y-2 pl-8">
-                      {formValues.name && (
-                        <div className="flex items-center gap-2">
-                          <User className="size-4 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">
-                            {formValues.name} {formValues.surname}
-                          </p>
-                        </div>
-                      )}
-                      {formValues.client_phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="size-4 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">{formValues.client_phone}</p>
-                        </div>
-                      )}
+          {(formValues.name ||
+            formValues.surname ||
+            formValues.client_phone) && (
+            <>
+              <Separator />
+              <div className="space-y-3">
+                <p className="text-sm font-medium">
+                  {t("steps.confirm.client")}
+                </p>
+                <div className="space-y-2 pl-8">
+                  {formValues.name && (
+                    <div className="flex items-center gap-2">
+                      <User className="size-4 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        {formValues.name} {formValues.surname}
+                      </p>
                     </div>
-                  </div>
-              </>
+                  )}
+                  {formValues.client_phone && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="size-4 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        {formValues.client_phone}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
-          <div className="flex items-center justify-between pt-2 md:pt-4">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleBack}
-        className="flex items-center gap-2"
-      >
-        <ArrowLeft />
-        {t("buttons.back")}
-      </Button>
+      <div className="flex items-center justify-between pt-2 md:pt-4">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleBack}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft />
+          {t("buttons.back")}
+        </Button>
 
-      <Button
-        type="button"
-        onClick={handleConfirm}
-        disabled={createBagsyMutation.isPending}
-      >
-        {createBagsyMutation.isPending ? (
-          <>
-            <Loader2 className="size-4 animate-spin" />
-            {t("steps.confirm.creating")}
-          </>
-        ) : (
-          t("steps.confirm.confirmButton")
-        )}
-      </Button>
+        <Button
+          type="button"
+          onClick={handleConfirm}
+          disabled={createBagsyMutation.isPending}
+        >
+          {createBagsyMutation.isPending ? (
+            <>
+              <Loader2 className="size-4 animate-spin" />
+              {t("steps.confirm.creating")}
+            </>
+          ) : (
+            t("steps.confirm.confirmButton")
+          )}
+        </Button>
       </div>
     </div>
   );

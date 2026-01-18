@@ -7,7 +7,14 @@
 
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, FormDescription } from "@/entities/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  FormDescription,
+} from "@/entities/form";
 import { Input } from "@/entities/input";
 import { Textarea } from "@/entities/textarea";
 import PhoneInput from "@/widgets/forms/phone-input";
@@ -30,7 +37,10 @@ export function AppointmentStepClient() {
           <FormItem>
             <FormLabel>{t("steps.client.name")}</FormLabel>
             <FormControl>
-              <Input placeholder={t("steps.client.namePlaceholder")} {...field} />
+              <Input
+                placeholder={t("steps.client.namePlaceholder")}
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -44,7 +54,10 @@ export function AppointmentStepClient() {
           <FormItem>
             <FormLabel>{t("steps.client.surname")}</FormLabel>
             <FormControl>
-              <Input placeholder={t("steps.client.surnamePlaceholder")} {...field} />
+              <Input
+                placeholder={t("steps.client.surnamePlaceholder")}
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -82,7 +95,9 @@ export function AppointmentStepClient() {
                 {...field}
               />
             </FormControl>
-            <FormDescription>{t("steps.client.commentDescription")}</FormDescription>
+            <FormDescription>
+              {t("steps.client.commentDescription")}
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}

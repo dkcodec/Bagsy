@@ -17,7 +17,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/entities/form";
-import { REGEXP_ONLY_DIGITS } from "input-otp"
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/entities/input-otp";
 import { Button } from "@/entities/button";
 import { Loader2 } from "lucide-react";
@@ -100,10 +100,22 @@ export function AppointmentStepOtp({
                   disabled={confirmBagsyMutation.isPending}
                 >
                   <InputOTPGroup>
-                    <InputOTPSlot index={0} className="md:h-18 md:w-18 md:text-xl" />
-                    <InputOTPSlot index={1} className="md:h-18 md:w-18 md:text-xl" />
-                    <InputOTPSlot index={2} className="md:h-18 md:w-18 md:text-xl" />
-                    <InputOTPSlot index={3} className="md:h-18 md:w-18 md:text-xl" />
+                    <InputOTPSlot
+                      index={0}
+                      className="md:h-18 md:w-18 md:text-xl"
+                    />
+                    <InputOTPSlot
+                      index={1}
+                      className="md:h-18 md:w-18 md:text-xl"
+                    />
+                    <InputOTPSlot
+                      index={2}
+                      className="md:h-18 md:w-18 md:text-xl"
+                    />
+                    <InputOTPSlot
+                      index={3}
+                      className="md:h-18 md:w-18 md:text-xl"
+                    />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
@@ -129,7 +141,6 @@ export function AppointmentStepOtp({
           t("steps.otp.resendCode")
         )}
       </Button>
-
     </div>
   );
 }

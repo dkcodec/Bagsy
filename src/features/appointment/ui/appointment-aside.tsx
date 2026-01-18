@@ -11,7 +11,15 @@ import { ru, kk } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Separator } from "@/entities/separator";
-import { CreditCard, Calendar, Clock, User, BriefcaseBusiness, ClipboardList, Banknote } from "lucide-react";
+import {
+  CreditCard,
+  Calendar,
+  Clock,
+  User,
+  BriefcaseBusiness,
+  ClipboardList,
+  Banknote,
+} from "lucide-react";
 import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
 
 interface AppointmentAsideProps {
@@ -117,17 +125,17 @@ export function AppointmentAside({
         {/* Мастер */}
         {selectedMaster && (
           <>
-          <div className="space-y-1.5">
-            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <User className="size-4" />
-              <span>{t("aside.master")}</span>
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                <User className="size-4" />
+                <span>{t("aside.master")}</span>
+              </div>
+              <div className="pl-6 space-y-1">
+                <p className="text-sm">{selectedMaster.master_name}</p>
+              </div>
             </div>
-            <div className="pl-6 space-y-1">
-              <p className="text-sm">{selectedMaster.master_name}</p>
-            </div>
-          </div>
-          <Separator />
-        </>
+            <Separator />
+          </>
         )}
 
         {/* Тотал */}

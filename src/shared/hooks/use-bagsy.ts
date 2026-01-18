@@ -74,9 +74,8 @@ export function useConfirmBagsy() {
     onError: (error: Error) => {
       toast.error(error.message || "Неверный код подтверждения");
     },
-  });  
+  });
 }
-
 
 /**
  * Хук для повторной отправки кода подтверждения

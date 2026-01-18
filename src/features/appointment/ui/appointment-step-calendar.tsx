@@ -2,7 +2,7 @@
 
 import { format, parseISO, isSameDay } from "date-fns";
 import { useSlots, useDaySlots } from "@/shared/hooks";
-import { SingleCalendar } from "@/entities/single-calendar";
+import { Calendar } from "@/entities/calendar";
 import { Button } from "@/entities/button";
 import {
   Card,
@@ -82,7 +82,7 @@ export function AppointmentStepCalendar({
           {isLoadingSlots ? (
             <Skeleton className="h-[350px] w-full max-w-[350px]" />
           ) : (
-            <SingleCalendar
+            <Calendar
               mode="single"
               selected={selectedDate || undefined}
               onSelect={handleDateSelect}
@@ -107,8 +107,8 @@ export function AppointmentStepCalendar({
                 ))}
               </div>
             ) : daySlotsData &&
-              daySlotsData.slots &&
-              daySlotsData.slots.length > 0 ? (
+              daySlotsData.masters &&
+              daySlotsData.masters.some(master => master.slots.length > 0) ? (
               <Card className="overflow-hidden">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base">Доступное время</CardTitle>
@@ -118,25 +118,28 @@ export function AppointmentStepCalendar({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="flex flex-wrap gap-2">
-                    {daySlotsData.slots.map(time => {
-                      const isSelected = selectedTime === time;
-                      return (
-                        <Button
-                          key={time}
-                          type="button"
-                          variant={isSelected ? "default" : "outline"}
-                          size="sm"
-                          className={cn(
-                            "gap-2",
-                            isSelected && "ring-2 ring-primary"
-                          )}
-                          onClick={() => onSelectTime(time)}
-                        >
-                          <Clock className="size-3" />
-                          {time}
-                        </Button>
-                      );
-                    })}
+                    {daySlotsData.masters
+                      .flatMap(master => master.slots)
+                      .flat()
+                      .map(time => {
+                        const isSelected = selectedTime === time;
+                        return (
+                          <Button
+                            key={time}
+                            type="button"
+                            variant={isSelected ? "default" : "outline"}
+                            size="sm"
+                            className={cn(
+                              "gap-2",
+                              isSelected && "ring-2 ring-primary"
+                            )}
+                            onClick={() => onSelectTime(time)}
+                          >
+                            <Clock className="size-3" />
+                            {time}
+                          </Button>
+                        );
+                      })}
                   </div>
                 </CardContent>
               </Card>

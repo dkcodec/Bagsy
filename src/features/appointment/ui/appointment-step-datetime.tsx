@@ -9,7 +9,6 @@ import { useMemo, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { format, parseISO, isSameDay } from "date-fns";
-import { ru, kk } from "date-fns/locale";
 import { useLocale } from "next-intl";
 import { useSlots, useDaySlots } from "@/shared/hooks/use-bagsy";
 import {
@@ -124,11 +123,9 @@ export function AppointmentStepDateTime({
     form.setValue("master_phone", masterPhone);
   };
 
-  const dateFnsLocale = locale === "ru" ? ru : kk;
-
   return (
     <div className="space-y-6">
-      <div className="flex gap-6 md:flex-row flex-col md:h-80">
+      <div className="flex gap-6 md:flex-row flex-col md:h-92">
         {/* Календарь */}
         <FormField
           control={form.control}
@@ -145,6 +142,7 @@ export function AppointmentStepDateTime({
                     selected={field.value ? parseISO(field.value) : undefined}
                     onSelect={handleDateSelect}
                     className="rounded-md border"
+                    disabled={isDateDisabled}
                   />
                 </div>
               </FormControl>

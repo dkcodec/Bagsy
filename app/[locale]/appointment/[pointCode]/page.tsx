@@ -1,4 +1,5 @@
 import { AppointmentFlow } from "@/features/appointment";
+import { AppointmentHeader } from "@/src/features/appointment/ui/appointment-header";
 
 /**
  * Страница записи на прием
@@ -12,8 +13,13 @@ export default async function AppointmentPage({
   const { pointCode } = await params;
 
   return (
-    <div className="container mx-auto py-8 px-3 sm:px-4 lg:px-8">
-      <AppointmentFlow pointCode={pointCode} />
-    </div>
+    <>
+      <AppointmentHeader />
+      <main className="pt-16 max-w-7xl mx-auto">
+        <div className="container mx-auto py-8 px-3 sm:px-4 lg:px-8">
+          <AppointmentFlow pointCode={pointCode} />
+        </div>
+      </main>
+    </>
   );
 }

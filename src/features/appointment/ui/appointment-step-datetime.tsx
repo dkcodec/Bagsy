@@ -157,6 +157,12 @@ export function AppointmentStepDateTime({
           className="hidden md:block self-stretch"
         />
 
+        {availableDates.length === 0 && (
+          <p className="flex-1 flex text-sm text-muted-foreground text-center justify-center items-center">
+            {t("steps.datetime.noDates")}
+          </p>
+        )}
+
         {/* Выбор времени */}
         {selectedDate && (
           <FormField
@@ -169,11 +175,11 @@ export function AppointmentStepDateTime({
                 </FormLabel>
                 <FormControl>
                   {isLoadingDaySlots ? (
-                    <div className="flex items-center justify-center py-8">
+                    <div className="flex-1 flex items-center justify-center py-8">
                       <Loader2 className="size-6 animate-spin text-muted-foreground" />
                     </div>
                   ) : availableTimeSlots.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-4 text-center">
+                    <p className="flex-1 flex text-sm text-muted-foreground py-4 text-center justify-center items-center">
                       {t("steps.datetime.noSlots")}
                     </p>
                   ) : (

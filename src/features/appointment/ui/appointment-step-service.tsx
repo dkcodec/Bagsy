@@ -39,9 +39,31 @@ export function AppointmentStepService({
   const { data: services, isLoading } = useServices(pointCode);
   const form = useFormContext<{
     service_id?: string;
+    date?: string;
+    time?: string;
+    master_phone?: string;
+    bagsy_id?: string;
+    code?: string;
   }>();
 
   const selectedServiceId = form.watch("service_id");
+
+  // Обработчик выбора услуги с очисткой зависимых полей
+  const handleServiceSelect = (serviceId: string) => {
+    const currentServiceId = form.getValues("service_id");
+    // Если выбран другой сервис, очищаем зависимые поля
+    if (currentServiceId !== serviceId) {
+      form.setValue("service_id", serviceId);
+      form.setValue("date", undefined);
+      form.setValue("time", undefined);
+      form.setValue("master_phone", undefined);
+      form.setValue("bagsy_id", undefined);
+      form.setValue("code", "");
+    } else {
+      // Если тот же сервис, просто обновляем значение
+      form.setValue("service_id", serviceId);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -73,7 +95,7 @@ export function AppointmentStepService({
                     key={service.id}
                     service={service}
                     isSelected={field.value === service.id}
-                    onClick={() => field.onChange(service.id)}
+                    onClick={() => handleServiceSelect(service.id)}
                   />
                 ))}
               </div>

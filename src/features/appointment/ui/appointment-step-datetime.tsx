@@ -157,6 +157,12 @@ export function AppointmentStepDateTime({
           className="hidden md:block self-stretch"
         />
 
+        {availableDates.length === 0 && (
+          <p className="flex-1 flex text-sm text-muted-foreground text-center justify-center items-center text-nowrap">
+            {t("steps.datetime.noDates")}
+          </p>
+        )}
+
         {/* Выбор времени */}
         {selectedDate && (
           <FormField

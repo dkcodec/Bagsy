@@ -157,10 +157,16 @@ export function AppointmentStepDateTime({
           className="hidden md:block self-stretch"
         />
 
-        {availableDates.length === 0 && (
-          <p className="flex-1 flex text-sm text-muted-foreground text-center justify-center items-center">
-            {t("steps.datetime.noDates")}
-          </p>
+        {isLoadingSlots ? (
+          <div className="flex-1 flex items-center justify-center py-8">
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          availableDates.length === 0 && (
+            <p className="flex-1 flex text-sm text-muted-foreground text-center justify-center items-center">
+              {t("steps.datetime.noDates")}
+            </p>
+          )
         )}
 
         {/* Выбор времени */}

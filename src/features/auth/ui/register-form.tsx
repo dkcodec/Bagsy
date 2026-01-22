@@ -308,6 +308,7 @@ export function RegisterForm() {
       // Получаем данные о бизнесе из формы
       const formValues = form.getValues();
       const networkInfo = formValues.network_info;
+      const validPhone = data.phone.replace(/\s/g, "");
 
       if (!networkInfo || !networkInfo.name || !networkInfo.description) {
         toast.error(t("errors.networkInfoRequired"));
@@ -317,7 +318,7 @@ export function RegisterForm() {
       await registerMutation.mutateAsync({
         name: data.name,
         surname: data.surname,
-        phone: data.phone,
+        phone: validPhone,
         password: data.password,
         role: data.role,
         network_info: {

@@ -308,7 +308,7 @@ export function RegisterForm() {
       // Получаем данные о бизнесе из формы
       const formValues = form.getValues();
       const networkInfo = formValues.network_info;
-      const validPhone = data.phone.replace(/\s/g, "");
+      const validPhone = data.phone.replace(/\D/g, "");
 
       if (!networkInfo || !networkInfo.name || !networkInfo.description) {
         toast.error(t("errors.networkInfoRequired"));
@@ -327,7 +327,7 @@ export function RegisterForm() {
         },
       });
 
-      setRegisteredPhone(data.phone);
+      setRegisteredPhone(validPhone);
       setCurrentStep(2);
       toast.success(t("success.codeSent"));
     } catch (error) {

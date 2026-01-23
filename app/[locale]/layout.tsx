@@ -33,7 +33,7 @@ export async function generateMetadata(
   // Hreflang теги для главной страницы
   // Для вложенных страниц нужно будет добавить полный путь в их generateMetadata
   const languages = routing.locales.reduce<Record<string, string>>((acc, l) => {
-    const hreflang = localeToHreflang[l === "kz" ? "kk" : l] || l;
+    const hreflang = localeToHreflang[l] || l;
     // Для главной страницы используем только /locale
     acc[hreflang] = `${baseNormalized}/${l}`;
     return acc;

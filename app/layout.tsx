@@ -52,8 +52,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const htmlLang =
-    localeToHreflang[locale === "kz" ? "kk" : "ru-KZ"] ?? "ru-KZ";
+  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
   return (
     <html lang={htmlLang} suppressHydrationWarning>
       <head>

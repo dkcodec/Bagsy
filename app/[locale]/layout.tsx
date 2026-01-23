@@ -25,7 +25,7 @@ export async function generateMetadata(
 
   const base = process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz";
   const baseNormalized = base.replace(/\/+$/, "");
-  
+
   // Canonical для главной страницы (вложенные страницы должны переопределять его)
   // Используем только базовый путь с локалью, страницы могут добавить свой путь
   const canonical = `${baseNormalized}/${locale}`;
@@ -33,7 +33,7 @@ export async function generateMetadata(
   // Hreflang теги для главной страницы
   // Для вложенных страниц нужно будет добавить полный путь в их generateMetadata
   const languages = routing.locales.reduce<Record<string, string>>((acc, l) => {
-    const hreflang = localeToHreflang[l] || l;
+    const hreflang = localeToHreflang[l === "kz" ? "kk" : l] || l;
     // Для главной страницы используем только /locale
     acc[hreflang] = `${baseNormalized}/${l}`;
     return acc;

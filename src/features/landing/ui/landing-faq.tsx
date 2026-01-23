@@ -55,10 +55,7 @@ export async function LandingFAQ() {
   ];
 
   return (
-    <section
-      id="faq"
-      className="py-24 bg-background relative overflow-hidden"
-    >
+    <section id="faq" className="py-24 bg-background relative overflow-hidden">
       {/* Декоративные элементы */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       <div className="absolute top-0 left-1/4 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob" />
@@ -67,7 +64,10 @@ export async function LandingFAQ() {
         {/* Заголовок секции */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
-            <Badge variant="default" className="text-sm flex items-center gap-2 px-4 py-1.5">
+            <Badge
+              variant="default"
+              className="text-sm flex items-center gap-2 px-4 py-1.5"
+            >
               <HelpCircle className="h-4 w-4" />
               FAQ
             </Badge>

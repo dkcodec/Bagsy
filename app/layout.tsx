@@ -1,12 +1,10 @@
 import { Nunito } from "next/font/google";
-import { defaultLocale } from "@/i18n/routing";
-import type { Metadata } from "next";
 import "@/src/styles/shadcn.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
-import { localeToHreflang, ogLocaleMap } from "@/src/shared/constants";
+import { localeToHreflang } from "@/src/shared/constants";
 import { getLocale } from "next-intl/server";
 
 const nunito = Nunito({
@@ -54,7 +52,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
-  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
+  const htmlLang =
+    localeToHreflang[locale === "kz" ? "kk" : "ru-KZ"] ?? "ru-KZ";
   return (
     <html lang={htmlLang} suppressHydrationWarning>
       <head>

@@ -17,24 +17,15 @@ const nunito = Nunito({
 });
 
 export async function generateMetadata() {
-  const locale = await getLocale();
-  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
   return {
+    // metadataBase используется как базовый URL для всех относительных путей в метаданных
     metadataBase: new URL(process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz"),
-    alternates: {
-      canonical: process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz",
-      languages: {
-        "ru-KZ": "https://bagsy.kz/ru",
-        "kk-KZ": "https://bagsy.kz/kz",
-        "x-default": "https://bagsy.kz/ru",
-      },
-    },
     title: {
       default: "Bagsy",
       template: "%s | Bagsy",
     },
     description:
-      "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
+      "Bagsy — онлайн запись клиентов и CRM для управления расписанием, мастерами и записями. Подходит для самозанятых, салонов, услуг и малого бизнеса.",
     robots: {
       index: true,
       follow: true,
@@ -46,23 +37,6 @@ export async function generateMetadata() {
       ],
       apple: [{ url: "/apple-touch-icon.png" }],
       shortcut: ["/logo-dark.svg"],
-    },
-    openGraph: {
-      siteName: "Bagsy",
-      type: "website",
-      title: "Bagsy",
-      locale: ogLocaleMap[locale] ?? "ru_KZ",
-      alternateLocale: ["ru_KZ", "kk_KZ"],
-      description:
-        "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
-      images: [
-        {
-          url: "/logo-full-dark.svg",
-          width: 1200,
-          height: 630,
-          alt: "Bagsy",
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",

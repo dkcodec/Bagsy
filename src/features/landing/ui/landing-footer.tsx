@@ -143,14 +143,14 @@ export async function LandingFooter() {
           </p>
           <div className="flex items-center gap-6">
             <Link
-              href="#privacy"
+              href={`/${locale}/privacy`}
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
               hrefLang={locale}
             >
               {t("privacy")}
             </Link>
             <Link
-              href="#terms"
+              href={`/${locale}/terms`}
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
               hrefLang={locale}
             >

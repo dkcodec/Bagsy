@@ -23,7 +23,7 @@ export default async function TermsPage() {
       <Breadcrumb className="mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/" className=" hover:text-accent-500">
+            <BreadcrumbLink href={`/${locale}`} className=" hover:text-accent-500">
               {t("home")}
             </BreadcrumbLink>
           </BreadcrumbItem>

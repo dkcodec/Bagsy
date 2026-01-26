@@ -106,14 +106,18 @@ const mockServices: Service[] = [
 const mockDaySlotsData: GetDaySlotsResponse = {
   service_id: "service-123",
   point_code: "test_point",
-  date: "2024-01-15",
+  date: "2024-01-15T00:00:00.000+05:00",
   duration_minutes: 60,
   masters: [
     {
       master_name: "Иван Иванов",
       master_phone: "+77001234567",
       master_service_price: 1500,
-      slots: ["10:00", "11:00", "12:00"],
+      slots: [
+        "2024-01-15T10:00:00.000+05:00",
+        "2024-01-15T11:00:00.000+05:00",
+        "2024-01-15T12:00:00.000+05:00",
+      ],
     },
   ],
 };

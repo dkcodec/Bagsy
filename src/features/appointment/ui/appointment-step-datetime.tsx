@@ -23,6 +23,11 @@ import { Button } from "@/entities/button";
 import { Calendar } from "@/entities/calendar";
 import { Loader2, Clock, User } from "lucide-react";
 import { cn } from "@/shared/utils/styles";
+import {
+  toStartAtISO,
+  parseDateFromISO,
+  parseTimeFromISO,
+} from "@/shared/utils/datetime";
 import { Separator } from "@/entities/separator";
 
 interface AppointmentStepDateTimeProps {
@@ -54,21 +59,23 @@ export function AppointmentStepDateTime({
       : null
   );
 
-  // Получаем слоты на выбранный день
+  // Получаем слоты на выбранный день (date в API — ISO+tz)
   const { data: daySlotsData, isLoading: isLoadingDaySlots } = useDaySlots(
     selectedDate && serviceId && pointCode
       ? {
-          date: selectedDate,
+          date: toStartAtISO(selectedDate, "00:00"),
           service_id: serviceId,
           point_code: pointCode,
         }
       : null
   );
 
-  // Форматируем доступные даты для календаря
+  // Доступные даты: из ISO+tz извлекаем yyyy-MM-dd для UI (календарь, isSameDay)
   const availableDates = useMemo(() => {
     if (!slotsData?.available_dates) return [];
-    return slotsData.available_dates.map(dateStr => parseISO(dateStr));
+    return slotsData.available_dates
+      .map(parseDateFromISO)
+      .map(d => parseISO(d));
   }, [slotsData]);
 
   // Автоматически выбираем первую доступную дату при загрузке
@@ -86,21 +93,21 @@ export function AppointmentStepDateTime({
     );
   };
 
-  // Собираем все уникальные слоты времени из всех мастеров
+  // Слоты: из ISO+tz извлекаем HH:mm для UI; уникальные, сортировка
   const availableTimeSlots = useMemo(() => {
     if (!daySlotsData?.masters) return [];
     const allSlots = new Set<string>();
     daySlotsData.masters.forEach(master => {
-      master.slots.forEach(slot => allSlots.add(slot));
+      master.slots.map(parseTimeFromISO).forEach(t => allSlots.add(t));
     });
     return Array.from(allSlots).sort();
   }, [daySlotsData]);
 
-  // Фильтруем мастеров по выбранному времени
+  // Фильтруем мастеров по выбранному времени (HH:mm)
   const availableMasters = useMemo(() => {
     if (!selectedTime || !daySlotsData?.masters) return [];
     return daySlotsData.masters.filter(master =>
-      master.slots.includes(selectedTime)
+      master.slots.map(parseTimeFromISO).includes(selectedTime)
     );
   }, [selectedTime, daySlotsData]);
 

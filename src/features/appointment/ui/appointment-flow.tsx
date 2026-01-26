@@ -180,7 +180,7 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
   const selectedDate = form.watch("date");
   const selectedTime = form.watch("time");
   const selectedMasterPhone = form.watch("master_phone");
-  const { data: services } = useServices(pointCode);
+  const { data: services } = useServices(pointCode, true);
   const service = services?.find(s => s.id === serviceId);
 
   const { data: daySlotsData } = useDaySlots(

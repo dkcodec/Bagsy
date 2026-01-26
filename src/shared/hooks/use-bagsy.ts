@@ -14,10 +14,10 @@ import type {
 /**
  * Хук для получения списка услуг
  */
-export function useServices(pointCode: string) {
+export function useServices(pointCode: string, isActive?: boolean) {
   return useQuery({
     queryKey: ["services", pointCode],
-    queryFn: () => bagsyService.getServices(pointCode),
+    queryFn: () => bagsyService.getServices(pointCode, isActive),
     enabled: !!pointCode,
     staleTime: 10 * 60 * 1000, // 10 минут
   });

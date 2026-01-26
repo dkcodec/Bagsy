@@ -1,8 +1,16 @@
-﻿import { landing } from "@/features";
+import { landing } from "@/features";
+import { StructuredData } from "@/src/components/seo";
+import { getFAQDataForJSONLD } from "@/features/landing";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  // Получаем FAQ данные для JSON-LD структурированных данных
+  const faqData = await getFAQDataForJSONLD();
+
   return (
     <div className="min-h-screen">
+      {/* Структурированные данные JSON-LD для SEO */}
+      <StructuredData faqItems={faqData} />
+
       <landing.LandingHeader />
 
       <main>
@@ -20,6 +28,11 @@ export default function LandingPage() {
 
         <div id="contact">
           <landing.LandingContact />
+        </div>
+
+        {/* FAQ секция для SEO и пользователей */}
+        <div id="faq">
+          <landing.LandingFAQ />
         </div>
 
         {/* <div id="cta">

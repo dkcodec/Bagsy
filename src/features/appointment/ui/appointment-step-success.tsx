@@ -50,7 +50,7 @@ export function AppointmentStepSuccess({
   const formattedTime = formValues.time || "";
 
   const handleGoHome = () => {
-    router.push("/");
+    router.push(`/${locale}`);
   };
 
   return (

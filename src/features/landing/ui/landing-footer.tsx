@@ -106,6 +106,7 @@ export async function LandingFooter() {
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
                 hrefLang={locale}
+                aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
               </Link>
@@ -113,6 +114,7 @@ export async function LandingFooter() {
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
                 hrefLang={locale}
+                aria-label="Twitter"
               >
                 <Twitter className="h-5 w-5" />
               </Link>
@@ -120,6 +122,7 @@ export async function LandingFooter() {
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
                 hrefLang={locale}
+                aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
               </Link>
@@ -127,6 +130,7 @@ export async function LandingFooter() {
                 href="#"
                 className="text-gray-400 hover:text-accent-500 dark:hover:text-accent-400 transition-colors"
                 hrefLang={locale}
+                aria-label="Linkedin"
               >
                 <Linkedin className="h-5 w-5" />
               </Link>
@@ -143,14 +147,14 @@ export async function LandingFooter() {
           </p>
           <div className="flex items-center gap-6">
             <Link
-              href="#privacy"
+              href={`/${locale}/privacy`}
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
               hrefLang={locale}
             >
               {t("privacy")}
             </Link>
             <Link
-              href="#terms"
+              href={`/${locale}/terms`}
               className="text-sm text-gray-600 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
               hrefLang={locale}
             >

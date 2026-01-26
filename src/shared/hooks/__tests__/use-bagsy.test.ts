@@ -58,7 +58,7 @@ describe("useCreateBagsy", () => {
 
   const validRequestData: CreateBagsyRequest = {
     service_id: "service-123",
-    start_at: "2024-01-15T10:00:00Z",
+    start_at: "2024-01-15T10:00:00.000+05:00",
     master_phone: "77001234567",
     name: "Иван",
     surname: "Иванов",

@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/ru",
+        permanent: true,
+        locale: false,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

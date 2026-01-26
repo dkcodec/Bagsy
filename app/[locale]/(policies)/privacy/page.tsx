@@ -23,13 +23,19 @@ export default async function PrivacyPage() {
       <Breadcrumb className="mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/" className=" hover:text-accent-500">
+            <BreadcrumbLink
+              href={`/${locale}`}
+              className=" hover:text-accent-500"
+            >
               {t("home")}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/privacy" className=" hover:text-accent-500">
+            <BreadcrumbLink
+              href={`/${locale}/privacy`}
+              className=" hover:text-accent-500"
+            >
               {t("heading")}
             </BreadcrumbLink>
           </BreadcrumbItem>

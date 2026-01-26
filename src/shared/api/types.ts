@@ -98,11 +98,13 @@ export interface GetSlotsResponse {
   service_id: string;
   point_code: string;
   duration_minutes: number;
-  available_dates: string[]; // ISO date strings
+  /** ISO datetime с таймзоной, напр. 2025-01-15T00:00:00.000+05:00 */
+  available_dates: string[];
 }
 
 export interface GetDaySlotsRequest {
-  date: string; // ISO date string
+  /** ISO 8601 с таймзоной, напр. 2025-01-15T00:00:00.000+05:00 */
+  date: string;
   point_code: string;
   service_id: string;
 }
@@ -111,12 +113,14 @@ export interface GetDaySlotsRequest {
 export interface MasterSlot {
   phone: string;
   name: string;
-  slots: string[]; // Time strings like "15:00"
+  /** ISO datetime с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
+  slots: string[];
 }
 
 export interface GetDaySlotsResponse {
   service_id: string;
   point_code: string;
+  /** ISO datetime с таймзоной */
   date: string;
   duration_minutes: number;
   masters: [
@@ -124,6 +128,7 @@ export interface GetDaySlotsResponse {
       master_name: string;
       master_phone: string;
       master_service_price: number;
+      /** ISO datetime с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
       slots: string[];
     },
   ];
@@ -135,7 +140,8 @@ export interface CreateBagsyRequest {
   master_phone: string;
   name: string;
   service_id: string;
-  start_at: string; // ISO datetime string rfc339 с Z окончанием
+  /** ISO 8601 с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
+  start_at: string;
   surname: string;
 }
 

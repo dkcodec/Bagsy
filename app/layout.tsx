@@ -1,12 +1,10 @@
 import { Nunito } from "next/font/google";
-import { defaultLocale } from "@/i18n/routing";
-import type { Metadata } from "next";
 import "@/src/styles/shadcn.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "sonner";
-import { localeToHreflang, ogLocaleMap } from "@/src/shared/constants";
+import { localeToHreflang } from "@/src/shared/constants";
 import { getLocale } from "next-intl/server";
 
 const nunito = Nunito({
@@ -17,24 +15,15 @@ const nunito = Nunito({
 });
 
 export async function generateMetadata() {
-  const locale = await getLocale();
-  const htmlLang = localeToHreflang[locale] ?? "ru-KZ";
   return {
+    // metadataBase используется как базовый URL для всех относительных путей в метаданных
     metadataBase: new URL(process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz"),
-    alternates: {
-      canonical: process.env.NEXT_PUBLIC_DOMAIN || "https://bagsy.kz",
-      languages: {
-        "ru-KZ": "https://bagsy.kz/ru",
-        "kk-KZ": "https://bagsy.kz/kz",
-        "x-default": "https://bagsy.kz/ru",
-      },
-    },
     title: {
       default: "Bagsy",
       template: "%s | Bagsy",
     },
     description:
-      "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
+      "Bagsy — онлайн запись клиентов и CRM для управления расписанием, мастерами и записями. Подходит для самозанятых, салонов, услуг и малого бизнеса.",
     robots: {
       index: true,
       follow: true,
@@ -46,23 +35,6 @@ export async function generateMetadata() {
       ],
       apple: [{ url: "/apple-touch-icon.png" }],
       shortcut: ["/logo-dark.svg"],
-    },
-    openGraph: {
-      siteName: "Bagsy",
-      type: "website",
-      title: "Bagsy",
-      locale: ogLocaleMap[locale] ?? "ru_KZ",
-      alternateLocale: ["ru_KZ", "kk_KZ"],
-      description:
-        "Bagsy — онлайн‑сервис для управления записями. Быстро, удобно, локализовано.",
-      images: [
-        {
-          url: "/logo-full-dark.svg",
-          width: 1200,
-          height: 630,
-          alt: "Bagsy",
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",

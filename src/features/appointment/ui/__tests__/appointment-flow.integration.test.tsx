@@ -242,7 +242,7 @@ describe("AppointmentFlow - Интеграционные тесты", () => {
       customRender(<AppointmentFlow pointCode="test_point" />);
 
       // Assert
-      expect(mockedUseServices).toHaveBeenCalledWith("test_point");
+      expect(mockedUseServices).toHaveBeenCalledWith("test_point", true);
     });
 
     it("должен вызвать useDaySlots когда выбраны date, serviceId и pointCode", () => {

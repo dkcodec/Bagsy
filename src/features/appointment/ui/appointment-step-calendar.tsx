@@ -2,6 +2,11 @@
 
 import { format, parseISO, isSameDay } from "date-fns";
 import { useSlots, useDaySlots } from "@/shared/hooks";
+import {
+  toStartAtISO,
+  parseDateFromISO,
+  parseTimeFromISO,
+} from "@/shared/utils/datetime";
 import { Calendar } from "@/entities/calendar";
 import { Button } from "@/entities/button";
 import {
@@ -41,20 +46,20 @@ export function AppointmentStepCalendar({
     service_id: serviceId,
   });
 
-  // Получаем слоты на выбранный день
+  // Получаем слоты на выбранный день (date в API — ISO+tz)
   const { data: daySlotsData, isLoading: isLoadingDaySlots } = useDaySlots(
     selectedDate
       ? {
-          date: format(selectedDate, "yyyy-MM-dd"),
+          date: toStartAtISO(format(selectedDate, "yyyy-MM-dd"), "00:00"),
           point_code: pointCode,
           service_id: serviceId,
         }
       : null
   );
 
-  // Преобразуем доступные даты в Date объекты для календаря
+  // Доступные даты: из ISO+tz извлекаем yyyy-MM-dd, затем Date для календаря
   const availableDates =
-    slotsData?.available_dates.map(dateStr => parseISO(dateStr)) || [];
+    slotsData?.available_dates.map(s => parseISO(parseDateFromISO(s))) ?? [];
 
   // Функция для проверки, доступна ли дата
   const isDateAvailable = (date: Date) => {
@@ -118,9 +123,14 @@ export function AppointmentStepCalendar({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="flex flex-wrap gap-2">
-                    {daySlotsData.masters
-                      .flatMap(master => master.slots)
-                      .flat()
+                    {[
+                      ...new Set(
+                        daySlotsData.masters.flatMap(m =>
+                          m.slots.map(parseTimeFromISO)
+                        )
+                      ),
+                    ]
+                      .sort()
                       .map(time => {
                         const isSelected = selectedTime === time;
                         return (

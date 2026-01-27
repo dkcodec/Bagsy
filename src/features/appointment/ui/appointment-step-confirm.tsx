@@ -28,6 +28,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { AppointmentStepOtp } from "./appointment-step-otp";
+import { toStartAtISO } from "@/shared/utils/datetime";
 import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
 
 interface AppointmentStepConfirmProps {
@@ -97,8 +98,8 @@ export function AppointmentStepConfirm({
     }
 
     try {
-      // Формируем start_at в ISO формате с Z окончанием
-      const startAt = `${formValues.date}T${formValues.time}:00Z`;
+      // start_at в ISO 8601 с таймзоной пользователя
+      const startAt = toStartAtISO(formValues.date!, formValues.time!);
       const clientPhone = formValues.client_phone!.replace(/[^\d]/g, "");
 
       const response = await createBagsyMutation.mutateAsync({

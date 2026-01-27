@@ -36,7 +36,7 @@ export function AppointmentStepService({
   pointCode,
 }: AppointmentStepServiceProps) {
   const t = useTranslations("AppointmentForm");
-  const { data: services, isLoading } = useServices(pointCode);
+  const { data: services, isLoading } = useServices(pointCode, true);
   const form = useFormContext<{
     service_id?: string;
     date?: string;

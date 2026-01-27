@@ -23,6 +23,7 @@ import { AppointmentStepConfirm } from "./appointment-step-confirm";
 import { AppointmentStepSuccess } from "./appointment-step-success";
 import { AppointmentAside } from "./appointment-aside";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
+import { toStartAtISO } from "@/shared/utils/datetime";
 import { cn } from "@/src/shared/utils/styles";
 
 interface AppointmentFlowProps {
@@ -179,13 +180,13 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
   const selectedDate = form.watch("date");
   const selectedTime = form.watch("time");
   const selectedMasterPhone = form.watch("master_phone");
-  const { data: services } = useServices(pointCode);
+  const { data: services } = useServices(pointCode, true);
   const service = services?.find(s => s.id === serviceId);
 
   const { data: daySlotsData } = useDaySlots(
     selectedDate && serviceId && pointCode
       ? {
-          date: selectedDate,
+          date: toStartAtISO(selectedDate, "00:00"),
           service_id: serviceId,
           point_code: pointCode,
         }

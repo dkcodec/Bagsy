@@ -22,10 +22,10 @@ describe("bagsyService.createBagsy", () => {
     jest.clearAllMocks();
   });
 
-  // Валидные данные для создания записи
+  // Валидные данные для создания записи (start_at — ISO 8601 с таймзоной)
   const validRequestData: CreateBagsyRequest = {
     service_id: "0ff04d9f-72db-42d0-81f1-373706bff188",
-    start_at: "2026-01-22T15:30:00Z",
+    start_at: "2026-01-22T15:30:00.000+05:00",
     master_phone: "77012345111",
     name: "Иван",
     surname: "Иванов",
@@ -58,7 +58,7 @@ describe("bagsyService.createBagsy", () => {
       // Arrange
       const requestWithoutComment: CreateBagsyRequest = {
         service_id: "service-123",
-        start_at: "2024-01-15T10:00:00Z",
+        start_at: "2024-01-15T10:00:00.000+05:00",
         master_phone: "+77001234567",
         name: "Иван",
         surname: "Иванов",
@@ -92,11 +92,11 @@ describe("bagsyService.createBagsy", () => {
       );
     });
 
-    it("должен правильно сформировать ISO формат start_at с Z окончанием", async () => {
+    it("должен правильно сформировать ISO формат start_at с таймзоной", async () => {
       // Arrange
       const requestWithISO: CreateBagsyRequest = {
         ...validRequestData,
-        start_at: "2026-01-22T15:30:00Z",
+        start_at: "2026-01-22T15:30:00.000+05:00",
       };
       mockedApiClient.post.mockResolvedValueOnce(validResponse);
 
@@ -107,12 +107,12 @@ describe("bagsyService.createBagsy", () => {
       expect(mockedApiClient.post).toHaveBeenCalledWith(
         "v1/bagsies",
         expect.objectContaining({
-          start_at: "2026-01-22T15:30:00Z",
+          start_at: "2026-01-22T15:30:00.000+05:00",
         })
       );
-      // Проверяем, что формат соответствует ISO с Z
+      // ISO 8601 с таймзоной: YYYY-MM-DDTHH:mm:ss.SSS±HH:mm
       expect(requestWithISO.start_at).toMatch(
-        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}$/
       );
     });
   });
@@ -212,7 +212,7 @@ describe("bagsyService.createBagsy", () => {
         "v1/bagsies",
         expect.objectContaining({
           service_id: "0ff04d9f-72db-42d0-81f1-373706bff188",
-          start_at: "2026-01-22T15:30:00Z",
+          start_at: "2026-01-22T15:30:00.000+05:00",
           master_phone: "77012345111",
           name: "Иван",
           surname: "Иванов",

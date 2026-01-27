@@ -26,9 +26,13 @@ export const bagsyService = {
   /**
    * Получение списка услуг для точки
    */
-  async getServices(pointCode: string): Promise<Service[]> {
+  async getServices(pointCode: string, isActive?: boolean): Promise<Service[]> {
+    const queryParams = new URLSearchParams();
+    if (isActive !== undefined) {
+      queryParams.append("is_active", isActive ? "true" : "false");
+    }
     const response = await apiClient.get<ServicesResponse>(
-      `v1/services/${pointCode}`
+      `v1/services/${pointCode}${queryParams.toString() ? `?${queryParams.toString()}` : ""}`
     );
 
     return response.services;

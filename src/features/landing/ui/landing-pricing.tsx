@@ -1,234 +1,233 @@
 import { getTranslations, getLocale } from "next-intl/server";
 import { Button } from "@/entities/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/entities/card";
 import { Badge } from "@/entities/badge";
-import { Check, Star, Zap, Users, Crown } from "lucide-react";
+import { Check } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/shared/utils/styles";
+
+interface Feature {
+  text: string;
+  muted?: boolean;
+}
+
+interface Plan {
+  name: string;
+  price: string;
+  currentPrice: string;
+  period: string;
+  trial: string;
+  description: string;
+  features: Feature[];
+  cta: string;
+  href: string;
+  highlighted?: boolean;
+  badge?: string;
+}
+
+function PlanCard({ plan }: { plan: Plan }) {
+  const isHighlighted = plan.highlighted;
+
+  const card = (
+    <div
+      className={cn(
+        "flex flex-col rounded-2xl p-8 h-full",
+        isHighlighted
+          ? "bg-foreground text-background"
+          : "bg-muted dark:bg-muted/50 text-foreground"
+      )}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <h3 className="text-xl font-bold">{plan.name}</h3>
+        {plan.badge && (
+          <Badge
+            className={cn(
+              "text-xs font-medium",
+              isHighlighted
+                ? "bg-accent-500 text-white border-accent-500 hover:bg-accent-500"
+                : "bg-accent-100 text-accent-700 border-accent-200 hover:bg-accent-100 dark:bg-accent-900 dark:text-accent-300 dark:border-accent-800"
+            )}
+          >
+            {plan.badge}
+          </Badge>
+        )}
+      </div>
+
+      <p
+        className={cn(
+          "text-sm mb-6",
+          isHighlighted ? "text-background/60" : "text-muted-foreground"
+        )}
+      >
+        {plan.description}
+      </p>
+
+      <div className="mb-1">
+        <span
+          className={cn(
+            "text-lg line-through",
+            isHighlighted ? "text-background/40" : "text-muted-foreground/60"
+          )}
+        >
+          {plan.price}
+        </span>
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-bold tracking-tight">
+            {plan.currentPrice}
+          </span>
+          <span
+            className={cn(
+              "text-sm",
+              isHighlighted ? "text-background/60" : "text-muted-foreground"
+            )}
+          >
+            {plan.period}
+          </span>
+        </div>
+      </div>
+
+      <p
+        className={cn(
+          "text-sm font-medium mb-8",
+          isHighlighted ? "text-accent-400" : "text-accent-600"
+        )}
+      >
+        {plan.trial}
+      </p>
+
+      <ul className="flex-1 space-y-3 mb-8">
+        {plan.features.map((feature, i) => (
+          <li key={i} className="flex items-start gap-3">
+            <Check
+              className={cn(
+                "h-4 w-4 mt-0.5 shrink-0",
+                feature.muted
+                  ? isHighlighted
+                    ? "text-background/40"
+                    : "text-muted-foreground/50"
+                  : isHighlighted
+                    ? "text-accent-400"
+                    : "text-accent-600"
+              )}
+            />
+            <span
+              className={cn(
+                "text-sm",
+                feature.muted
+                  ? isHighlighted
+                    ? "text-background/40"
+                    : "text-muted-foreground/50"
+                  : ""
+              )}
+            >
+              {feature.text}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <Button
+        asChild
+        size="lg"
+        className={cn(
+          "w-full rounded-xl",
+          isHighlighted
+            ? "bg-background text-foreground hover:bg-background/90"
+            : "bg-foreground text-background hover:bg-foreground/90"
+        )}
+      >
+        <Link href={plan.href}>{plan.cta}</Link>
+      </Button>
+    </div>
+  );
+
+  if (isHighlighted) {
+    return (
+      <div className="relative rounded-2xl p-[2px] overflow-hidden">{card}</div>
+    );
+  }
+
+  return card;
+}
 
 export async function LandingPricing() {
   const t = await getTranslations("Landing.pricing");
   const locale = await getLocale();
 
+  const appUrl = `${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`;
+
+  const plans: Plan[] = [
+    {
+      name: t("solo.title"),
+      price: t("solo.price"),
+      currentPrice: t("solo.currentPrice"),
+      period: t("solo.period"),
+      trial: t("solo.trial"),
+      description: t("solo.description"),
+      cta: t("solo.cta"),
+      href: appUrl,
+      features: [
+        { text: t("solo.features.point") },
+        { text: t("solo.features.records") },
+        { text: t("solo.features.crm") },
+        { text: t("solo.features.notifications") },
+        { text: t("solo.features.booking") },
+        { text: t("solo.features.reminders") },
+      ],
+    },
+    {
+      name: t("point.title"),
+      price: t("point.price"),
+      currentPrice: t("point.currentPrice"),
+      period: t("point.period"),
+      trial: t("point.trial"),
+      description: t("point.description"),
+      badge: t("point.badge"),
+      highlighted: true,
+      cta: t("point.cta"),
+      href: appUrl,
+      features: [
+        { text: t("point.features.masters") },
+        { text: t("point.features.allSolo") },
+        { text: t("point.features.crm") },
+        { text: t("point.features.analytics"), muted: true },
+        { text: t("point.features.finance"), muted: true },
+        { text: t("point.features.inventory"), muted: true },
+      ],
+    },
+    {
+      name: t("network.title"),
+      price: t("network.price"),
+      currentPrice: t("network.currentPrice"),
+      period: t("network.period"),
+      trial: t("network.trial"),
+      description: t("network.description"),
+      cta: t("network.cta"),
+      href: appUrl,
+      features: [
+        { text: t("network.features.points") },
+        { text: t("network.features.masters") },
+        { text: t("network.features.allPoint") },
+        { text: t("network.features.multi"), muted: true },
+        { text: t("network.features.analytics"), muted: true },
+        { text: t("network.features.api"), muted: true },
+      ],
+    },
+  ];
+
   return (
-    <section className="py-24 bg-linear-to-br from-background via-accent-50 to-background dark:from-background dark:via-accent-950 dark:to-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Заголовок секции */}
-        <div className="text-center mb-16">
-          <Badge variant="default" className="mb-4">
-            {t("badge")}
-          </Badge>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-            {t("title")}
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+    <section id="pricing" className="py-24">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">{t("title")}</h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             {t("subtitle")}
           </p>
         </div>
 
-        {/* Тарифные планы */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Бесплатный план */}
-          <Card className="relative border-2 border-gray-200 dark:border-gray-700 hover:border-accent-300 dark:hover:border-accent-600 transition-all duration-300">
-            <CardHeader className="text-center pb-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
-                  <Users className="h-8 w-8 text-green-600 dark:text-green-400" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                {t("free.title")}
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
-                {t("free.subtitle")}
-              </CardDescription>
-              <div className="mt-4">
-                <div className="text-4xl font-bold text-gray-900 dark:text-white">
-                  {t("free.price")}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {t("free.period")}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="space-y-3">
-                {[
-                  t("free.features.records"),
-                  t("free.features.clients"),
-                  t("free.features.calendar"),
-                  t("free.features.notifications"),
-                  t("free.features.support"),
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-green-500 shrink-0" />
-                    <span className="text-gray-700 dark:text-gray-300">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <Button className="w-full mt-6" size="lg">
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
-                  hrefLang={locale}
-                >
-                  {t("free.cta")}
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Популярный план - Early Access */}
-          <Card className="relative border-2 border-accent-500 dark:border-accent-400 shadow-xl scale-105">
-            {/* Популярный бейдж */}
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <Badge className="bg-linear-to-r from-accent-500 to-accent-600 text-white px-4 py-1">
-                <Star className="h-4 w-4 mr-1" />
-                {t("popular.badge")}
-              </Badge>
-            </div>
-
-            <CardHeader className="text-center pb-6 pt-8">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 rounded-full bg-linear-to-r from-accent-500 to-accent-600">
-                  <Crown className="h-8 w-8 text-white" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                {t("popular.title")}
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
-                {t("popular.subtitle")}
-              </CardDescription>
-              <div className="mt-4">
-                <div className="text-4xl font-bold text-gray-900 dark:text-white">
-                  {t("popular.price")}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {t("popular.period")}
-                </div>
-                <div className="text-sm text-green-600 dark:text-green-400 font-medium mt-1">
-                  {t("popular.limited")}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="space-y-3">
-                {[
-                  t("popular.features.unlimited"),
-                  t("popular.features.analytics"),
-                  t("popular.features.priority"),
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-accent-500 shrink-0" />
-                    <span className="text-gray-700 dark:text-gray-300">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                className="w-full mt-6 bg-linear-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700"
-                size="lg"
-              >
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
-                  hrefLang={locale}
-                >
-                  {t("popular.cta")}
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Будущий план */}
-          <Card className="relative border-2 border-gray-200 dark:border-gray-700 opacity-75">
-            <CardHeader className="text-center pb-6">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <Zap className="h-8 w-8 text-gray-600 dark:text-gray-400" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                {t("future.title")}
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-300">
-                {t("future.subtitle")}
-              </CardDescription>
-              <div className="mt-4">
-                <div className="text-4xl font-bold text-gray-400 dark:text-gray-500">
-                  {t("future.price")}
-                </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {t("future.period")}
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="space-y-3">
-                {[
-                  t("future.features.enterprise"),
-                  t("future.features.api"),
-                  t("future.features.whiteLabel"),
-                  t("future.features.dedicated"),
-                  t("future.features.sla"),
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-gray-400 shrink-0" />
-                    <span className="text-gray-500 dark:text-gray-400">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <Button
-                variant="outline"
-                className="w-full mt-6"
-                size="lg"
-                disabled
-              >
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
-                  hrefLang={locale}
-                >
-                  {t("future.cta")}
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Дополнительная информация */}
-        <div className="mt-16 text-center">
-          <div className="bg-linear-to-r from-accent-100 to-background dark:from-accent-900 dark:to-background rounded-2xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              {t("additional.title")}
-            </h3>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
-              {t("additional.description")}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" size="lg">
-                <Link href="/contact" hrefLang={locale}>
-                  {t("additional.contact")}
-                </Link>
-              </Button>
-              <Button size="lg">
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`}
-                  hrefLang={locale}
-                >
-                  {t("additional.start")}
-                </Link>
-              </Button>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {plans.map(plan => (
+            <PlanCard key={plan.name} plan={plan} />
+          ))}
         </div>
       </div>
     </section>

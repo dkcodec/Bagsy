@@ -160,9 +160,7 @@ describe("RegisterStepOne", () => {
 
       expect(screen.getByText("plans.solo.description")).toBeInTheDocument();
       expect(screen.getByText("plans.point.description")).toBeInTheDocument();
-      expect(
-        screen.getByText("plans.network.description")
-      ).toBeInTheDocument();
+      expect(screen.getByText("plans.network.description")).toBeInTheDocument();
     });
   });
 
@@ -174,9 +172,7 @@ describe("RegisterStepOne", () => {
         </Wrapper>
       );
 
-      const soloButton = screen
-        .getByText("plans.solo.name")
-        .closest("button");
+      const soloButton = screen.getByText("plans.solo.name").closest("button");
       expect(soloButton).toHaveClass("border-primary");
     });
 
@@ -209,9 +205,7 @@ describe("RegisterStepOne", () => {
 
       expect(networkButton).toHaveClass("border-primary");
 
-      const soloButton = screen
-        .getByText("plans.solo.name")
-        .closest("button");
+      const soloButton = screen.getByText("plans.solo.name").closest("button");
       expect(soloButton).toHaveClass("border-muted");
     });
   });

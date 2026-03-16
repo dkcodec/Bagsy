@@ -16,182 +16,61 @@ import {
   CardTitle,
 } from "@/entities/card";
 import { Stepper } from "@/entities/stepper";
-import { RegisterStepBusiness } from "./register-step-business";
 import { RegisterStepOne } from "./register-step-one";
 import { RegisterStepTwo } from "./register-step-two";
 import {
-  useManagementRegister,
-  useManagementConfirm,
-} from "@/shared/hooks/use-management-register";
-import type { ManagementRole } from "@/shared/api/types";
+  useRegister,
+  useRegisterResend,
+  useRegisterVerify,
+} from "@/shared/hooks/use-register";
+import type { PlanCode } from "@/shared/api/types";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 
-const MAX_ATTEMPTS = 3;
+interface RegisterFormProps {
+  defaultPlan?: string;
+}
 
-export function RegisterForm() {
+export function RegisterForm({ defaultPlan }: RegisterFormProps) {
   const t = useTranslations("RegisterForm");
   const [currentStep, setCurrentStep] = useState(0);
   const [registeredPhone, setRegisteredPhone] = useState<string>("");
-  const [attemptsLeft, setAttemptsLeft] = useState(MAX_ATTEMPTS);
+  const [retryAfter, setRetryAfter] = useState(0);
 
-  const registerMutation = useManagementRegister();
-  const confirmMutation = useManagementConfirm();
+  const registerMutation = useRegister();
+  const resendMutation = useRegisterResend();
+  const verifyMutation = useRegisterVerify();
 
-  const roles = useMemo(() => {
-    const raw = t.raw("roles");
-    if (Array.isArray(raw)) {
-      return raw.filter(
-        (item): item is { value: ManagementRole; label: string } => {
-          return (
-            typeof item === "object" &&
-            item !== null &&
-            typeof (item as { value: string }).value === "string" &&
-            typeof (item as { label: string }).label === "string"
-          );
-        }
-      );
-    }
-    return [] as Array<{ value: ManagementRole; label: string }>;
-  }, [t]);
+  const validPlan = (
+    ["solo", "point", "network"].includes(defaultPlan || "")
+      ? defaultPlan
+      : "solo"
+  ) as PlanCode;
 
-  // Схема для шага 0: информация о бизнесе
-  const stepBusinessSchema = useMemo(
-    () =>
-      z.object({
-        network_info: z.object({
-          name: z
-            .string()
-            .trim()
-            .min(1, { message: t("errors.networkNameRequired") }),
-          description: z
-            .string()
-            .trim()
-            .min(1, { message: t("errors.networkDescriptionRequired") }),
-        }),
-        name: z.string().optional(),
-        surname: z.string().optional(),
-        phone: z.string().optional(),
-        password: z.string().optional(),
-        role: z.enum(["net_manager", "self_owner"]).optional(),
-        code: z.string().optional(),
-      }),
-    [t]
-  );
-
-  // Схема для шага 1: информация о пользователе
-  const stepOneSchema = useMemo(
-    () =>
-      z.object({
-        name: z
-          .string()
-          .trim()
-          .min(1, { message: t("errors.nameRequired") }),
-        surname: z
-          .string()
-          .trim()
-          .min(1, { message: t("errors.surnameRequired") }),
-        phone: z
-          .string()
-          .trim()
-          .min(1, { message: t("errors.phoneRequired") })
-          .regex(/^\+?[0-9\s().-]{7,}$/, {
-            message: t("errors.phoneInvalid"),
-          }),
-        password: z.string().min(6, { message: t("errors.passwordMin") }),
-        role: z
-          .enum(["net_manager", "self_owner"])
-          .refine(val => val !== undefined, {
-            message: t("errors.roleRequired"),
-          }),
-        network_info: z
-          .object({
-            name: z.string().optional(),
-            description: z.string().optional(),
-          })
-          .optional(),
-        code: z.string().optional(),
-      }),
-    [t]
-  );
-
-  // Схема для шага 2: подтверждение кода
-  const stepTwoSchema = useMemo(
-    () =>
-      z.object({
-        name: z.string().optional(),
-        surname: z.string().optional(),
-        phone: z.string().optional(),
-        password: z.string().optional(),
-        role: z.enum(["net_manager", "self_owner"]).optional(),
-        network_info: z
-          .object({
-            name: z.string().optional(),
-            description: z.string().optional(),
-          })
-          .optional(),
-        code: z
-          .string()
-          .length(4, { message: t("errors.codeLength") })
-          .regex(/^\d{4}$/, { message: t("errors.codeInvalid") }),
-      }),
-    [t]
-  );
-
-  // Создаем единую схему с условной валидацией в зависимости от шага
   const unifiedSchema = useMemo(() => {
     return z
       .object({
-        network_info: z.object({
-          name: z.string().trim(),
-          description: z.string().trim(),
-        }),
-        name: z.string().trim(),
-        surname: z.string().trim(),
+        first_name: z.string().trim(),
+        last_name: z.string().trim(),
         phone: z.string().trim(),
         password: z.string(),
         confirmPassword: z.string(),
-        role: z.enum(["net_manager", "self_owner"]).optional(),
+        plan_code: z.enum(["solo", "point", "network"]),
         code: z.string(),
       })
       .superRefine((data, ctx) => {
-        // Валидация для шага 0: информация о бизнесе
         if (currentStep === 0) {
-          if (
-            !data.network_info.name ||
-            data.network_info.name.trim().length === 0
-          ) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: t("errors.networkNameRequired"),
-              path: ["network_info", "name"],
-            });
-          }
-          if (
-            !data.network_info.description ||
-            data.network_info.description.trim().length === 0
-          ) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: t("errors.networkDescriptionRequired"),
-              path: ["network_info", "description"],
-            });
-          }
-        }
-
-        // Валидация для шага 1: информация о пользователе
-        if (currentStep === 1) {
-          if (!data.name || data.name.trim().length === 0) {
+          if (!data.first_name || data.first_name.trim().length === 0) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: t("errors.nameRequired"),
-              path: ["name"],
+              path: ["first_name"],
             });
           }
-          if (!data.surname || data.surname.trim().length === 0) {
+          if (!data.last_name || data.last_name.trim().length === 0) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: t("errors.surnameRequired"),
-              path: ["surname"],
+              path: ["last_name"],
             });
           }
           if (!data.phone || data.phone.trim().length === 0) {
@@ -227,17 +106,16 @@ export function RegisterForm() {
               path: ["confirmPassword"],
             });
           }
-          if (!data.role) {
+          if (!data.plan_code) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: t("errors.roleRequired"),
-              path: ["role"],
+              message: t("errors.planRequired"),
+              path: ["plan_code"],
             });
           }
         }
 
-        // Валидация для шага 2: код подтверждения
-        if (currentStep === 2) {
+        if (currentStep === 1) {
           if (!data.code || data.code.length !== 4) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -258,117 +136,87 @@ export function RegisterForm() {
   const form = useForm({
     resolver: zodResolver(unifiedSchema),
     defaultValues: {
-      name: "",
-      surname: "",
+      first_name: "",
+      last_name: "",
       phone: "",
       password: "",
       confirmPassword: "",
-      role: undefined as ManagementRole | undefined,
-      network_info: {
-        name: "",
-        description: "",
-      },
+      plan_code: validPlan,
       code: "",
     },
-    mode: "onBlur", // Изменено на onBlur чтобы не блокировать ввод
-    reValidateMode: "onBlur", // Ревалидация только при потере фокуса
-    shouldUnregister: false, // Сохраняем значения полей при размонтировании
-    shouldFocusError: false, // Не фокусируемся на ошибках автоматически
+    mode: "onBlur",
+    reValidateMode: "onBlur",
+    shouldUnregister: false,
+    shouldFocusError: false,
   });
 
-  // Очищаем ошибки при смене шага
   useEffect(() => {
     form.clearErrors();
   }, [currentStep, form]);
 
   const steps = useMemo(
     () => [
-      {
-        label: t("steps.step1.label"),
-      },
-      {
-        label: t("steps.step2.label"),
-      },
-      {
-        label: t("steps.step3.label"),
-      },
+      { label: t("steps.step1.label") },
+      { label: t("steps.step2.label") },
     ],
     [t]
   );
 
-  const handleStepBusinessSubmit = async (
-    data: z.infer<typeof stepBusinessSchema>
-  ) => {
-    // Переходим на следующий шаг
-    setCurrentStep(1);
-  };
-
-  const handleStepOneSubmit = async (data: z.infer<typeof stepOneSchema>) => {
+  const handleStepOneSubmit = async () => {
+    const data = form.getValues();
     try {
-      // Получаем данные о бизнесе из формы
-      const formValues = form.getValues();
-      const networkInfo = formValues.network_info;
       const validPhone = data.phone.replace(/\D/g, "");
 
-      if (!networkInfo || !networkInfo.name || !networkInfo.description) {
-        toast.error(t("errors.networkInfoRequired"));
-        return;
-      }
-
-      await registerMutation.mutateAsync({
-        name: data.name,
-        surname: data.surname,
-        phone: validPhone,
+      const response = await registerMutation.mutateAsync({
+        first_name: data.first_name,
+        last_name: data.last_name,
         password: data.password,
-        role: data.role,
-        network_info: {
-          name: networkInfo.name,
-          description: networkInfo.description,
-        },
+        phone: validPhone,
+        plan_code: data.plan_code,
       });
 
       setRegisteredPhone(validPhone);
-      setCurrentStep(2);
+      setRetryAfter(response.retry_after);
+      setCurrentStep(1);
       toast.success(t("success.codeSent"));
-    } catch (error) {
-      // Ошибка уже обработана в хуке
+    } catch {
+      // Ошибка обработана в хуке
     }
   };
 
-  const handleStepTwoSubmit = async (data: z.infer<typeof stepTwoSchema>) => {
-    if (attemptsLeft <= 0) {
-      toast.error(t("errors.maxAttemptsReached"));
-      return;
-    }
-
+  const handleStepTwoSubmit = async () => {
+    const data = form.getValues();
     try {
-      await confirmMutation.mutateAsync({
+      await verifyMutation.mutateAsync({
         phone: registeredPhone,
         code: data.code,
       });
-      // Редирект происходит в хуке
-    } catch (error) {
-      // Уменьшаем количество попыток при ошибке
-      setAttemptsLeft(prev => Math.max(0, prev - 1));
+    } catch {
+      // Ошибка обработана в хуке
+    }
+  };
 
-      // Если попытки закончились
-      if (attemptsLeft <= 1) {
-        toast.error(t("errors.maxAttemptsReached"));
-      }
+  const handleResend = async () => {
+    try {
+      const response = await resendMutation.mutateAsync({
+        phone: registeredPhone,
+      });
+      setRetryAfter(response.retry_after);
+    } catch {
+      // Ошибка обработана в хуке
     }
   };
 
   const handleBack = () => {
     if (currentStep === 0) return;
-    setCurrentStep(currentStep - 1);
-    if (currentStep === 2) {
-      // При возврате с шага подтверждения очищаем код
-      form.setValue("code", "");
-      setAttemptsLeft(MAX_ATTEMPTS);
-    }
+    setCurrentStep(0);
+    form.setValue("code", "");
   };
 
-  const isLoading = registerMutation.isPending || confirmMutation.isPending;
+  const isLoading =
+    registerMutation.isPending ||
+    verifyMutation.isPending ||
+    resendMutation.isPending;
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
@@ -382,27 +230,18 @@ export function RegisterForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(
-              currentStep === 0
-                ? data =>
-                    handleStepBusinessSubmit(
-                      data as z.infer<typeof stepBusinessSchema>
-                    )
-                : currentStep === 1
-                  ? data =>
-                      handleStepOneSubmit(data as z.infer<typeof stepOneSchema>)
-                  : data =>
-                      handleStepTwoSubmit(data as z.infer<typeof stepTwoSchema>)
+              currentStep === 0 ? handleStepOneSubmit : handleStepTwoSubmit
             )}
             className="space-y-6"
           >
             {currentStep === 0 ? (
-              <RegisterStepBusiness />
-            ) : currentStep === 1 ? (
-              <RegisterStepOne roles={roles} />
+              <RegisterStepOne />
             ) : (
               <RegisterStepTwo
                 phone={registeredPhone}
-                attemptsLeft={attemptsLeft}
+                retryAfter={retryAfter}
+                onResend={handleResend}
+                isResending={resendMutation.isPending}
               />
             )}
 
@@ -430,7 +269,7 @@ export function RegisterForm() {
                   </>
                 ) : (
                   <>
-                    {currentStep === 2 ? (
+                    {currentStep === 1 ? (
                       t("buttons.confirm")
                     ) : (
                       <>

@@ -22,9 +22,9 @@ export default async function LandingPage() {
           <landing.LandingFeatures />
         </div>
 
-        {/* <div id="pricing">
+        <div id="pricing">
           <landing.LandingPricing />
-        </div> */}
+        </div>
 
         <div id="contact">
           <landing.LandingContact />

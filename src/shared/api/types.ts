@@ -32,43 +32,42 @@ export interface FormResponse {
   message: string;
 }
 
-// Типы для регистрации управления
-export type ManagementRole = "net_manager" | "self_owner";
+// Типы для регистрации
+export type PlanCode = "solo" | "point" | "network";
 
-export interface NetworkInfo {
-  name: string;
-  description: string;
-}
-
-export interface ManagementRegisterRequest {
-  name: string;
-  surname: string;
-  phone: string;
+export interface RegisterRequest {
+  first_name: string;
+  last_name: string;
   password: string;
-  role: ManagementRole;
-  network_info: NetworkInfo;
+  phone: string;
+  plan_code: PlanCode;
 }
 
-export interface ManagementRegisterResponse {
+export interface RegisterResponse {
+  expires_in: number;
   message: string;
   phone: string;
-  expires_at: string;
+  retry_after: number;
 }
 
-export interface ManagementConfirmRequest {
+export interface RegisterResendRequest {
   phone: string;
+}
+
+export interface RegisterResendResponse {
+  expires_in: number;
+  message: string;
+  retry_after: number;
+}
+
+export interface RegisterVerifyRequest {
   code: string;
+  phone: string;
 }
 
-export interface ManagementConfirmResponse {
-  message: string;
-  user: {
-    id: string;
-    name: string;
-    surname: string;
-    phone: string;
-    role: string;
-  };
+export interface RegisterVerifyResponse {
+  access_token: string;
+  refresh_token: string;
 }
 
 // Типы для бронирования (bagsies)

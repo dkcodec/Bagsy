@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import {
@@ -11,15 +12,43 @@ import {
   FormDescription,
 } from "@/entities/form";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/entities/input-otp";
+import { Button } from "@/entities/button";
+import { Loader2 } from "lucide-react";
 
 interface RegisterStepTwoProps {
   phone: string;
-  attemptsLeft: number;
+  retryAfter: number;
+  onResend: () => void;
+  isResending: boolean;
 }
 
-export function RegisterStepTwo({ phone, attemptsLeft }: RegisterStepTwoProps) {
+export function RegisterStepTwo({
+  phone,
+  retryAfter,
+  onResend,
+  isResending,
+}: RegisterStepTwoProps) {
   const t = useTranslations("RegisterForm");
   const form = useFormContext();
+  const [countdown, setCountdown] = useState(retryAfter);
+
+  useEffect(() => {
+    setCountdown(retryAfter);
+  }, [retryAfter]);
+
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [countdown]);
 
   return (
     <div className="space-y-6">
@@ -27,11 +56,6 @@ export function RegisterStepTwo({ phone, attemptsLeft }: RegisterStepTwoProps) {
         <p className="text-sm text-muted-foreground">
           {t("confirm.description", { phone })}
         </p>
-        {attemptsLeft < 3 && (
-          <p className="text-sm font-medium text-destructive">
-            {t("confirm.attemptsLeft", { count: attemptsLeft })}
-          </p>
-        )}
       </div>
 
       <FormField
@@ -60,6 +84,27 @@ export function RegisterStepTwo({ phone, attemptsLeft }: RegisterStepTwoProps) {
           </FormItem>
         )}
       />
+
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={countdown > 0 || isResending}
+          onClick={onResend}
+        >
+          {isResending ? (
+            <>
+              <Loader2 className="size-4 animate-spin mr-2" />
+              {t("buttons.submitting")}
+            </>
+          ) : countdown > 0 ? (
+            t("buttons.resendIn", { seconds: countdown })
+          ) : (
+            t("buttons.resend")
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

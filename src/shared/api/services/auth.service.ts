@@ -1,44 +1,47 @@
 /**
- * Сервис для авторизации и регистрации управления
+ * Сервис для авторизации и регистрации
  * Работа с эндпоинтами аутентификации
  */
 
 import { apiClient } from "../client";
 import type {
-  ManagementRegisterRequest,
-  ManagementRegisterResponse,
-  ManagementConfirmRequest,
-  ManagementConfirmResponse,
+  RegisterRequest,
+  RegisterResponse,
+  RegisterResendRequest,
+  RegisterResendResponse,
+  RegisterVerifyRequest,
+  RegisterVerifyResponse,
 } from "../types";
 
 /**
- * Сервис для регистрации управления
+ * Сервис для регистрации
  */
-export const managementAuthService = {
+export const authService = {
   /**
-   * Регистрация владельца сети или сетевого менеджера
-   * Отправляет данные и получает код подтверждения
+   * Регистрация владельца организации
+   * Создаёт pending-запрос и отправляет OTP-код
    */
-  async register(
-    data: ManagementRegisterRequest
-  ): Promise<ManagementRegisterResponse> {
-    const response = await apiClient.post<ManagementRegisterResponse>(
-      "v1/auth/management/register",
-      data
-    );
-    return response;
+  async register(data: RegisterRequest): Promise<RegisterResponse> {
+    return apiClient.post<RegisterResponse>("v1/auth/register", data);
   },
 
   /**
-   * Подтверждение регистрации с кодом из SMS
+   * Повторная отправка OTP-кода
    */
-  async confirm(
-    data: ManagementConfirmRequest
-  ): Promise<ManagementConfirmResponse> {
-    const response = await apiClient.post<ManagementConfirmResponse>(
-      "v1/auth/management/register/confirm",
+  async resend(data: RegisterResendRequest): Promise<RegisterResendResponse> {
+    return apiClient.post<RegisterResendResponse>(
+      "v1/auth/register/resend",
       data
     );
-    return response;
+  },
+
+  /**
+   * Подтверждение регистрации OTP-кодом
+   */
+  async verify(data: RegisterVerifyRequest): Promise<RegisterVerifyResponse> {
+    return apiClient.post<RegisterVerifyResponse>(
+      "v1/auth/register/verify",
+      data
+    );
   },
 };

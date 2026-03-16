@@ -11,37 +11,29 @@ import {
   FormDescription,
 } from "@/entities/form";
 import { Input } from "@/entities/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/entities/select";
 import { PhoneInput } from "@/widgets/forms/phone-input";
-import type { ManagementRole } from "@/shared/api/types";
+import type { PlanCode } from "@/shared/api/types";
+import { cn } from "@/shared/utils/styles";
 
-interface RegisterStepOneProps {
-  roles: Array<{ value: ManagementRole; label: string }>;
-}
+const PLANS: PlanCode[] = ["solo", "point", "network"];
 
-export function RegisterStepOne({ roles }: RegisterStepOneProps) {
+export function RegisterStepOne() {
   const t = useTranslations("RegisterForm");
   const form = useFormContext();
 
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold">{t("steps.step2.title")}</h3>
+        <h3 className="text-lg font-semibold">{t("steps.step1.title")}</h3>
         <p className="text-sm text-muted-foreground">
-          {t("steps.step2.subtitle")}
+          {t("steps.step1.subtitle")}
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField
           control={form.control}
-          name="name"
+          name="first_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("fields.name.label")}</FormLabel>
@@ -59,7 +51,7 @@ export function RegisterStepOne({ roles }: RegisterStepOneProps) {
 
         <FormField
           control={form.control}
-          name="surname"
+          name="last_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>{t("fields.surname.label")}</FormLabel>
@@ -139,25 +131,35 @@ export function RegisterStepOne({ roles }: RegisterStepOneProps) {
 
       <FormField
         control={form.control}
-        name="role"
+        name="plan_code"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t("fields.role.label")}</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder={t("fields.role.placeholder")} />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                {roles.map(role => (
-                  <SelectItem key={role.value} value={role.value}>
-                    {role.label}
-                  </SelectItem>
+            <FormLabel>{t("fields.planCode.label")}</FormLabel>
+            <FormControl>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {PLANS.map(plan => (
+                  <button
+                    key={plan}
+                    type="button"
+                    onClick={() => field.onChange(plan)}
+                    className={cn(
+                      "flex flex-col items-start rounded-xl border-2 p-4 text-left transition-colors",
+                      field.value === plan
+                        ? "border-primary bg-primary/5"
+                        : "border-muted hover:border-muted-foreground/30"
+                    )}
+                  >
+                    <span className="font-semibold">
+                      {t(`plans.${plan}.name`)}
+                    </span>
+                    <span className="text-xs text-muted-foreground mt-1">
+                      {t(`plans.${plan}.description`)}
+                    </span>
+                  </button>
                 ))}
-              </SelectContent>
-            </Select>
-            <FormDescription>{t("fields.role.hint")}</FormDescription>
+              </div>
+            </FormControl>
+            <FormDescription>{t("fields.planCode.hint")}</FormDescription>
             <FormMessage />
           </FormItem>
         )}

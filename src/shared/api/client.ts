@@ -276,7 +276,7 @@ export const apiClient = new HttpClient({
       const second = segments[1];
 
       // Не перезагружаем страницу, если уже на странице логина или регистрации
-      if (second === "login" || second === "invite") {
+      if (second === "login" || second === "invite" || second === "register") {
         return;
       }
 

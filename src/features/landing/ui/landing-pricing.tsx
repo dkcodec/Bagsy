@@ -153,8 +153,6 @@ export async function LandingPricing() {
   const t = await getTranslations("Landing.pricing");
   const locale = await getLocale();
 
-  const appUrl = `${process.env.NEXT_PUBLIC_APP_DOMAIN}${locale}/login`;
-
   const plans: Plan[] = [
     {
       name: t("solo.title"),
@@ -164,7 +162,7 @@ export async function LandingPricing() {
       trial: t("solo.trial"),
       description: t("solo.description"),
       cta: t("solo.cta"),
-      href: appUrl,
+      href: `/${locale}/register?plan=solo`,
       features: [
         { text: t("solo.features.point") },
         { text: t("solo.features.records") },
@@ -184,7 +182,7 @@ export async function LandingPricing() {
       badge: t("point.badge"),
       highlighted: true,
       cta: t("point.cta"),
-      href: appUrl,
+      href: `/${locale}/register?plan=point`,
       features: [
         { text: t("point.features.masters") },
         { text: t("point.features.allSolo") },
@@ -202,7 +200,7 @@ export async function LandingPricing() {
       trial: t("network.trial"),
       description: t("network.description"),
       cta: t("network.cta"),
-      href: appUrl,
+      href: `/${locale}/register?plan=network`,
       features: [
         { text: t("network.features.points") },
         { text: t("network.features.masters") },

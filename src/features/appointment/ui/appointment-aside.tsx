@@ -12,56 +12,48 @@ import { useLocale } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Separator } from "@/entities/separator";
 import {
-  CreditCard,
   Calendar,
   Clock,
   User,
   BriefcaseBusiness,
   ClipboardList,
   Banknote,
+  MapPin,
+  Phone,
 } from "lucide-react";
-import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
+import type { Location, Service, GetSlotsResponse } from "@/shared/api/types";
 
 interface AppointmentAsideProps {
-  pointCode: string;
+  location: Location;
   service: Service | undefined;
-  daySlotsData: GetDaySlotsResponse | undefined;
+  slotsData: GetSlotsResponse | undefined;
   date?: string;
   time?: string;
-  masterPhone?: string;
+  employeeId?: string;
 }
 
 export function AppointmentAside({
-  pointCode,
+  location,
   service,
-  daySlotsData,
+  slotsData,
   date,
   time,
-  masterPhone,
+  employeeId,
 }: AppointmentAsideProps) {
   const t = useTranslations("AppointmentForm");
   const locale = useLocale();
   const dateFnsLocale = locale === "ru" ? ru : kk;
 
-  // Форматируем pointCode для отображения
-  const formattedPointCode = pointCode
-    .split("_")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  // Форматируем дату
   const formattedDate = date
     ? format(parseISO(date), "d MMMM yyyy", { locale: dateFnsLocale })
     : null;
 
-  // Находим выбранного мастера и его цену
-  const selectedMaster = daySlotsData?.masters.find(
-    m => m.master_phone === masterPhone
+  const selectedMaster = slotsData?.master_slots.find(
+    m => m.employee_id === employeeId
   );
 
-  // Определяем отображаемую цену: конкретная цена мастера или диапазон цен услуги
-  const hasSpecificPrice = !!selectedMaster?.master_service_price;
-  const specificPrice = selectedMaster?.master_service_price;
+  const hasSpecificPrice = !!selectedMaster?.price;
+  const specificPrice = selectedMaster?.price;
   const priceRange =
     service?.min_price && service?.max_price
       ? service.min_price === service.max_price
@@ -81,7 +73,27 @@ export function AppointmentAside({
             <BriefcaseBusiness className="size-4 text-muted-foreground" />
             <span>{t("aside.business")}</span>
           </div>
-          <p className="text-sm pl-6">{formattedPointCode}</p>
+          <p className="text-sm pl-6">{location.name}</p>
+          {location.address && (
+            <div className="flex items-start gap-1.5 pl-6">
+              <MapPin className="size-3.5 text-muted-foreground mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground">
+                {[
+                  location.address.city,
+                  location.address.street,
+                  location.address.building,
+                ]
+                  .filter(Boolean)
+                  .join(", ")}
+              </p>
+            </div>
+          )}
+          {location.phone && (
+            <div className="flex items-center gap-1.5 pl-6">
+              <Phone className="size-3.5 text-muted-foreground shrink-0" />
+              <p className="text-xs text-muted-foreground">{location.phone}</p>
+            </div>
+          )}
         </div>
 
         <Separator />
@@ -131,7 +143,7 @@ export function AppointmentAside({
                 <span>{t("aside.master")}</span>
               </div>
               <div className="pl-6 space-y-1">
-                <p className="text-sm">{selectedMaster.master_name}</p>
+                <p className="text-sm">{selectedMaster.employee_name}</p>
               </div>
             </div>
             <Separator />

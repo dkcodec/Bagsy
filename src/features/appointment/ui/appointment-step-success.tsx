@@ -15,14 +15,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Button } from "@/entities/button";
 import { CheckCircle2, Calendar, Clock, User } from "lucide-react";
 import { Separator } from "@/entities/separator";
-import type { GetDaySlotsResponse } from "@/shared/api/types";
+import type { GetSlotsResponse } from "@/shared/api/types";
 
 interface AppointmentStepSuccessProps {
-  daySlotsData?: GetDaySlotsResponse;
+  slotsData?: GetSlotsResponse;
 }
 
 export function AppointmentStepSuccess({
-  daySlotsData,
+  slotsData,
 }: AppointmentStepSuccessProps) {
   const t = useTranslations("AppointmentForm");
   const router = useRouter();
@@ -30,7 +30,7 @@ export function AppointmentStepSuccess({
   const form = useFormContext<{
     date?: string;
     time?: string;
-    master_phone?: string;
+    employee_id?: string;
     name?: string;
     surname?: string;
   }>();
@@ -38,8 +38,8 @@ export function AppointmentStepSuccess({
   const formValues = form.getValues();
   const dateFnsLocale = locale === "ru" ? ru : kk;
 
-  const selectedMaster = daySlotsData?.masters.find(
-    m => m.master_phone === formValues.master_phone
+  const selectedMaster = slotsData?.master_slots.find(
+    m => m.employee_id === formValues.employee_id
   );
 
   const formattedDate = formValues.date
@@ -69,7 +69,6 @@ export function AppointmentStepSuccess({
 
           <Separator />
 
-          {/* Информация о записи */}
           <div className="space-y-3">
             {(formattedDate || formattedTime) && (
               <div className="flex items-center gap-3">
@@ -88,7 +87,6 @@ export function AppointmentStepSuccess({
               </div>
             )}
 
-            {/* Информация о мастере */}
             {selectedMaster && (
               <>
                 <Separator />
@@ -101,7 +99,7 @@ export function AppointmentStepSuccess({
                       {t("steps.confirm.master")}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {selectedMaster.master_name}
+                      {selectedMaster.employee_name}
                     </p>
                   </div>
                 </div>

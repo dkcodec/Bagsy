@@ -70,97 +70,109 @@ export interface RegisterVerifyResponse {
   refresh_token: string;
 }
 
-// Типы для бронирования (bagsies)
+// Типы для локации
+
+export interface LocationAddress {
+  building: string;
+  city: string;
+  details: string;
+  street: string;
+}
+
+export interface LocationCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationScheduleEntry {
+  date: string;
+  end_time: string;
+  id: string;
+  start_time: string;
+  type: string;
+}
+
+export interface Location {
+  active: boolean;
+  address: LocationAddress;
+  category_id: string;
+  coordinates: LocationCoordinates;
+  created_at: string;
+  description: string;
+  id: string;
+  name: string;
+  phone: string;
+  schedule: LocationScheduleEntry[];
+  schedule_type: string;
+  slot_duration_minutes: number;
+  slug: string;
+}
+
+// Типы для услуг
+
+export interface Service {
+  active: boolean;
+  category_id: string;
+  color: string;
+  description: string;
+  duration_minutes: number;
+  id: string;
+  max_price: number;
+  min_price: number;
+  name: string;
+  sort_order: number;
+}
+
 export interface ServicesResponse {
   services: Service[];
 }
 
-export interface Service {
-  id: string;
-  point_code: string;
-  category_id: number;
-  subcategory_id: number;
-  name: string;
-  description: string;
-  duration_minutes: number;
-  active: boolean;
-  min_price: number;
-  max_price: number;
+// Типы для слотов записи
+
+export interface SlotTime {
+  end_at: string;
+  start_at: string;
+}
+
+export interface MasterSlot {
+  employee_id: string;
+  employee_name: string;
+  price: number;
+  slots: SlotTime[];
 }
 
 export interface GetSlotsRequest {
-  point_code: string;
+  employee_id?: string;
+  end_date: string;
+  location_id: string;
   service_id: string;
+  start_date: string;
 }
 
 export interface GetSlotsResponse {
-  service_id: string;
-  point_code: string;
   duration_minutes: number;
-  /** ISO datetime с таймзоной, напр. 2025-01-15T00:00:00.000+05:00 */
-  available_dates: string[];
-}
-
-export interface GetDaySlotsRequest {
-  /** ISO 8601 с таймзоной, напр. 2025-01-15T00:00:00.000+05:00 */
-  date: string;
-  point_code: string;
+  location_id: string;
+  master_slots: MasterSlot[];
   service_id: string;
 }
 
-// Старый тип для обратной совместимости (если понадобится)
-export interface MasterSlot {
-  phone: string;
-  name: string;
-  /** ISO datetime с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
-  slots: string[];
-}
+// Типы для записи (appointments)
 
-export interface GetDaySlotsResponse {
-  service_id: string;
-  point_code: string;
-  /** ISO datetime с таймзоной */
-  date: string;
-  duration_minutes: number;
-  masters: [
-    {
-      master_name: string;
-      master_phone: string;
-      master_service_price: number;
-      /** ISO datetime с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
-      slots: string[];
-    },
-  ];
-}
-
-export interface CreateBagsyRequest {
-  client_phone: string;
+export interface CreateAppointmentRequest {
   comment?: string;
-  master_phone: string;
-  name: string;
+  employee_id: string;
+  first_name: string;
+  last_name: string;
+  location_id: string;
+  phone: string;
   service_id: string;
-  /** ISO 8601 с таймзоной, напр. 2025-01-15T15:00:00.000+05:00 */
   start_at: string;
-  surname: string;
 }
 
-export interface ResendCodeRequest {
-  bagsy_id: string;
+export interface CreateAppointmentResponse {
+  id: string;
 }
 
-export interface ResendCodeResponse {
-  message: string;
-}
-
-export interface CreateBagsyResponse {
-  bagsy_id: string;
-}
-
-export interface ConfirmBagsyRequest {
-  bagsy_id: string;
+export interface ConfirmAppointmentRequest {
   code: string;
-}
-
-export interface ConfirmBagsyResponse {
-  message: string;
 }

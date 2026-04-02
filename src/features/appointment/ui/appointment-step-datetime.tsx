@@ -9,8 +9,7 @@ import { useMemo, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { format, parseISO, isSameDay } from "date-fns";
-import { useLocale } from "next-intl";
-import { useSlots, useDaySlots } from "@/shared/hooks/use-bagsy";
+import { useSlots } from "@/shared/hooks/use-appointment";
 import {
   FormField,
   FormItem,
@@ -31,54 +30,60 @@ import {
 import { Separator } from "@/entities/separator";
 
 interface AppointmentStepDateTimeProps {
-  pointCode: string;
+  locationId: string;
   serviceId: string;
 }
 
 export function AppointmentStepDateTime({
-  pointCode,
+  locationId,
   serviceId,
 }: AppointmentStepDateTimeProps) {
   const t = useTranslations("AppointmentForm");
-  const locale = useLocale();
   const form = useFormContext<{
     service_id?: string;
     date?: string;
     time?: string;
-    master_phone?: string;
+    employee_id?: string;
   }>();
 
   const selectedDate = form.watch("date");
   const selectedTime = form.watch("time");
-  const selectedMasterPhone = form.watch("master_phone");
 
-  // Получаем доступные даты
+  // Получаем слоты на 7 дней вперед
   const { data: slotsData, isLoading: isLoadingSlots } = useSlots(
-    serviceId && pointCode
-      ? { service_id: serviceId, point_code: pointCode }
-      : null
-  );
-
-  // Получаем слоты на выбранный день (date в API — ISO+tz)
-  const { data: daySlotsData, isLoading: isLoadingDaySlots } = useDaySlots(
-    selectedDate && serviceId && pointCode
+    serviceId && locationId
       ? {
-          date: toStartAtISO(selectedDate, "00:00"),
+          location_id: locationId,
           service_id: serviceId,
-          point_code: pointCode,
+          start_date: toStartAtISO(
+            new Date().toISOString().slice(0, 10),
+            "00:00"
+          ),
+          end_date: toStartAtISO(
+            new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 10),
+            "00:00"
+          ),
         }
       : null
   );
 
-  // Доступные даты: из ISO+tz извлекаем yyyy-MM-dd для UI (календарь, isSameDay)
+  // Доступные даты: извлекаем уникальные даты из всех слотов всех мастеров
   const availableDates = useMemo(() => {
-    if (!slotsData?.available_dates) return [];
-    return slotsData.available_dates
-      .map(parseDateFromISO)
+    if (!slotsData?.master_slots) return [];
+    const dateSet = new Set<string>();
+    slotsData.master_slots.forEach(master => {
+      master.slots.forEach(slot => {
+        dateSet.add(parseDateFromISO(slot.start_at));
+      });
+    });
+    return Array.from(dateSet)
+      .sort()
       .map(d => parseISO(d));
   }, [slotsData]);
 
-  // Автоматически выбираем первую доступную дату при загрузке
+  // Автоматически выбираем первую доступную дату
   useEffect(() => {
     if (availableDates.length > 0 && !selectedDate) {
       const firstDate = availableDates[0];
@@ -86,48 +91,54 @@ export function AppointmentStepDateTime({
     }
   }, [availableDates, selectedDate, form]);
 
-  // Функция для проверки, доступна ли дата
   const isDateDisabled = (date: Date) => {
     return !availableDates.some(availableDate =>
       isSameDay(availableDate, date)
     );
   };
 
-  // Слоты: из ISO+tz извлекаем HH:mm для UI; уникальные, сортировка
+  // Слоты времени на выбранный день: уникальные, сортированные
   const availableTimeSlots = useMemo(() => {
-    if (!daySlotsData?.masters) return [];
+    if (!selectedDate || !slotsData?.master_slots) return [];
     const allSlots = new Set<string>();
-    daySlotsData.masters.forEach(master => {
-      master.slots.map(parseTimeFromISO).forEach(t => allSlots.add(t));
+    slotsData.master_slots.forEach(master => {
+      master.slots.forEach(slot => {
+        if (parseDateFromISO(slot.start_at) === selectedDate) {
+          allSlots.add(parseTimeFromISO(slot.start_at));
+        }
+      });
     });
     return Array.from(allSlots).sort();
-  }, [daySlotsData]);
+  }, [selectedDate, slotsData]);
 
-  // Фильтруем мастеров по выбранному времени (HH:mm)
+  // Фильтруем мастеров по выбранному времени и дате
   const availableMasters = useMemo(() => {
-    if (!selectedTime || !daySlotsData?.masters) return [];
-    return daySlotsData.masters.filter(master =>
-      master.slots.map(parseTimeFromISO).includes(selectedTime)
+    if (!selectedTime || !selectedDate || !slotsData?.master_slots) return [];
+    return slotsData.master_slots.filter(master =>
+      master.slots.some(slot => {
+        return (
+          parseDateFromISO(slot.start_at) === selectedDate &&
+          parseTimeFromISO(slot.start_at) === selectedTime
+        );
+      })
     );
-  }, [selectedTime, daySlotsData]);
+  }, [selectedTime, selectedDate, slotsData]);
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       form.setValue("date", format(date, "yyyy-MM-dd"));
-      // Сбрасываем время и мастера при смене даты
       form.setValue("time", undefined);
-      form.setValue("master_phone", undefined);
+      form.setValue("employee_id", undefined);
     }
   };
 
   const handleTimeSelect = (time: string) => {
     form.setValue("time", time);
-    // Сбрасываем мастера при смене времени
-    form.setValue("master_phone", undefined);
+    form.setValue("employee_id", undefined);
   };
 
-  const handleMasterSelect = (masterPhone: string) => {
-    form.setValue("master_phone", masterPhone);
+  const handleMasterSelect = (employeeId: string) => {
+    form.setValue("employee_id", employeeId);
   };
 
   return (
@@ -158,7 +169,6 @@ export function AppointmentStepDateTime({
           )}
         />
 
-        {/* Сепаратор видим только на десктопе при горизонтальном расположении */}
         <Separator
           orientation="vertical"
           className="hidden md:block self-stretch"
@@ -187,11 +197,7 @@ export function AppointmentStepDateTime({
                   {t("steps.datetime.time")}
                 </FormLabel>
                 <FormControl>
-                  {isLoadingDaySlots ? (
-                    <div className="flex-1 flex items-center justify-center py-8">
-                      <Loader2 className="size-6 animate-spin text-muted-foreground" />
-                    </div>
-                  ) : availableTimeSlots.length === 0 ? (
+                  {availableTimeSlots.length === 0 ? (
                     <p className="flex-1 flex text-sm text-muted-foreground py-4 text-center justify-center items-center">
                       {t("steps.datetime.noSlots")}
                     </p>
@@ -226,7 +232,7 @@ export function AppointmentStepDateTime({
       {selectedTime && (
         <FormField
           control={form.control}
-          name="master_phone"
+          name="employee_id"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-base">
@@ -241,23 +247,23 @@ export function AppointmentStepDateTime({
                   <div className="grid gap-4 sm:grid-cols-2">
                     {availableMasters.map(master => (
                       <Card
-                        key={master.master_phone}
+                        key={master.employee_id}
                         className={cn(
                           "cursor-pointer transition-all hover:shadow-md",
-                          field.value === master.master_phone &&
+                          field.value === master.employee_id &&
                             "ring-2 ring-primary"
                         )}
-                        onClick={() => handleMasterSelect(master.master_phone)}
+                        onClick={() => handleMasterSelect(master.employee_id)}
                       >
                         <CardHeader className="pb-3">
                           <CardTitle className="text-base flex items-center gap-2">
                             <User className="size-4" />
-                            {master.master_name}
+                            {master.employee_name}
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <p className="text-sm font-medium">
-                            {master?.master_service_price?.toLocaleString()} ₸
+                            {master.price?.toLocaleString()} ₸
                           </p>
                         </CardContent>
                       </Card>

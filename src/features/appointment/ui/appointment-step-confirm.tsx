@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { format, parseISO } from "date-fns";
 import { ru, kk } from "date-fns/locale";
 import { useLocale } from "next-intl";
-import { useCreateBagsy } from "@/shared/hooks/use-bagsy";
+import { useCreateAppointment } from "@/shared/hooks/use-appointment";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/entities/card";
 import { Button } from "@/entities/button";
@@ -26,22 +26,23 @@ import {
   ClipboardList,
   BriefcaseBusiness,
   ArrowLeft,
+  MapPin,
 } from "lucide-react";
 import { AppointmentStepOtp } from "./appointment-step-otp";
 import { toStartAtISO } from "@/shared/utils/datetime";
-import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
+import type { Location, Service, GetSlotsResponse } from "@/shared/api/types";
 
 interface AppointmentStepConfirmProps {
-  pointCode: string;
+  location: Location;
   service: Service | undefined;
-  daySlotsData: GetDaySlotsResponse | undefined;
+  slotsData: GetSlotsResponse | undefined;
   handleBack: () => void;
 }
 
 export function AppointmentStepConfirm({
-  pointCode,
+  location,
   service,
-  daySlotsData,
+  slotsData,
   handleBack,
 }: AppointmentStepConfirmProps) {
   const t = useTranslations("AppointmentForm");
@@ -50,23 +51,23 @@ export function AppointmentStepConfirm({
     service_id?: string;
     date?: string;
     time?: string;
-    master_phone?: string;
+    employee_id?: string;
     name?: string;
     surname?: string;
     client_phone?: string;
     comment?: string;
-    bagsy_id?: string;
+    appointment_id?: string;
   }>();
 
   const [showOtp, setShowOtp] = useState(false);
-  const createBagsyMutation = useCreateBagsy();
+  const createAppointmentMutation = useCreateAppointment();
 
   const formValues = form.getValues();
   const dateFnsLocale = locale === "ru" ? ru : kk;
 
   // Находим выбранного мастера
-  const selectedMaster = daySlotsData?.masters.find(
-    m => m.master_phone === formValues.master_phone
+  const selectedMaster = slotsData?.master_slots.find(
+    m => m.employee_id === formValues.employee_id
   );
 
   // Форматируем дату и время
@@ -77,18 +78,12 @@ export function AppointmentStepConfirm({
     : "";
   const formattedTime = formValues.time || "";
 
-  // Форматируем pointCode для отображения
-  const formattedPointCode = pointCode
-    .split("_")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
   const handleConfirm = async () => {
     if (
       !formValues.service_id ||
       !formValues.date ||
       !formValues.time ||
-      !formValues.master_phone ||
+      !formValues.employee_id ||
       !formValues.name ||
       !formValues.surname ||
       !formValues.client_phone
@@ -98,35 +93,33 @@ export function AppointmentStepConfirm({
     }
 
     try {
-      // start_at в ISO 8601 с таймзоной пользователя
       const startAt = toStartAtISO(formValues.date!, formValues.time!);
-      const clientPhone = formValues.client_phone!.replace(/[^\d]/g, "");
+      const phone = formValues.client_phone!.replace(/[^\d]/g, "");
 
-      const response = await createBagsyMutation.mutateAsync({
+      const response = await createAppointmentMutation.mutateAsync({
         service_id: formValues.service_id!,
         start_at: startAt,
-        master_phone: formValues.master_phone!,
-        name: formValues.name!,
-        surname: formValues.surname!,
-        client_phone: clientPhone,
+        employee_id: formValues.employee_id!,
+        first_name: formValues.name!,
+        last_name: formValues.surname!,
+        phone,
+        location_id: location.id,
         comment: formValues.comment || undefined,
       });
 
-      // Сохраняем bagsy_id и показываем OTP
-      form.setValue("bagsy_id", response.bagsy_id);
+      form.setValue("appointment_id", response.id);
       setShowOtp(true);
       toast.success(t("success.bagsyCreated"));
-    } catch (error) {
+    } catch {
       // Ошибка уже обработана в хуке
     }
   };
 
-  // Если OTP уже показан, отображаем его
-  if (showOtp || formValues.bagsy_id) {
+  if (showOtp || formValues.appointment_id) {
     return (
       <AppointmentStepOtp
-        bagsyId={formValues.bagsy_id!}
-        daySlotsData={daySlotsData}
+        appointmentId={formValues.appointment_id!}
+        slotsData={slotsData}
       />
     );
   }
@@ -144,9 +137,29 @@ export function AppointmentStepConfirm({
               <p className="text-sm font-medium">
                 {t("steps.confirm.business")}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {formattedPointCode}
-              </p>
+              <p className="text-sm text-muted-foreground">{location.name}</p>
+              {location.address && (
+                <div className="flex items-start gap-1.5 mt-1">
+                  <MapPin className="size-3.5 text-muted-foreground mt-0.5 shrink-0" />
+                  <p className="text-xs text-muted-foreground">
+                    {[
+                      location.address.city,
+                      location.address.street,
+                      location.address.building,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                </div>
+              )}
+              {location.phone && (
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Phone className="size-3.5 text-muted-foreground shrink-0" />
+                  <p className="text-xs text-muted-foreground">
+                    {location.phone}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -168,7 +181,7 @@ export function AppointmentStepConfirm({
                   </p>
                   {selectedMaster && (
                     <p className="text-sm font-medium mt-1">
-                      {selectedMaster?.master_service_price?.toLocaleString()} ₸
+                      {selectedMaster.price?.toLocaleString()} ₸
                     </p>
                   )}
                 </div>
@@ -195,7 +208,7 @@ export function AppointmentStepConfirm({
                     </p>
                     {formattedTime && (
                       <>
-                        <span className="text-muted-foreground">•</span>
+                        <span className="text-muted-foreground">&bull;</span>
                         <div className="flex items-center gap-1.5">
                           <Clock className="size-3.5 text-muted-foreground" />
                           <p className="text-sm text-muted-foreground">
@@ -224,7 +237,7 @@ export function AppointmentStepConfirm({
                     {t("steps.confirm.master")}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {selectedMaster.master_name}
+                    {selectedMaster.employee_name}
                   </p>
                 </div>
               </div>
@@ -278,9 +291,9 @@ export function AppointmentStepConfirm({
         <Button
           type="button"
           onClick={handleConfirm}
-          disabled={createBagsyMutation.isPending}
+          disabled={createAppointmentMutation.isPending}
         >
-          {createBagsyMutation.isPending ? (
+          {createAppointmentMutation.isPending ? (
             <>
               <Loader2 className="size-4 animate-spin" />
               {t("steps.confirm.creating")}

@@ -7,14 +7,8 @@
 
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { useServices } from "@/shared/hooks/use-bagsy";
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/entities/form";
+import { useLocationServices } from "@/shared/hooks/use-appointment";
+import { FormField, FormItem, FormControl, FormMessage } from "@/entities/form";
 import {
   Card,
   CardContent,
@@ -23,44 +17,40 @@ import {
   CardHeader,
   CardTitle,
 } from "@/entities/card";
-import { Button } from "@/entities/button";
 import { Loader2, Clock } from "lucide-react";
 import { cn } from "@/shared/utils/styles";
 import type { Service } from "@/shared/api/types";
 
 interface AppointmentStepServiceProps {
-  pointCode: string;
+  locationId: string;
 }
 
 export function AppointmentStepService({
-  pointCode,
+  locationId,
 }: AppointmentStepServiceProps) {
   const t = useTranslations("AppointmentForm");
-  const { data: services, isLoading } = useServices(pointCode, true);
+  const { data: services, isLoading } = useLocationServices(locationId);
   const form = useFormContext<{
     service_id?: string;
     date?: string;
     time?: string;
-    master_phone?: string;
-    bagsy_id?: string;
+    employee_id?: string;
+    appointment_id?: string;
     code?: string;
   }>();
 
   const selectedServiceId = form.watch("service_id");
 
-  // Обработчик выбора услуги с очисткой зависимых полей
   const handleServiceSelect = (serviceId: string) => {
     const currentServiceId = form.getValues("service_id");
-    // Если выбран другой сервис, очищаем зависимые поля
     if (currentServiceId !== serviceId) {
       form.setValue("service_id", serviceId);
       form.setValue("date", undefined);
       form.setValue("time", undefined);
-      form.setValue("master_phone", undefined);
-      form.setValue("bagsy_id", undefined);
+      form.setValue("employee_id", undefined);
+      form.setValue("appointment_id", undefined);
       form.setValue("code", "");
     } else {
-      // Если тот же сервис, просто обновляем значение
       form.setValue("service_id", serviceId);
     }
   };

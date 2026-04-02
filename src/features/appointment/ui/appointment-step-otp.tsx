@@ -8,7 +8,10 @@
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { useConfirmBagsy, useResendCode } from "@/shared/hooks/use-bagsy";
+import {
+  useConfirmAppointment,
+  useResendOtp,
+} from "@/shared/hooks/use-appointment";
 import { toast } from "sonner";
 import {
   FormField,
@@ -22,50 +25,47 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/entities/input-otp";
 import { Button } from "@/entities/button";
 import { Loader2 } from "lucide-react";
 import { AppointmentStepSuccess } from "./appointment-step-success";
-import type { GetDaySlotsResponse } from "@/shared/api/types";
+import type { GetSlotsResponse } from "@/shared/api/types";
 
 interface AppointmentStepOtpProps {
-  bagsyId: string;
-  daySlotsData?: GetDaySlotsResponse;
+  appointmentId: string;
+  slotsData?: GetSlotsResponse;
 }
 
 export function AppointmentStepOtp({
-  bagsyId,
-  daySlotsData,
+  appointmentId,
+  slotsData,
 }: AppointmentStepOtpProps) {
   const t = useTranslations("AppointmentForm");
   const form = useFormContext<{
     code?: string;
   }>();
   const [showSuccess, setShowSuccess] = useState(false);
-  const confirmBagsyMutation = useConfirmBagsy();
-  const resendCodeMutation = useResendCode();
+  const confirmMutation = useConfirmAppointment();
+  const resendMutation = useResendOtp();
 
   const handleOtpComplete = async (value: string) => {
     if (value.length !== 4) return;
 
     try {
-      await confirmBagsyMutation.mutateAsync({
-        bagsy_id: bagsyId,
+      await confirmMutation.mutateAsync({
+        id: appointmentId,
         code: value,
       });
       form.setValue("code", value);
       setShowSuccess(true);
       toast.success(t("success.bagsyConfirmed"));
-    } catch (error) {
-      // Ошибка уже обработана в хуке
+    } catch {
       form.setValue("code", "");
     }
   };
 
   const handleResendCode = () => {
-    resendCodeMutation.mutateAsync({
-      bagsy_id: bagsyId,
-    });
+    resendMutation.mutateAsync(appointmentId);
   };
 
   if (showSuccess) {
-    return <AppointmentStepSuccess daySlotsData={daySlotsData} />;
+    return <AppointmentStepSuccess slotsData={slotsData} />;
   }
 
   return (
@@ -97,7 +97,7 @@ export function AppointmentStepOtp({
                     }
                   }}
                   pattern={REGEXP_ONLY_DIGITS}
-                  disabled={confirmBagsyMutation.isPending}
+                  disabled={confirmMutation.isPending}
                 >
                   <InputOTPGroup>
                     <InputOTPSlot
@@ -125,14 +125,14 @@ export function AppointmentStepOtp({
         )}
       />
 
-      {confirmBagsyMutation.isPending && (
+      {confirmMutation.isPending && (
         <div className="flex justify-center">
           <Loader2 className="size-5 animate-spin text-muted-foreground" />
         </div>
       )}
 
       <Button variant="outline" className="w-full" onClick={handleResendCode}>
-        {resendCodeMutation.isPending ? (
+        {resendMutation.isPending ? (
           <>
             <Loader2 className="size-4 animate-spin" />
             {t("steps.otp.resendCode")}

@@ -8,9 +8,9 @@ import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { useFormContext } from "react-hook-form";
 import { AppointmentStepConfirm } from "../appointment-step-confirm";
-import { useCreateBagsy } from "@/shared/hooks/use-bagsy";
+import { useCreateAppointment } from "@/shared/hooks/use-appointment";
 import { toast } from "sonner";
-import type { Service, GetDaySlotsResponse } from "@/shared/api/types";
+import type { Location, Service, GetSlotsResponse } from "@/shared/api/types";
 import { render as customRender } from "@/src/__tests__/utils/test-utils";
 
 // Мокируем зависимости
@@ -19,8 +19,8 @@ jest.mock("react-hook-form", () => ({
   useFormContext: jest.fn(),
 }));
 
-jest.mock("@/shared/hooks/use-bagsy", () => ({
-  useCreateBagsy: jest.fn(),
+jest.mock("@/shared/hooks/use-appointment", () => ({
+  useCreateAppointment: jest.fn(),
 }));
 
 jest.mock("sonner", () => ({
@@ -35,47 +35,67 @@ jest.mock("@/shared/utils/datetime", () => ({
 }));
 
 jest.mock("../appointment-step-otp", () => ({
-  AppointmentStepOtp: ({ bagsyId }: { bagsyId: string }) => (
-    <div data-testid="appointment-step-otp">OTP Step: {bagsyId}</div>
+  AppointmentStepOtp: ({ appointmentId }: { appointmentId: string }) => (
+    <div data-testid="appointment-step-otp">OTP Step: {appointmentId}</div>
   ),
 }));
 
 const mockedUseFormContext = useFormContext as jest.MockedFunction<
   typeof useFormContext
 >;
-const mockedUseCreateBagsy = useCreateBagsy as jest.MockedFunction<
-  typeof useCreateBagsy
+const mockedUseCreateAppointment = useCreateAppointment as jest.MockedFunction<
+  typeof useCreateAppointment
 >;
 const mockedToast = toast as jest.Mocked<typeof toast>;
 
 // Моковые данные
+const mockLocation: Location = {
+  active: true,
+  address: { building: "1", city: "Алматы", details: "", street: "ул. Тест" },
+  category_id: "cat-1",
+  coordinates: { latitude: 43.238, longitude: 76.945 },
+  created_at: "2024-01-01T00:00:00Z",
+  description: "Тестовая локация",
+  id: "location-123",
+  name: "Тестовый салон",
+  phone: "+77001234567",
+  schedule: [],
+  schedule_type: "weekly",
+  slot_duration_minutes: 30,
+  slug: "test_point",
+};
+
 const mockService: Service = {
   id: "service-123",
-  point_code: "test_point",
-  category_id: 1,
-  subcategory_id: 1,
+  category_id: "cat-1",
+  color: "#000",
   name: "Тестовая услуга",
   description: "Описание услуги",
   duration_minutes: 60,
   active: true,
   min_price: 1000,
   max_price: 2000,
+  sort_order: 0,
 };
 
-const mockDaySlotsData: GetDaySlotsResponse = {
+const mockSlotsData: GetSlotsResponse = {
   service_id: "service-123",
-  point_code: "test_point",
-  date: "2024-01-15T00:00:00.000+05:00",
+  location_id: "location-123",
   duration_minutes: 60,
-  masters: [
+  master_slots: [
     {
-      master_name: "Иван Иванов",
-      master_phone: "+77001234567",
-      master_service_price: 1500,
+      employee_id: "emp-1",
+      employee_name: "Иван Иванов",
+      price: 1500,
       slots: [
-        "2024-01-15T10:00:00.000+05:00",
-        "2024-01-15T11:00:00.000+05:00",
-        "2024-01-15T12:00:00.000+05:00",
+        {
+          start_at: "2024-01-15T10:00:00.000+05:00",
+          end_at: "2024-01-15T11:00:00.000+05:00",
+        },
+        {
+          start_at: "2024-01-15T11:00:00.000+05:00",
+          end_at: "2024-01-15T12:00:00.000+05:00",
+        },
       ],
     },
   ],
@@ -85,23 +105,23 @@ const mockFormValues = {
   service_id: "service-123",
   date: "2024-01-15",
   time: "10:00",
-  master_phone: "+77001234567",
+  employee_id: "emp-1",
   name: "Петр",
   surname: "Петров",
   client_phone: "+7 (700) 987-65-43",
   comment: "Комментарий",
-  bagsy_id: undefined,
+  appointment_id: undefined,
   code: "",
 } as {
   service_id?: string;
   date?: string;
   time?: string;
-  master_phone?: string;
+  employee_id?: string;
   name?: string;
   surname?: string;
   client_phone?: string;
   comment?: string;
-  bagsy_id?: string;
+  appointment_id?: string;
   code?: string;
 };
 
@@ -121,13 +141,11 @@ describe("AppointmentStepConfirm", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Сбрасываем состояние мутации
     mockMutation.isPending = false;
     mockMutation.isError = false;
     mockMutation.isSuccess = false;
     mockMutation.data = undefined;
     mockMutation.error = null;
-    // Сбрасываем мок функции mutateAsync
     mockMutation.mutateAsync.mockClear();
     mockedUseFormContext.mockReturnValue({
       getValues: mockGetValues,
@@ -146,101 +164,89 @@ describe("AppointmentStepConfirm", () => {
       getFieldState: jest.fn(),
       setFocus: jest.fn(),
     } as any);
-    mockedUseCreateBagsy.mockReturnValue(mockMutation as any);
+    mockedUseCreateAppointment.mockReturnValue(mockMutation as any);
   });
 
   describe("Отображение данных записи", () => {
-    it("должен отобразить бизнес (pointCode)", () => {
-      // Arrange & Act
+    it("должен отобразить бизнес (название локации)", () => {
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point_code"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.business")).toBeInTheDocument();
-      expect(screen.getByText("Test Point Code")).toBeInTheDocument();
+      expect(screen.getByText("Тестовый салон")).toBeInTheDocument();
     });
 
     it("должен отобразить услугу", () => {
-      // Arrange & Act
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.service")).toBeInTheDocument();
       expect(screen.getByText("Тестовая услуга")).toBeInTheDocument();
     });
 
-    it("должен отобразить цену услуги мастера", () => {
-      // Arrange & Act
+    it("должен отобразить цену мастера", () => {
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("1 500 ₸")).toBeInTheDocument();
     });
 
     it("должен отобразить дату и время", () => {
-      // Arrange & Act
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.when")).toBeInTheDocument();
       expect(screen.getByText("10:00")).toBeInTheDocument();
     });
 
     it("должен отобразить мастера", () => {
-      // Arrange & Act
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.master")).toBeInTheDocument();
       expect(screen.getByText("Иван Иванов")).toBeInTheDocument();
     });
 
     it("должен отобразить данные клиента", () => {
-      // Arrange & Act
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.client")).toBeInTheDocument();
       expect(screen.getByText("Петр Петров")).toBeInTheDocument();
       expect(screen.getByText("+7 (700) 987-65-43")).toBeInTheDocument();
@@ -249,58 +255,53 @@ describe("AppointmentStepConfirm", () => {
 
   describe("Успешное создание записи", () => {
     it("должен успешно создать запись при клике на кнопку подтверждения", async () => {
-      // Arrange
       const user = userEvent.setup();
-      const mockResponse = { bagsy_id: "bagsy-456" };
+      const mockResponse = { id: "appointment-456" };
       mockMutation.mutateAsync.mockResolvedValueOnce(mockResponse);
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(mockMutation.mutateAsync).toHaveBeenCalledTimes(1);
       });
       expect(mockMutation.mutateAsync).toHaveBeenCalledWith({
         service_id: "service-123",
         start_at: "2024-01-15T10:00:00.000+05:00",
-        master_phone: "+77001234567",
-        name: "Петр",
-        surname: "Петров",
-        client_phone: "77009876543",
+        employee_id: "emp-1",
+        first_name: "Петр",
+        last_name: "Петров",
+        phone: "77009876543",
+        location_id: "location-123",
         comment: "Комментарий",
       });
     });
 
     it("должен правильно сформировать start_at из date и time", async () => {
-      // Arrange
       const user = userEvent.setup();
-      mockMutation.mutateAsync.mockResolvedValueOnce({ bagsy_id: "bagsy-456" });
+      mockMutation.mutateAsync.mockResolvedValueOnce({ id: "appointment-456" });
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -311,105 +312,96 @@ describe("AppointmentStepConfirm", () => {
     });
 
     it("должен очистить телефон от нецифровых символов", async () => {
-      // Arrange
       const user = userEvent.setup();
       mockGetValues.mockReturnValue({
         ...mockFormValues,
         client_phone: "+7 (700) 987-65-43",
       });
-      mockMutation.mutateAsync.mockResolvedValueOnce({ bagsy_id: "bagsy-456" });
+      mockMutation.mutateAsync.mockResolvedValueOnce({ id: "appointment-456" });
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(mockMutation.mutateAsync).toHaveBeenCalledWith(
           expect.objectContaining({
-            client_phone: "77009876543",
+            phone: "77009876543",
           })
         );
       });
     });
 
-    it("должен сохранить bagsy_id в форму после успешного создания", async () => {
-      // Arrange
+    it("должен сохранить appointment_id в форму после успешного создания", async () => {
       const user = userEvent.setup();
-      const mockResponse = { bagsy_id: "bagsy-456" };
+      const mockResponse = { id: "appointment-456" };
       mockMutation.mutateAsync.mockResolvedValueOnce(mockResponse);
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
-        expect(mockSetValue).toHaveBeenCalledWith("bagsy_id", "bagsy-456");
+        expect(mockSetValue).toHaveBeenCalledWith(
+          "appointment_id",
+          "appointment-456"
+        );
       });
     });
 
     it("должен показать OTP шаг после успешного создания", async () => {
-      // Arrange
       const user = userEvent.setup();
-      mockMutation.mutateAsync.mockResolvedValueOnce({ bagsy_id: "bagsy-456" });
+      mockMutation.mutateAsync.mockResolvedValueOnce({ id: "appointment-456" });
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(screen.getByTestId("appointment-step-otp")).toBeInTheDocument();
       });
     });
 
     it("должен показать toast.success при успешном создании", async () => {
-      // Arrange
       const user = userEvent.setup();
-      mockMutation.mutateAsync.mockResolvedValueOnce({ bagsy_id: "bagsy-456" });
+      mockMutation.mutateAsync.mockResolvedValueOnce({ id: "appointment-456" });
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(mockedToast.success).toHaveBeenCalledWith(
           "success.bagsyCreated"
@@ -420,7 +412,6 @@ describe("AppointmentStepConfirm", () => {
 
   describe("Валидация полей", () => {
     it("должен показать toast.error при незаполненных полях", async () => {
-      // Arrange
       const user = userEvent.setup();
       mockGetValues.mockReturnValue({
         ...mockFormValues,
@@ -429,18 +420,16 @@ describe("AppointmentStepConfirm", () => {
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       expect(mockedToast.error).toHaveBeenCalledWith("errors.fillAllFields");
       expect(mockMutation.mutateAsync).not.toHaveBeenCalled();
     });
@@ -448,111 +437,82 @@ describe("AppointmentStepConfirm", () => {
 
   describe("Состояние загрузки", () => {
     it("должен заблокировать кнопку во время загрузки", () => {
-      // Arrange
       mockMutation.isPending = true;
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       const confirmButton = screen.getByText("steps.confirm.creating");
       expect(confirmButton).toBeDisabled();
     });
 
     it("должен показать Loader2 во время загрузки", () => {
-      // Arrange
       mockMutation.isPending = true;
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Assert
       expect(screen.getByText("steps.confirm.creating")).toBeInTheDocument();
     });
   });
 
   describe("Обработка ошибок", () => {
     it("должен обработать ошибку создания записи", async () => {
-      // Arrange
       const user = userEvent.setup();
       const error = new Error("Ошибка создания");
-      // Убеждаемся, что mockGetValues возвращает правильные данные
       mockGetValues.mockReturnValue(mockFormValues);
       mockMutation.mutateAsync.mockRejectedValueOnce(error);
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const confirmButton = screen.getByText("steps.confirm.confirmButton");
       await user.click(confirmButton);
 
-      // Assert
       await waitFor(() => {
         expect(mockMutation.mutateAsync).toHaveBeenCalled();
       });
-      // Ошибка обрабатывается в хуке, здесь просто проверяем что не упало
       expect(mockSetValue).not.toHaveBeenCalledWith(
-        "bagsy_id",
+        "appointment_id",
         expect.any(String)
       );
     });
   });
 
-  describe("Форматирование", () => {
-    it("должен правильно отформатировать pointCode (заглавные буквы)", () => {
-      // Arrange & Act
-      customRender(
-        <AppointmentStepConfirm
-          pointCode="test_point_code"
-          service={mockService}
-          daySlotsData={mockDaySlotsData}
-          handleBack={mockHandleBack}
-        />
-      );
-
-      // Assert
-      expect(screen.getByText("Test Point Code")).toBeInTheDocument();
-    });
-  });
-
   describe("Навигация", () => {
     it("должен вызвать handleBack при клике на кнопку назад", async () => {
-      // Arrange
       const user = userEvent.setup();
 
       customRender(
         <AppointmentStepConfirm
-          pointCode="test_point"
+          location={mockLocation}
           service={mockService}
-          daySlotsData={mockDaySlotsData}
+          slotsData={mockSlotsData}
           handleBack={mockHandleBack}
         />
       );
 
-      // Act
       const backButton = screen.getByText("buttons.back");
       await user.click(backButton);
 
-      // Assert
       expect(mockHandleBack).toHaveBeenCalledTimes(1);
     });
   });

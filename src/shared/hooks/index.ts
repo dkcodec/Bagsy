@@ -10,5 +10,5 @@
 
 export * from "./use-disclosure";
 export * from "./use-mobile";
-export * from "./use-bagsy";
+export * from "./use-appointment";
 export * from "./use-register";

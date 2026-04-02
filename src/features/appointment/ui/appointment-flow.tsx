@@ -10,12 +10,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { useServices, useDaySlots } from "@/shared/hooks/use-bagsy";
+import {
+  useLocation,
+  useLocationServices,
+  useSlots,
+} from "@/shared/hooks/use-appointment";
 import { Form } from "@/entities/form";
 import { Stepper } from "@/entities/stepper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/entities/card";
 import { Button } from "@/entities/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { AppointmentStepService } from "./appointment-step-service";
 import { AppointmentStepDateTime } from "./appointment-step-datetime";
 import { AppointmentStepClient } from "./appointment-step-client";
@@ -35,12 +39,12 @@ type AppointmentFormData = {
   service_id?: string;
   date?: string;
   time?: string;
-  master_phone?: string;
+  employee_id?: string;
   name?: string;
   surname?: string;
   client_phone?: string;
   comment?: string;
-  bagsy_id?: string;
+  appointment_id?: string;
   code?: string;
 };
 
@@ -49,6 +53,10 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
   const isMobile = useIsMobile();
   const [currentStep, setCurrentStep] = useState(0);
 
+  // Получаем локацию по slug
+  const { data: location, isLoading: isLoadingLocation } =
+    useLocation(pointCode);
+
   // Схема валидации с условной валидацией по шагам
   const schema = useMemo(() => {
     return z
@@ -56,15 +64,14 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
         service_id: z.string().optional(),
         date: z.string().optional(),
         time: z.string().optional(),
-        master_phone: z.string().optional(),
+        employee_id: z.string().optional(),
         name: z.string().optional(),
         surname: z.string().optional(),
         client_phone: z.string().optional(),
-        bagsy_id: z.string().optional(),
+        appointment_id: z.string().optional(),
         code: z.string().optional(),
       })
       .superRefine((data, ctx) => {
-        // Валидация для шага 0: выбор услуги
         if (currentStep === 0) {
           if (!data.service_id || data.service_id.trim().length === 0) {
             ctx.addIssue({
@@ -75,7 +82,6 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
           }
         }
 
-        // Валидация для шага 1: дата, время, мастер
         if (currentStep === 1) {
           if (!data.date || data.date.trim().length === 0) {
             ctx.addIssue({
@@ -91,16 +97,15 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
               path: ["time"],
             });
           }
-          if (!data.master_phone || data.master_phone.trim().length === 0) {
+          if (!data.employee_id || data.employee_id.trim().length === 0) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: t("errors.masterRequired"),
-              path: ["master_phone"],
+              path: ["employee_id"],
             });
           }
         }
 
-        // Валидация для шага 2: данные клиента
         if (currentStep === 2) {
           if (!data.name || data.name.trim().length === 0) {
             ctx.addIssue({
@@ -131,8 +136,7 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
           }
         }
 
-        // Валидация для шага 3 (OTP): код
-        if (currentStep === 3 && data.bagsy_id) {
+        if (currentStep === 3 && data.appointment_id) {
           if (!data.code || data.code.length !== 4) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -156,12 +160,12 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
       service_id: undefined,
       date: undefined,
       time: undefined,
-      master_phone: undefined,
+      employee_id: undefined,
       name: "",
       surname: "",
       client_phone: "",
       comment: "",
-      bagsy_id: undefined,
+      appointment_id: undefined,
       code: "",
     },
     mode: "onBlur",
@@ -175,39 +179,41 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
     form.clearErrors();
   }, [currentStep, form]);
 
-  // Получаем данные для Aside
+  // Получаем данные для Aside и слотов
   const serviceId = form.watch("service_id");
   const selectedDate = form.watch("date");
   const selectedTime = form.watch("time");
-  const selectedMasterPhone = form.watch("master_phone");
-  const { data: services } = useServices(pointCode, true);
+  const selectedEmployeeId = form.watch("employee_id");
+
+  const { data: services } = useLocationServices(location?.id);
   const service = services?.find(s => s.id === serviceId);
 
-  const { data: daySlotsData } = useDaySlots(
-    selectedDate && serviceId && pointCode
+  const { data: slotsData } = useSlots(
+    location?.id && serviceId
       ? {
-          date: toStartAtISO(selectedDate, "00:00"),
+          location_id: location.id,
           service_id: serviceId,
-          point_code: pointCode,
+          start_date: toStartAtISO(
+            new Date().toISOString().slice(0, 10),
+            "00:00"
+          ),
+          end_date: toStartAtISO(
+            new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 10),
+            "00:00"
+          ),
         }
       : null
   );
 
-  // Шаги для степпера (без шага успеха)
+  // Шаги для степпера
   const steps = useMemo(
     () => [
-      {
-        label: t("steps.stepper.service"),
-      },
-      {
-        label: t("steps.stepper.datetime"),
-      },
-      {
-        label: t("steps.stepper.client"),
-      },
-      {
-        label: t("steps.stepper.confirm"),
-      },
+      { label: t("steps.stepper.service") },
+      { label: t("steps.stepper.datetime") },
+      { label: t("steps.stepper.client") },
+      { label: t("steps.stepper.confirm") },
     ],
     [t]
   );
@@ -223,17 +229,29 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
     if (currentStep === 0) return;
     setCurrentStep(prev => Math.max(prev - 1, 0));
     if (currentStep === 3) {
-      // При возврате с шага OTP очищаем код
       form.setValue("code", "");
     }
   };
 
-  // Экран успеха показывается внутри appointment-step-otp после успешного подтверждения
-  // Здесь не нужно проверять, так как логика уже в компоненте OTP
+  if (isLoadingLocation) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!location) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">{t("errors.locationNotFound")}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2 md:space-y-4 lg:space-y-6">
-      {/* Степпер - на мобилке только цифры */}
+      {/* Степпер */}
       <div className={isMobile ? "px-2" : ""}>
         <Stepper
           steps={steps.map(step => ({
@@ -246,7 +264,6 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
 
       {/* Основной контент с Aside */}
       <div className="grid gap-3 md:gap-6 lg:grid-cols-[1fr_250px] xl:grid-cols-[1fr_400px]">
-        {/* Основной блок с шагом */}
         <Card>
           <CardHeader>
             <CardTitle>
@@ -266,25 +283,24 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
                 }}
               >
                 {currentStep === 0 && (
-                  <AppointmentStepService pointCode={pointCode} />
+                  <AppointmentStepService locationId={location.id} />
                 )}
                 {currentStep === 1 && serviceId && (
                   <AppointmentStepDateTime
-                    pointCode={pointCode}
+                    locationId={location.id}
                     serviceId={serviceId}
                   />
                 )}
                 {currentStep === 2 && <AppointmentStepClient />}
                 {currentStep === 3 && (
                   <AppointmentStepConfirm
-                    pointCode={pointCode}
+                    location={location}
                     service={service}
-                    daySlotsData={daySlotsData}
+                    slotsData={slotsData}
                     handleBack={handleBack}
                   />
                 )}
 
-                {/* Навигация (кроме шага подтверждения, где кнопка внутри компонента) */}
                 {currentStep !== 3 && (
                   <div className="flex items-center justify-between pt-2 md:pt-4">
                     <Button
@@ -313,14 +329,13 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
           </CardContent>
         </Card>
 
-        {/* Aside - справа на десктопе, внизу на мобилке */}
         <AppointmentAside
-          pointCode={pointCode}
+          location={location}
           service={service}
-          daySlotsData={daySlotsData}
+          slotsData={slotsData}
           date={selectedDate}
           time={selectedTime}
-          masterPhone={selectedMasterPhone}
+          employeeId={selectedEmployeeId}
         />
       </div>
     </div>

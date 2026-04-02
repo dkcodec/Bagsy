@@ -1,27 +1,25 @@
 /**
- * Unit тесты для useCreateBagsy хука
+ * Unit тесты для useCreateAppointment хука
  * Тестирование React Query мутации для создания записи
  */
 
 import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
-import { useCreateBagsy } from "../use-bagsy";
-import { bagsyService } from "@/shared/api/services";
+import { useCreateAppointment } from "../use-appointment";
+import { appointmentService } from "@/shared/api/services";
 import { toast } from "sonner";
 import type {
-  CreateBagsyRequest,
-  CreateBagsyResponse,
+  CreateAppointmentRequest,
+  CreateAppointmentResponse,
 } from "@/shared/api/types";
 
-// Мокируем bagsyService
 jest.mock("@/shared/api/services", () => ({
-  bagsyService: {
-    createBagsy: jest.fn(),
+  appointmentService: {
+    createAppointment: jest.fn(),
   },
 }));
 
-// Мокируем toast
 jest.mock("sonner", () => ({
   toast: {
     error: jest.fn(),
@@ -29,10 +27,11 @@ jest.mock("sonner", () => ({
   },
 }));
 
-const mockedBagsyService = bagsyService as jest.Mocked<typeof bagsyService>;
+const mockedAppointmentService = appointmentService as jest.Mocked<
+  typeof appointmentService
+>;
 const mockedToast = toast as jest.Mocked<typeof toast>;
 
-// Вспомогательная функция для создания QueryClient и wrapper
 function createWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -50,34 +49,32 @@ function createWrapper() {
   };
 }
 
-describe("useCreateBagsy", () => {
-  // Очищаем моки перед каждым тестом
+describe("useCreateAppointment", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  const validRequestData: CreateBagsyRequest = {
+  const validRequestData: CreateAppointmentRequest = {
     service_id: "service-123",
     start_at: "2024-01-15T10:00:00.000+05:00",
-    master_phone: "77001234567",
-    name: "Иван",
-    surname: "Иванов",
-    client_phone: "77009876543",
+    employee_id: "emp-1",
+    first_name: "Иван",
+    last_name: "Иванов",
+    phone: "77009876543",
+    location_id: "location-123",
     comment: "Комментарий",
   };
 
-  const validResponse: CreateBagsyResponse = {
-    bagsy_id: "bagsy-456",
+  const validResponse: CreateAppointmentResponse = {
+    id: "appointment-456",
   };
 
   describe("Структура хука", () => {
     it("должен возвращать корректную структуру мутации", () => {
-      // Arrange & Act
-      const { result } = renderHook(() => useCreateBagsy(), {
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Assert
       expect(result.current).toHaveProperty("mutate");
       expect(result.current).toHaveProperty("mutateAsync");
       expect(result.current).toHaveProperty("isPending");
@@ -88,45 +85,43 @@ describe("useCreateBagsy", () => {
     });
 
     it("должен иметь начальное состояние isPending = false", () => {
-      // Arrange & Act
-      const { result } = renderHook(() => useCreateBagsy(), {
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Assert
       expect(result.current.isPending).toBe(false);
     });
   });
 
   describe("Успешный вызов", () => {
-    it("должен успешно вызвать createBagsy с правильными параметрами", async () => {
-      // Arrange
-      mockedBagsyService.createBagsy.mockResolvedValueOnce(validResponse);
-      const { result } = renderHook(() => useCreateBagsy(), {
+    it("должен успешно вызвать createAppointment с правильными параметрами", async () => {
+      mockedAppointmentService.createAppointment.mockResolvedValueOnce(
+        validResponse
+      );
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       await result.current.mutateAsync(validRequestData);
 
-      // Assert
-      expect(mockedBagsyService.createBagsy).toHaveBeenCalledTimes(1);
-      expect(mockedBagsyService.createBagsy).toHaveBeenCalledWith(
+      expect(mockedAppointmentService.createAppointment).toHaveBeenCalledTimes(
+        1
+      );
+      expect(mockedAppointmentService.createAppointment).toHaveBeenCalledWith(
         validRequestData
       );
     });
 
     it("должен установить isSuccess в true после успешного вызова", async () => {
-      // Arrange
-      mockedBagsyService.createBagsy.mockResolvedValueOnce(validResponse);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      mockedAppointmentService.createAppointment.mockResolvedValueOnce(
+        validResponse
+      );
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       await result.current.mutateAsync(validRequestData);
 
-      // Assert
       await waitFor(() => {
         expect(result.current.isSuccess).toBe(true);
       });
@@ -136,64 +131,57 @@ describe("useCreateBagsy", () => {
 
   describe("Обработка ошибок", () => {
     it("должен вызвать toast.error при ошибке с сообщением", async () => {
-      // Arrange
-      const errorMessage = "Ошибка создания брони";
+      const errorMessage = "Ошибка создания записи";
       const error = new Error(errorMessage);
-      mockedBagsyService.createBagsy.mockRejectedValueOnce(error);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      mockedAppointmentService.createAppointment.mockRejectedValueOnce(error);
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       try {
         await result.current.mutateAsync(validRequestData);
-      } catch (e) {
+      } catch {
         // Ожидаем ошибку
       }
 
-      // Assert
       await waitFor(() => {
         expect(mockedToast.error).toHaveBeenCalledWith(errorMessage);
       });
     });
 
     it("должен вызвать toast.error с сообщением по умолчанию при ошибке без сообщения", async () => {
-      // Arrange
       const error = new Error();
-      mockedBagsyService.createBagsy.mockRejectedValueOnce(error);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      mockedAppointmentService.createAppointment.mockRejectedValueOnce(error);
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       try {
         await result.current.mutateAsync(validRequestData);
-      } catch (e) {
+      } catch {
         // Ожидаем ошибку
       }
 
-      // Assert
       await waitFor(() => {
-        expect(mockedToast.error).toHaveBeenCalledWith("Ошибка создания брони");
+        expect(mockedToast.error).toHaveBeenCalledWith(
+          "Ошибка создания записи"
+        );
       });
     });
 
     it("должен установить isError в true при ошибке", async () => {
-      // Arrange
-      const error = new Error("Ошибка создания брони");
-      mockedBagsyService.createBagsy.mockRejectedValueOnce(error);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      const error = new Error("Ошибка создания записи");
+      mockedAppointmentService.createAppointment.mockRejectedValueOnce(error);
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       try {
         await result.current.mutateAsync(validRequestData);
-      } catch (e) {
+      } catch {
         // Ожидаем ошибку
       }
 
-      // Assert
       await waitFor(() => {
         expect(result.current.isError).toBe(true);
       });
@@ -203,48 +191,40 @@ describe("useCreateBagsy", () => {
 
   describe("Интеграция с React Query", () => {
     it("должен вызвать onError callback при ошибке", async () => {
-      // Arrange
-      const error = new Error("Ошибка создания брони");
-      mockedBagsyService.createBagsy.mockRejectedValueOnce(error);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      const error = new Error("Ошибка создания записи");
+      mockedAppointmentService.createAppointment.mockRejectedValueOnce(error);
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       try {
         await result.current.mutateAsync(validRequestData);
-      } catch (e) {
+      } catch {
         // Ожидаем ошибку
       }
 
-      // Assert
       await waitFor(() => {
         expect(mockedToast.error).toHaveBeenCalled();
       });
-      // Проверяем, что onError был вызван через toast.error
-      expect(mockedToast.error).toHaveBeenCalledWith("Ошибка создания брони");
+      expect(mockedToast.error).toHaveBeenCalledWith("Ошибка создания записи");
     });
 
     it("должен установить isPending в true во время выполнения", async () => {
-      // Arrange
-      let resolvePromise: (value: CreateBagsyResponse) => void;
-      const promise = new Promise<CreateBagsyResponse>(resolve => {
+      let resolvePromise: (value: CreateAppointmentResponse) => void;
+      const promise = new Promise<CreateAppointmentResponse>(resolve => {
         resolvePromise = resolve;
       });
-      mockedBagsyService.createBagsy.mockReturnValueOnce(promise);
-      const { result } = renderHook(() => useCreateBagsy(), {
+      mockedAppointmentService.createAppointment.mockReturnValueOnce(promise);
+      const { result } = renderHook(() => useCreateAppointment(), {
         wrapper: createWrapper(),
       });
 
-      // Act
       result.current.mutateAsync(validRequestData);
 
-      // Assert
       await waitFor(() => {
         expect(result.current.isPending).toBe(true);
       });
 
-      // Завершаем промис
       resolvePromise!(validResponse);
       await waitFor(() => {
         expect(result.current.isPending).toBe(false);

@@ -23,10 +23,12 @@ import type { Service } from "@/shared/api/types";
 
 interface AppointmentStepServiceProps {
   locationId: string;
+  onNext?: () => void;
 }
 
 export function AppointmentStepService({
   locationId,
+  onNext,
 }: AppointmentStepServiceProps) {
   const t = useTranslations("AppointmentForm");
   const { data: services, isLoading } = useLocationServices(locationId);
@@ -86,6 +88,10 @@ export function AppointmentStepService({
                     service={service}
                     isSelected={field.value === service.id}
                     onClick={() => handleServiceSelect(service.id)}
+                    onDoubleClick={() => {
+                      handleServiceSelect(service.id);
+                      onNext?.();
+                    }}
                   />
                 ))}
               </div>
@@ -102,9 +108,15 @@ interface ServiceCardProps {
   service: Service;
   isSelected: boolean;
   onClick: () => void;
+  onDoubleClick: () => void;
 }
 
-function ServiceCard({ service, isSelected, onClick }: ServiceCardProps) {
+function ServiceCard({
+  service,
+  isSelected,
+  onClick,
+  onDoubleClick,
+}: ServiceCardProps) {
   const t = useTranslations("AppointmentForm");
 
   const priceText =
@@ -119,6 +131,7 @@ function ServiceCard({ service, isSelected, onClick }: ServiceCardProps) {
         isSelected && "ring-2 ring-primary"
       )}
       onClick={onClick}
+      onDoubleClick={onDoubleClick}
     >
       <CardHeader className="pb-3">
         <CardTitle className="text-lg">{service.name}</CardTitle>

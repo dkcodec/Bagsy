@@ -44,9 +44,9 @@ src/
 ├── shared/
 │   ├── api/
 │   │   ├── client.ts     # HttpClient с авто-refresh токенов
-│   │   ├── services/     # API-сервисы (auth.service.ts, bagsy.service.ts)
+│   │   ├── services/     # API-сервисы (auth.service.ts, appointment.service.ts)
 │   │   └── types.ts      # Типы API
-│   ├── hooks/            # Кастомные хуки (use-bagsy, use-mobile, use-disclosure)
+│   ├── hooks/            # Кастомные хуки (use-appointment, use-mobile, use-disclosure)
 │   ├── utils/            # Утилиты (cookies, datetime, jwt, cn())
 │   ├── constants.ts
 │   └── types.ts
@@ -76,8 +76,8 @@ messages/           # Переводы (ru.json, kz.json)
 | Тесты             | `__tests__/*.test.tsx`               | `__tests__/register-form.test.tsx`  |
 | React-компоненты  | PascalCase                           | `AppointmentFlow`                   |
 | Props             | `{Name}Props`                        | `AppointmentFlowProps`              |
-| Хуки              | `use{Feature}`                       | `useServices()`, `useCreateBagsy()` |
-| API типы          | `{Action}{Resource}Request/Response` | `CreateBagsyRequest`                |
+| Хуки              | `use{Feature}`                       | `useLocation()`, `useCreateAppointment()` |
+| API типы          | `{Action}{Resource}Request/Response` | `CreateAppointmentRequest`                |
 
 ### Patterns
 
@@ -85,13 +85,28 @@ messages/           # Переводы (ru.json, kz.json)
 
 ```typescript
 // 1. Сервис (src/shared/api/services/)
-bagsyService.getServices(pointCode);
+appointmentService.getLocation(slug);
+appointmentService.getServices(locationId);
+appointmentService.getSlots(data);
 
 // 2. Хук (src/shared/hooks/)
-const { data } = useServices(pointCode);
+const { data: location } = useLocation(slug);
+const { data: services } = useLocationServices(location?.id);
+const { data: slots } = useSlots({ location_id, service_id, start_date, end_date });
 
 // 3. Компонент использует хук
 ```
+
+**API эндпоинты записи**:
+
+| Метод | Путь | Описание |
+| ----- | ---- | -------- |
+| GET | `/v1/locations/slug/{slug}` | Локация по slug + расписание |
+| GET | `/v1/services/{locationId}` | Услуги локации |
+| POST | `/v1/appointments/slots` | Доступные слоты (по сотрудникам) |
+| POST | `/v1/appointments` | Создание записи |
+| POST | `/v1/appointments/{id}/confirm` | Подтверждение OTP |
+| POST | `/v1/appointments/{id}/resend-otp` | Повторная отправка кода |
 
 **Формы**: Многошаговые с Zod superRefine
 

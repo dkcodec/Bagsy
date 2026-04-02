@@ -32,11 +32,13 @@ import { Separator } from "@/entities/separator";
 interface AppointmentStepDateTimeProps {
   locationId: string;
   serviceId: string;
+  onNext?: () => void;
 }
 
 export function AppointmentStepDateTime({
   locationId,
   serviceId,
+  onNext,
 }: AppointmentStepDateTimeProps) {
   const t = useTranslations("AppointmentForm");
   const form = useFormContext<{
@@ -254,6 +256,10 @@ export function AppointmentStepDateTime({
                             "ring-2 ring-primary"
                         )}
                         onClick={() => handleMasterSelect(master.employee_id)}
+                        onDoubleClick={() => {
+                          handleMasterSelect(master.employee_id);
+                          onNext?.();
+                        }}
                       >
                         <CardHeader className="pb-3">
                           <CardTitle className="text-base flex items-center gap-2">

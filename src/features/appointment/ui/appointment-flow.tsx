@@ -283,12 +283,16 @@ export function AppointmentFlow({ pointCode }: AppointmentFlowProps) {
                 }}
               >
                 {currentStep === 0 && (
-                  <AppointmentStepService locationId={location.id} />
+                  <AppointmentStepService
+                    locationId={location.id}
+                    onNext={handleNext}
+                  />
                 )}
                 {currentStep === 1 && serviceId && (
                   <AppointmentStepDateTime
                     locationId={location.id}
                     serviceId={serviceId}
+                    onNext={handleNext}
                   />
                 )}
                 {currentStep === 2 && <AppointmentStepClient />}

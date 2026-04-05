@@ -65,7 +65,11 @@ export function AppointmentStepService({
     );
   }
 
-  if (!services || services.length === 0) {
+  const pricedServices = services?.filter(
+    service => service.min_price > 0 || service.max_price > 0
+  );
+
+  if (!pricedServices || pricedServices.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">{t("steps.service.noServices")}</p>
@@ -82,7 +86,7 @@ export function AppointmentStepService({
           <FormItem>
             <FormControl>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {services.map(service => (
+                {pricedServices.map(service => (
                   <ServiceCard
                     key={service.id}
                     service={service}
